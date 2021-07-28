@@ -10,11 +10,11 @@ class PtrHolder {
  public:
   /// @brief Create PtrHolder
   /// @param [in] ptr - pointer to managed object
-  PtrHolder(T* ptr);
+  PtrHolder(T* ptr) noexcept;
 
   /// @brief Move object constructor
   /// @param other Another instance
-  PtrHolder(PtrHolder&& other);
+  PtrHolder(PtrHolder&& other) noexcept;
 
   ~PtrHolder() noexcept;
 
@@ -35,35 +35,6 @@ class PtrHolder {
  private:
   T* instance_;
 };
-
-// implementation
-template <class T>
-PtrHolder<T>::PtrHolder(T* ptr) {
-  instance_ = ptr;
-}
-
-template <class T>
-PtrHolder<T>::PtrHolder(PtrHolder&& other) {
-  instance_ = other.instance_;
-  other.instance_ = nullptr;
-}
-
-template <class T>
-PtrHolder<T>::~PtrHolder() noexcept {
-  if (instance_ != nullptr) {
-    delete instance_;
-  }
-}
-
-template <class T>
-T* PtrHolder<T>::Get() const noexcept {
-  return instance_;
-}
-
-template <class T>
-T* PtrHolder<T>::operator->() const {
-  return instance_;
-}
 
 }  // namespace cpp_instance_manager
 
