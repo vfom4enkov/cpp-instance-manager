@@ -20,7 +20,7 @@ class PtrHolder {
 
   /// @brief Get direct pointer to managed object
   /// @return Pointer to managed object
-  T* Get() const noexcept;
+  T* get() const noexcept;
 
   /// @brief Overloaded access operator provides access to public fields and
   /// methods of T class

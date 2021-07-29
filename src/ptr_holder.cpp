@@ -22,7 +22,7 @@ PtrHolder<T>::~PtrHolder() noexcept {
 }
 
 template <class T>
-T* PtrHolder<T>::Get() const noexcept {
+T* PtrHolder<T>::get() const noexcept {
   return instance_;
 }
 

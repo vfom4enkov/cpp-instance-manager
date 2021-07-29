@@ -30,7 +30,7 @@ class Context : public BaseContext {
 
   /// @brief Get pointer to managed object
   /// @return Pointer to managed object
-  T* InstancePtr() noexcept;
+  T* get_instance_ptr() noexcept;
 
  private:
   Core* core_;

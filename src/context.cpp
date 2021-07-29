@@ -29,7 +29,7 @@ Context<T>::~Context() noexcept {
 }
 
 template <class T>
-inline T* Context<T>::InstancePtr() noexcept {
+inline T* Context<T>::get_instance_ptr() noexcept {
   return instance_ptr_;
 }
 
