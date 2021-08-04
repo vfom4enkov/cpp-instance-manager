@@ -71,7 +71,7 @@ class Core {
 
 template <class T>
 static inline std::string Core::CreateTypeKey(const std::string& key) noexcept {
-  return typeid(T).name() + " / " + key;
+  return typeid(T).name() + "/" + key;
 }
 
 }  // namespace cpp_instance_manager
