@@ -1,5 +1,5 @@
 //
-//#include "ptr_holder.h"
+#include "ptr_holder.h"
 //
 //namespace cpp_instance_manager {
 //

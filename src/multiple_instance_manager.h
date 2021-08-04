@@ -60,6 +60,7 @@ T* MultipleInstanceManager<T>::Get() noexcept {
 }
 
 // Implementation
+
 template <class T>
 InstanceCountOptionEnum MultipleInstanceManager<T>::CountOption() noexcept {
   return InstanceCountOptionEnum::kMultiple;

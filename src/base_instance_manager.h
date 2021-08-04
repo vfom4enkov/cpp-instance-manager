@@ -22,7 +22,7 @@ class BaseInstanceManager : public AbstractInstanceManager {
   BaseInstanceManager(std::string class_name_key,
                       std::function<T*(DependencyHelper&)>&& create,
                       Core* core) noexcept
-      : class_name_key_(class_name_key), create_(create), core_(core){};
+      : class_name_key_(class_name_key), create_(create), core_(core), last_error_(""){};
 
   std::string LastError() noexcept override;
 

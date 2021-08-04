@@ -37,6 +37,7 @@ class SingleInstanceManager : public BaseInstanceManager<T> {
 };
 
 // Implementation
+
 template <class T>
 T* SingleInstanceManager<T>::Get() noexcept {
   if (instance_.size() > 0) {
