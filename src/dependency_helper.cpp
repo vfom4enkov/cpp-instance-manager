@@ -1,6 +1,7 @@
 #include "dependency_helper.h"
 
 namespace cpp_instance_manager {
+
 template <typename N>
 N* DependencyHelper::Get() noexcept {
   return Get<N>(DEFAULT_KEY);
@@ -19,7 +20,7 @@ N* DependencyHelper::Get(std::string key) noexcept {
   }
 
   uintptr_t item_uintptr = reinterpret_cast<uintptr_t>(item);
-  dependencies_.push_back(item_uintptr);
+  context_->add_dependency(item_uintptr);
   return item;
 }
 

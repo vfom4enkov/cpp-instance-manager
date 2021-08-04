@@ -22,8 +22,8 @@ class DependencyHelper {
   /// @brief Create instance of the helper
   /// @param [in] core - Pointer to the core with registered objects
   /// @param [in] base_context - Pointer to the context for save dependencies
-  DependencyHelper(Core* core) noexcept
-      : core_(core), has_error_(false){};
+  DependencyHelper(Core* core, BaseContext* context) noexcept
+      : core_(core), context_(context), has_error_(false){};
 
   /// Get dependency, registered in the core with default key.
   /// In error case the function will return 'nullptr'.
@@ -48,27 +48,24 @@ class DependencyHelper {
 
  protected:
   bool has_error_;
-  std::vector<uintptr_t> dependencies_;
-
+  
 private:
+  BaseContext* context_;
   Core* core_;
   std::string last_error_;
 };
 
-/// @brief Checks if was error on get dependency operation
+/// @brief Checks if was error on get dependency operation and get dependencies
 class DependencyHelperInspector : public DependencyHelper {
  public:
   /// @brief Create instance of the helper
   /// @param [in] core - Pointer to the core with registered objects
-  DependencyHelperInspector(Core* core) noexcept : DependencyHelper(core) {};
+  /// /// @param [in] base_context - Pointer to the context for save dependencies
+  DependencyHelperInspector(Core* core, BaseContext* context) noexcept : DependencyHelper(core, context) {};
 
   /// Ñheck if there were errors or not
   /// @return The check result
   bool has_error() noexcept { return has_error_; }
-
-  /// @brief 
-  /// @return 
-  std::vector<uintptr_t> get_dependencies() { return dependencies_; }
 };
 
 }  // namespace cpp_instance_manager

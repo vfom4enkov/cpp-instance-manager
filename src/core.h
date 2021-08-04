@@ -4,6 +4,9 @@
 #include <functional>
 #include <string>
 
+#include "dependency_helper.h"
+#include "instance_count_option_enum.h"
+
 namespace cpp_instance_manager {
 
 /// @brief Key for objects without key
@@ -25,7 +28,6 @@ class Core {
       InstanceCountOptionEnum count_option,
       std::string key,
       std::function<T*(DependencyHelper&)>&& create) noexcept;
-  // TODO VFomchenkov: Rename DependencyHelper to DependencyResolveHelper
 
   /// @brief Get instance of managed object
   /// @tparam T - Type of managed object
