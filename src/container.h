@@ -4,6 +4,7 @@
 #include <mutex>
 
 #include "core.h"
+#include "ptr_holder.h"
 
 namespace cpp_instance_manager {
 
@@ -37,6 +38,19 @@ class Container {
   template <class T>
   T* Get(std::string key) noexcept;
 
+  /// @brief Get PtrHolder on instance of managed object
+  /// @tparam T - Type of managed object
+  /// @return PtrHolder on instance of managed object
+  template <typename T>
+  PtrHolder<T> GetHolder() noexcept;
+
+  /// @brief Get PtrHolder on instance of managed object by key
+  /// @tparam T - Type of managed object
+  /// @param [in] key - Key for managed object
+  /// @return PtrHolder on instance of managed object
+  template <typename T>
+  PtrHolder<T> GetHolder(const std::string& key) noexcept;
+
   /// @brief Delete managed object and dependencies (not actual for single instances)
   /// @tparam T - Type of managed object
   /// @param [in/out] instance - Pointer to managed object (after the operation it will be 'nullptr')
@@ -69,7 +83,6 @@ std::string Container::LastError() noexcept { return last_error_; }
 template <class T>
 T* Container::Get() noexcept {
   return Get<T>(DEFAULT_KEY);
-  
 }
 
 template <class T>
@@ -93,6 +106,17 @@ T* Container::Get(std::string key) noexcept {
   }
 
   return nullptr;
+}
+
+template <typename T>
+inline PtrHolder<T> Container::GetHolder() noexcept {
+  return GetHolder<T>(DEFAULT_KEY);
+}
+
+template <typename T>
+inline PtrHolder<T> Container::GetHolder(const std::string& key) noexcept {
+  PtrHolder<T> holder(this, Get<T>(key));
+  return std::move(holder);
 }
 
 template <class T>

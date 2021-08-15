@@ -19,7 +19,7 @@ static const std::string DEFAULT_KEY = "default";
 class Core {
  public:
   /// @brief Create Core
-  Core() noexcept : last_error_(""){};
+  Core() noexcept {};
 
   ~Core() noexcept;
 
@@ -27,10 +27,12 @@ class Core {
   /// @tparam T - Type of managed object
   /// @param [in] count_option - Number of copies produced object
   /// @param [in] key - Unique key for a given object type
+  /// @param [in] base_type - Name of base class for T
   /// @param [in] create - Function for create instance of managed object
   /// @return Result of the operation true - success, false - fail
   template <typename T>
   bool Add(InstanceCountOptionEnum count_option, std::string key,
+           std::string base_type,
            std::function<T*(DependencyHelper&)>&& create) noexcept;
 
   /// @brief Get instance of managed object
@@ -69,12 +71,13 @@ class Core {
  private:
   template <class T>
   static inline std::string CreateTypeKey(const std::string& key) noexcept;
+  static inline std::string CreateTypeKey(const std::string& base_name,
+                                          const std::string& key) noexcept;
 
  private:
   std::unordered_map<std::string, AbstractInstanceManager*> manager_index_;
   std::unordered_map<uintptr_t, AbstractInstanceManager*> instance_index_;
-  std::unordered_map<uintptr_t, AbstractInstanceManager*>
-      single_instance_index_;
+  std::unordered_map<uintptr_t, AbstractInstanceManager*> single_instance_index_;
 
   std::string last_error_;
 };
@@ -82,9 +85,7 @@ class Core {
 // Implementation
 
 Core::~Core() noexcept {
-  for (typename std::unordered_map<std::string,
-                                   AbstractInstanceManager*>::iterator it =
-           manager_index_.begin();
+  for (typename std::unordered_map<std::string, AbstractInstanceManager*>::iterator it = manager_index_.begin();
        it != manager_index_.end(); ++it) {
     delete it->second;
   }
@@ -92,8 +93,11 @@ Core::~Core() noexcept {
 
 template <typename T>
 bool Core::Add(InstanceCountOptionEnum count_option, std::string key,
+               std::string base_type,
                std::function<T*(DependencyHelper&)>&& create) noexcept {
-  std::string type_key = CreateTypeKey<T>(key);
+  std::string type_key = std::string::empty(base_type)
+                             ? CreateTypeKey<T>(key)
+                             : CreateTypeKey(base, key);
 
   if (manager_index_.count(type_key) == 1) {
     // the instance manager for the key 'type_key' already registered
@@ -143,12 +147,14 @@ T* Core::Get(const std::string& key) noexcept {
   InstanceCountOptionEnum count_option = a_instance_manager->CountOption();
   switch (count_option) {
     case InstanceCountOptionEnum::kSingle: {
-      auto* single_manager = reinterpret_cast<SingleInstanceManager<T>*>(a_instance_manager);
+      auto* single_manager =
+          reinterpret_cast<SingleInstanceManager<T>*>(a_instance_manager);
       object_instance = single_manager->Get();
       break;
     }
     case InstanceCountOptionEnum::kMultiple: {
-      auto* multiple_manager = reinterpret_cast<MultipleInstanceManager<T>*>(a_instance_manager);
+      auto* multiple_manager =
+          reinterpret_cast<MultipleInstanceManager<T>*>(a_instance_manager);
       object_instance = multiple_manager->Get();
       break;
     }
@@ -188,7 +194,8 @@ void Core::CollectSingleInstance(T*& instance) noexcept {
 
   // instance is not single instance
   AbstractInstanceManager* a_instance_manager = it->second;
-  SingleInstanceManager<T>* manager = static_cast<SingleInstanceManager<T>*>(a_instance_manager);
+  SingleInstanceManager<T>* manager =
+      static_cast<SingleInstanceManager<T>*>(a_instance_manager);
   manager->Collect();
   single_instance_index_.erase(instance_uintptr);
 
@@ -197,7 +204,12 @@ void Core::CollectSingleInstance(T*& instance) noexcept {
 
 template <class T>
 static inline std::string Core::CreateTypeKey(const std::string& key) noexcept {
-  return typeid(T).name() + "/" + key;
+  return CreateTypeKey(typeid(T).name(), key);
+}
+
+inline std::string Core::CreateTypeKey(const std::string& base_name,
+                                       const std::string& key) noexcept {
+  return base_name + "/" + key;
 }
 
 void Core::Collect(uintptr_t instance_uintptr_t) noexcept {

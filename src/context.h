@@ -23,11 +23,9 @@ template <class T>
 class Context : public BaseContext {
  public:
   /// @brief Create context
-  /// @tparam T Type of managed object
   /// @param core Pointer to core
   /// @param instance_ptr Pointer to managed object
   /// @param dependencies Values of dependent objects pointers
-  template <class T>
   Context(Core* core) noexcept
       : core_(core), instance_ptr_(nullptr) {};
 
