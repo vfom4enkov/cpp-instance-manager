@@ -4,8 +4,8 @@
 #include <functional>
 #include <string>
 
-#include "context.h"
-#include "error_context.h"
+#include "context/context.h"
+#include "context/error_context.h"
 #include "resolver.h"
 #include "unique_ptr_tool.h"
 

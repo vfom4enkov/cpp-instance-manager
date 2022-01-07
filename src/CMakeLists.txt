@@ -1,10 +1,12 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.1)
 
-set(instance_manager "instance_manager")
+file(GLOB HEADERS "cpptoolkit/factory/*.h")
+file(GLOB MANAGER_HEADERS "cpptoolkit/factory/manager/*.h")
+file(GLOB CONTEXT_HEADERS "cpptoolkit/factory/manager/context/*.h")
 
-file(GLOB SOURCES "*.cpp")
-file(GLOB HEADERS "*.h")
+add_library(${lib_name} ${HEADERS} ${MANAGER_HEADERS} ${CONTEXT_HEADERS})
 
-add_library(${instance_manager} ${SOURCES} ${HEADERS})
+source_group("Header Files/manager" FILES ${MANAGER_HEADERS})
+source_group("Header Files/manager/context" FILES ${CONTEXT_HEADERS})
 
-set_target_properties(instance_manager PROPERTIES LINKER_LANGUAGE CXX)
+set_target_properties(${lib_name} PROPERTIES LINKER_LANGUAGE CXX)

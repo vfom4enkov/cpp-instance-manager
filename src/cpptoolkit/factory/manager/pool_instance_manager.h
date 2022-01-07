@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "base_instance_manager.h"
-#include "pool_context.h"
+#include "context/pool_context.h"
 
 namespace cpptoolkit {
 namespace factory {

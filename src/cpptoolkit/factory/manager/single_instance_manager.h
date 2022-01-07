@@ -4,8 +4,8 @@
 #include <mutex>
 
 #include "base_instance_manager.h"
-#include "error_context.h"
-#include "weak_context.h"
+#include "context/error_context.h"
+#include "context/weak_context.h"
 
 namespace cpptoolkit {
 namespace factory {
