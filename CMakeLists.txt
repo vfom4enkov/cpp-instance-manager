@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.1)
 
 # set the project name
 set(project_name "CppToolKit-Factory")
+set(example_name "example")
 set(lib_name "factory")
 set(test_name "test")
 
