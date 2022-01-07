@@ -5,12 +5,12 @@ namespace factory {
 
 BOOST_AUTO_TEST_SUITE(TestLockPoolHelper)
 
-#define LOCK_POOL_INSTANCE_MANAGEG_MACRO                 \
-  LockPoolInstanceManager<MockUnitLevel_3> manager(      \
-      "MockUnitLevel_3",                                 \
-      [](Resolver& resolver) -> MockUnitLevel_3* { \
-        return new MockUnitLevel_3();                    \
-      },                                                 \
+#define LOCK_POOL_INSTANCE_MANAGEG_MACRO            \
+  LockPoolInstanceManager<MockUnitLevel_3> manager( \
+      "MockUnitLevel_3",                            \
+      [](Resolver& resolver) -> MockUnitLevel_3* {  \
+        return new MockUnitLevel_3();               \
+      },                                            \
       core_, 2);
 
 BOOST_FIXTURE_TEST_CASE(test_lock_pool_normal_case, Fixture) {

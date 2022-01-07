@@ -8,12 +8,12 @@ BOOST_AUTO_TEST_SUITE(TestSingleInstanceManager)
 template <typename T>
 using UPtrBContext = std::unique_ptr<BaseContext<T>>;
 
-#define SINGLE_INSTANCE_MANAGEG_MACRO                    \
-  SingleInstanceManager<MockUnitLevel_3> manager(        \
-      "MockUnitLevel_3",                                 \
+#define SINGLE_INSTANCE_MANAGEG_MACRO              \
+  SingleInstanceManager<MockUnitLevel_3> manager(  \
+      "MockUnitLevel_3",                           \
       [](Resolver& resolver) -> MockUnitLevel_3* { \
-        return new MockUnitLevel_3();                    \
-      },                                                 \
+        return new MockUnitLevel_3();              \
+      },                                           \
       core_);
 
 BOOST_FIXTURE_TEST_CASE(test_single_instance_manager_normal_case, Fixture) {
