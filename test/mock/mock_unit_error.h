@@ -3,6 +3,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+
 struct MockUnitNotRegistered {};
 
 struct MockUnitReturnNullOncreate {};
