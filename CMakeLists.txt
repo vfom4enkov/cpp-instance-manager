@@ -1,7 +1,10 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.1)
 
 # set the project name
-project(CppInstanceManager)
+set(project_name "CppToolKit-Factory")
+set(lib_name "factory")
+
+project(${project_name})
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
