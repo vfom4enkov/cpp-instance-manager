@@ -9,8 +9,8 @@
 
 #include <cpptoolkit/factory/manager/lock_pool_instance_manager.h>
 #include <cpptoolkit/factory/manager/multiple_instance_manager.h>
-#include <cpptoolkit/factory/manager/pool_instance_manager.h>
 #include <cpptoolkit/factory/manager/single_instance_manager.h>
+#include <cpptoolkit/factory/manager/soft_pool_instance_manager.h>
 
 #include "mock/fixture.h"
 

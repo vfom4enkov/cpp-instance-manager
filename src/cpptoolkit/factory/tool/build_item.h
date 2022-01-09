@@ -6,8 +6,8 @@
 
 #include "../manager/lock_pool_instance_manager.h"
 #include "../manager/multiple_instance_manager.h"
-#include "../manager/pool_instance_manager.h"
 #include "../manager/single_instance_manager.h"
+#include "../manager/soft_pool_instance_manager.h"
 #include "common.h"
 #include "instance_count_option_enum.h"
 
@@ -116,7 +116,7 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
       result = core->Add(std::move(s_manager));
       break;
     }
-    case InstanceCountOptionEnum::kPool: {
+    case InstanceCountOptionEnum::kSoftPool: {
       if (pool_size_ == 0) {
         error_ = type_name + ": pool size can not be 0";
         return false;
@@ -182,7 +182,7 @@ BuildItem<T>& BuildItem<T>::AsLockPoolInstance(uint32_t pool_size) noexcept {
 
 template <typename T>
 BuildItem<T>& BuildItem<T>::AsPoolInstance(uint32_t pool_size) noexcept {
-  count_option_ = InstanceCountOptionEnum::kPool;
+  count_option_ = InstanceCountOptionEnum::kSoftPool;
   pool_size_ = pool_size;
   return *this;
 }
