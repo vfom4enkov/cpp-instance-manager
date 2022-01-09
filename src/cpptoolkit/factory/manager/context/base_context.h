@@ -29,6 +29,12 @@ class BaseContext : public AContext {
   bool IsValid() noexcept override;
   std::string Error() noexcept override;
 
+  // Ban RAII operations
+  BaseContext(const BaseContext&) = delete;
+  BaseContext(BaseContext&& other) = delete;
+  BaseContext& operator=(BaseContext&& other) = delete;
+  BaseContext& operator=(const BaseContext&) = delete;
+
  protected:
   T* instance_ptr_;
   bool is_valid_;      // has error or not

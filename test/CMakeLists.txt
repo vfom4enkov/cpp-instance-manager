@@ -8,9 +8,9 @@ file(GLOB TEST_HEADERS "*.h")
 file(GLOB TEST_SOURCES "*.cpp")
 
 add_executable(${test_name}
-				${MOCK_SOURCES}
-				${MOCK_HEADERS}
-				${TEST_HEADERS}
+                ${MOCK_SOURCES}
+                ${MOCK_HEADERS}
+                ${TEST_HEADERS}
                 ${TEST_SOURCES})
 
 source_group("mock" FILES ${MOCK_SOURCES} ${MOCK_HEADERS})
