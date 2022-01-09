@@ -110,7 +110,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_pool_instance) {
   for (auto& it : core.index_) {
     std::unique_ptr<AInstanceManager>& u_ptr = it.second;
     auto manager =
-        dynamic_cast<PoolInstanceManager<MockUnitLevel_3>*>(u_ptr.get());
+        dynamic_cast<SoftPoolInstanceManager<MockUnitLevel_3>*>(u_ptr.get());
     BOOST_CHECK(manager != nullptr);
     BOOST_CHECK_EQUAL(pool_size, manager->size_);
   }

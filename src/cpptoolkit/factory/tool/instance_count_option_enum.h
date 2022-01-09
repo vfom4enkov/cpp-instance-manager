@@ -17,7 +17,7 @@ enum class InstanceCountOptionEnum {
   kLockPool = 2,
 
   /// @brief Take object from the pool or create new one if pool is empty
-  kPool = 3
+  kSoftPool = 3
 };
 
 }  // namespace factory
