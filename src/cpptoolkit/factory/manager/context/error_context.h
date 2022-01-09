@@ -18,6 +18,12 @@ class ErrorContext : public BaseContext<T> {
   ErrorContext(std::string error) noexcept : BaseContext<T>(false) {
     error_ = error;
   };
+
+  // Ban RAII operations
+  ErrorContext(const ErrorContext&) = delete;
+  ErrorContext(ErrorContext&& other) = delete;
+  ErrorContext& operator=(ErrorContext&& other) = delete;
+  ErrorContext& operator=(const ErrorContext&) = delete;
 };
 
 }  // namespace factory

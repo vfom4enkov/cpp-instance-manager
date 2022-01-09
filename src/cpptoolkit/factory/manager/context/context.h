@@ -23,6 +23,12 @@ class Context : public BaseContext<T>, public DependencyContainer {
 
   void Add(std::unique_ptr<AContext>&& dependency) noexcept override;
 
+  // Ban RAII operations
+  Context(const Context&) = delete;
+  Context(Context&& other) = delete;
+  Context& operator=(Context&& other) = delete;
+  Context& operator=(const Context&) = delete;
+
  private:
   std::vector<std::unique_ptr<AContext>> dependencies_;
 };

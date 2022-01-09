@@ -17,7 +17,15 @@ class WeakContext : public BaseContext<T> {
   WeakContext(T* instance_ptr) noexcept;
   
   ~WeakContext() noexcept {};
+
+  // Ban RAII operations
+  WeakContext(const WeakContext&) = delete;
+  WeakContext(WeakContext&& other) = delete;
+  WeakContext& operator=(WeakContext&& other) = delete;
+  WeakContext& operator=(const WeakContext&) = delete;
 };
+
+// Implementation
 
 template <typename T>
 WeakContext<T>::WeakContext(T* instance_ptr) noexcept

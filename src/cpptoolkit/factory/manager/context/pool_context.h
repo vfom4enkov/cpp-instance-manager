@@ -32,6 +32,12 @@ class PoolContext : public BaseContext<T> {
 
   ~PoolContext() noexcept;
 
+  // Ban RAII operations
+  PoolContext(const PoolContext&) = delete;
+  PoolContext(PoolContext&& other) = delete;
+  PoolContext& operator=(PoolContext&& other) = delete;
+  PoolContext& operator=(const PoolContext&) = delete;
+
  private:
   AbstractPoolInstancePutback* putback_;
   uintptr_t key_;
