@@ -121,8 +121,8 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         error_ = type_name + ": pool size can not be 0";
         return false;
       }
-      std::unique_ptr<PoolInstanceManager<T>> p_manager =
-          MakeUnique<PoolInstanceManager<T>>(type_key, std::move(create_), core,
+      std::unique_ptr<SoftPoolInstanceManager<T>> p_manager =
+          MakeUnique<SoftPoolInstanceManager<T>>(type_key, std::move(create_), core,
                                              pool_size_);
       result = core->Add(std::move(p_manager));
       break;
