@@ -15,7 +15,7 @@ If an object without dependencies:
 #include <cpptoolkit/factory/builder.h>
 ...
 cpptoolkit::factory::Builder builder;
-RegisterType<my_class>();
+builder.RegisterType<my_class>();
 ```
 
 Object with dependencies:
@@ -47,6 +47,15 @@ There are available four types:
 - *Multiple* - (default type) an instance is created every time on request
 - *Lock pool* - an instance is created if the pool is not full or the thread is blocked until another instance returns to the pool
 - *Soft pool* - an instance is created if the pool is empty. After the instance returns to the pool it is deleted if the pool is full
+Example registration of lock pool for 10 instances:
+```
+...
+builder.RegisterType<my_class>()
+  .AsLockPoolInstance(10);
+  // or .AsMultipleInstance() - for multiple instances
+  // or .AsSingleInstance()	- for single instance
+  // or .AsSoftPoolInstance(10) - for soft pool instances
+```
 
 ### Using of factory
 Save `std::unique_ptr<cf::Core> core_u_ptr` in public place after registration and use it:
@@ -58,4 +67,9 @@ or
 std::unique_ptr<my_class, cf::Deleter<my_class>> instance = core_u_ptr->GetUnique<my_class>();
 ```
 
+TODO:
+### Multiple implementations for base/abstract classes
 
+### Error handling
+
+### For developers
