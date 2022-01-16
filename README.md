@@ -25,11 +25,11 @@ Object with dependencies:
 namespace cf = cpptoolkit::factory;
 cf::Builder builder;
 builder
-	.Register<my_object>([](cf::Resolver& resolver) -> my_object* {
-		auto* dependency_1 = resolver.Get<dependency_object>();
-		auto* dependency_2 = resolver.Get<dependency_another_object>();
-		return cf::Create<my_object>(dependency_1, dependency_2);
-	});
+  .Register<my_object>([](cf::Resolver& resolver) -> my_object* {
+    auto* dependency_1 = resolver.Get<dependency_object>();
+    auto* dependency_2 = resolver.Get<dependency_another_object>();
+    return cf::Create<my_object>(dependency_1, dependency_2);
+  });
 ```
 Instances `dependency_1` and `dependency_2` will be deleted with `my_object` instance
 
