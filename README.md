@@ -43,7 +43,7 @@ std::unique_ptr<cf::Core> core_u_ptr = builder.Build();
 
 ### Type of objects
 There are available four types:
-- *Single* - an instance created once and used many times
+- *Single* - an instance created once and used many times (shared for other instances)
 - *Multiple* - (default type) an instance is created every time on request
 - *Lock pool* - an instance is created if the pool is not full or the thread is blocked until another instance returns to the pool
 - *Soft pool* - an instance is created if the pool is empty. After the instance returns to the pool it is deleted if the pool is full
