@@ -186,6 +186,8 @@ const std::string& BuildItem<T>::Error() noexcept {
 
 template <typename T>
 BuildItem<T>& BuildItem<T>::SetKey(const std::string& key) noexcept {
+  // TODO (VFomchenkov) Add checking for key, it should be only ASCII symbols
+  // TODO (VFomchenkov) Convert key to lower
   key_ = key;
   return *this;
 }
