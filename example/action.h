@@ -27,18 +27,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EXAMPLE_ABSTRACT_H_
-#define EXAMPLE_ABSTRACT_H_
+#ifndef EXAMPLE_ACTION_H_
+#define EXAMPLE_ACTION_H_
+
+#include "log/abstract_logger.h"
 
 namespace example {
 
-class Abstract {
+/// @brief Fake action helper
+class Action {
  public:
-  Abstract() noexcept = default;
-  virtual ~Abstract() noexcept = default;
-  virtual void Action() noexcept = 0;
-};
+  Action(AbstractLogger* logger) noexcept;
+  void Exec() noexcept;
 
+private:
+  AbstractLogger* logger_;
+};
 }  // namespace example
 
-#endif  // EXAMPLE_ABSTRACT_H_
+#endif  // EXAMPLE_ACTION_H_

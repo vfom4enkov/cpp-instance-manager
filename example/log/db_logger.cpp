@@ -28,8 +28,9 @@
  */
 
 #include "db_logger.h"
+
 #include <iostream>
 
 void example::DbLogger::Log(const std::string& message) noexcept {
-  std::cout << "Save message(" << message << ") to file" << std::endl;
+  std::cout << "Save message(" << message << ") to db" << std::endl;
 }

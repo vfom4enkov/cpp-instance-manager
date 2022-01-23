@@ -31,47 +31,47 @@
 
 #include <cpptoolkit/factory/builder.h>
 
-#include "abstract_custom.h"
-#include "abstract_default.h"
-#include "pool.h"
-#include "root.h"
-#include "single.h"
+#include "action.h"
+#include "log/abstract_logger.h"
+#include "log/complex_logger.h"
+#include "log/db_logger.h"
+#include "log/file_logger.h"
+#include "log/net_logger.h"
 
 namespace example {
 namespace cf = cpptoolkit::factory;
 
 std::unique_ptr<cf::Core> RegisterObjects(std::string& error) {
   cf::Builder builder;
+  builder.RegisterType<DbLogger>().AsLockPoolInstance(10);
+  builder.RegisterType<FileLogger>();
+  builder.RegisterType<NetLogger>().AsSingleInstance();
   builder
-      .Register<Abstract>([](cf::Resolver& resolver) -> Abstract* {
-        return cf::Create<AbstractCustom>();
+      .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {
+        auto* file_logger = resolver.Get<FileLogger>();
+        auto* db_logger = resolver.Get<DbLogger>();
+        return cf::Create<ComplexLogger>(file_logger, db_logger);
       })
-      .AsMultipleInstance()
-      .SetKey("Custom");
+      .SetKey("DB_AND_FILE");
+  builder
+      .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {
+        auto* file_and_db_logger = resolver.Get<AbstractLogger>("DB_AND_FILE");
+        auto* net_logger = resolver.Get<NetLogger>();
+        return cf::Create<ComplexLogger>(file_and_db_logger, net_logger);
+      });
 
   builder
-      .Register<Abstract>([](cf::Resolver& resolver) -> Abstract* {
-        return cf::Create<AbstractDefault>();
-      })
-      .AsMultipleInstance();
+      .Register<Action>([](cf::Resolver& resolver) -> Action* {
+        auto* logger = resolver.Get<AbstractLogger>();
+        return cf::Create<Action>(logger);
+      });
 
   builder
-      .Register<Pool>([](cf::Resolver& resolver) -> Pool* {
-        return cf::Create<Pool>(resolver.Get<Abstract>("Custom"));
+      .Register<Action>([](cf::Resolver& resolver) -> Action* {
+        auto* logger = resolver.Get<FileLogger>();
+        return cf::Create<Action>(logger);
       })
-      .AsLockPoolInstance(2);
-
-  builder
-      .Register<Single>([](cf::Resolver& resolver) -> Single* {
-        return cf::Create<Single>(resolver.Get<Abstract>());
-      })
-      .AsSingleInstance();
-
-  builder
-      .Register<Root>([](cf::Resolver& resolver) -> Root* {
-        return cf::Create<Root>(resolver.Get<Pool>(), resolver.Get<Single>());
-      })
-      .AsMultipleInstance();
+      .SetKey("LIGHT");
 
   std::unique_ptr<cf::Core> core = builder.Build();
   if (!core) {

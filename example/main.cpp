@@ -30,7 +30,7 @@
 
 #include <iostream>
 
-#include "root.h"
+#include "action.h"
 #include "registrator.h"
 
 namespace cf = cpptoolkit::factory;
@@ -44,26 +44,27 @@ int main() {
   }
 
   {
-    const auto root = core->GetShared<example::Root>();
-    root->Action();
+    const auto action = core->GetShared<example::Action>();
+    action->Exec();
+  }
+
+  std::cout << std::endl;
+
+  {
+    const auto action = core->GetShared<example::Action>("LIGHT");
+    action->Exec();
   }
 
   std::cout << "End program" << std::endl;
 }
 
-//	AbstractDefault::Constructor
-//	Single::Constructor
-//	AbstractCustom::Constructor
-//	Pool::Constructor
-//	Root::Constructor
-//	Root::Action
-//	Pool::Action
-//	AbstractCustom::Action
-//	Single::Action
-//	AbstractDefault::Action
-//	Root::Destructor
-//	End the program
-//	Single::Destructor
-//	AbstractDefault::Destructor
-//	Pool::Destructor
-//	AbstractCustom::Destructor
+// Save message(Start action) to file
+// Save message(Start action) to db
+// Send message(Start action) over network
+// Save message(Stop action) to file
+// Save message(Stop action) to db
+// Send message(Stop action) over network
+// 
+// Save message(Start action) to file
+// Save message(Stop action) to file
+// End program

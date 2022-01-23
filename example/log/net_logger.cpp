@@ -28,6 +28,7 @@
  */
 
 #include "net_logger.h"
+
 #include <iostream>
 
 void example::NetLogger::Log(const std::string& message) noexcept {

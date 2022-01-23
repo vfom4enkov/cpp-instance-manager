@@ -27,20 +27,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EXAMPLE_ABSTRACT_CUSTOM_H_
-#define EXAMPLE_ABSTRACT_CUSTOM_H_
+#include "action.h"
 
-#include "abstract.h"
+#include <iostream>
 
-namespace example {
-class AbstractCustom : public Abstract {
- public:
-  AbstractCustom() noexcept;
-  virtual ~AbstractCustom() noexcept;
+example::Action::Action(AbstractLogger* logger) noexcept : logger_(logger) {}
 
-  void Action() noexcept override;
-};
-
-}  // namespace example
-
-#endif  // EXAMPLE_ABSTRACT_CUSTOM_H_
+void example::Action::Exec() noexcept {
+  logger_->Log("Start action");
+  // do something
+  logger_->Log("Stop action");
+}
