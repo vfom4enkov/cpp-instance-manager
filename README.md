@@ -28,14 +28,14 @@ include_directories({pat_to_cpptoolkit-factory}/src)
       .SetKey("DB_AND_FILE");                                                       // (9)
   builder
       .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {     // (10)
-        auto* file_and_db_logger = resolver.Get<AbstractLogger>("DB_AND_FILE");
+        auto* file_and_db_logger = resolver.Get<AbstractLogger>("DB_AND_FILE");     // (11)
         auto* net_logger = resolver.Get<NetLogger>();
         return cf::Create<ComplexLogger>(file_and_db_logger, net_logger);
       });
 
   builder
-      .Register<Action>([](cf::Resolver& resolver) -> Action* {
-        auto* logger = resolver.Get<AbstractLogger>();
+      .Register<Action>([](cf::Resolver& resolver) -> Action* {                     // (12)
+        auto* logger = resolver.Get<AbstractLogger>();                              // (13)
         return cf::Create<Action>(logger);
       });
 
@@ -46,8 +46,8 @@ include_directories({pat_to_cpptoolkit-factory}/src)
       })
       .SetKey("LIGHT");
 
-  std::unique_ptr<cf::Core> core = builder.Build();                                 // (11)
-  if (!core) {                                                                      // (12)
+  std::unique_ptr<cf::Core> core = builder.Build();                                 // (14)
+  if (!core) {                                                                      // (15)
     error = builder.Error();
   }
 ```
@@ -62,15 +62,18 @@ Where
 8. Create inherited object `ComplexLogger` and add dependencies and use it as `AbstractLogger`
 9. Add key `DB_AND_FILE` for type `AbstractLogger` (check [Keys](#Keys) for more info)
 10. Register another type `AbstractLogger` with dependencies
-11. Complete registration and create the Core
-12. Check errors on register objects operation if the builder contains an error core will not be created
+11. Get dependency object with key (check [Keys](#Keys) for more info)
+12. Register complex object with dependencies
+13. Get dependency object with inner dependencies and default key
+14. Complete registration and create the Core
+15. Check errors on register objects operation if the builder contains an error core will not be created
 
 ### Types of objects
 There are four types available:
 - *Single* - an instance created once and used many times (shared for other instances)
 - *Multiple* - (default type) an instance is created every time on request
 - *Lock pool* - an instance is created if the pool is not full or the thread is blocked until another instance returns to the pool
-- *Soft pool* - an instance is created if the pool is empty. After the instance returns to the pool it is deleted if the pool is full
+- *Soft pool* - an instance is created if the pool is empty. At the end of usage instance returns to the pool or deleted if the pool is full
 
 2. Example registration of lock pool for 10 instances
 3. Example registration of multiple instance by default (or add `.AsMultipleInstance()`)
@@ -78,18 +81,27 @@ There are four types available:
 
 ### Keys
 
-If you need to register many types as base object (such as `(5)` and `(10)`) just add keys for these objects. '(5)' is registered with **DB_AND_FILE** key, `(10)` is registered with default key.
+If you need to register many types as base object (such as `(5)` and `(10)`) just add keys for these objects. `(5)` is registered with **DB_AND_FILE** key, `(10)` is registered with default key.
 How to get instance of object with specific key check the [Using of factory](#using-of-factory)
 
-### Using of factory
-Save `std::unique_ptr<cf::Core> core_u_ptr` in public place after registration and use it:
+### Using of the factory
+Save `std::unique_ptr<cf::Core> core` and use when you need to create instance:
+```cpp
+  ...
+  auto file_logger = core->GetShared<example::FileLogger>();                    // a
+  {
+    auto a_logger = core->GetShared<example::AbstractLogger>("DB_AND_FILE");    // b
+  }
+  auto a_logger_2 = core->GetShared<example::AbstractLogger>();                 // c
+  auto action = core->GetShared<example::Action>();                             // d
 ```
-std::shared_ptr<my_class> instance = core_u_ptr->GetShared<my_class>();
-```
-or
-```
-std::unique_ptr<my_class, cf::Deleter<my_class>> instance = core_u_ptr->GetUnique<my_class>();
-```
+Where
+a. Get shared pointer with instance of `example::FileLogger`
+b. Get shared pointer with instance of `example::AbstractLogger` and key **DB_AND_FILE**
+c. Get unique pointer (`std::unique_ptr<example::AbstractLogger, cpptoolkit::factory::Deleter<example::AbstractLogger>>`) with instance of `example::AbstractLogger`
+d. Get shared pointer for complex object with default key
+
+**NB** Before line `c` instance `b` and all dependencies of `b` will be deleted
 
 TODO:
 ### Error handling
