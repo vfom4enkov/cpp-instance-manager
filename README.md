@@ -10,7 +10,7 @@ include_directories({pat_to_cpptoolkit-factory}/src)
 ```
 
 ### Register objects
-```cpp
+```cpp class:"lineNo"
   namespace cf = cpptoolkit::factory;
   ...
   cf::Builder builder;                                                              // (1)
