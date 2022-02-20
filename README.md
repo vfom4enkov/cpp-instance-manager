@@ -75,9 +75,10 @@ There are four types available:
 - *Lock pool* - an instance is created if the pool is not full or the thread is blocked until another instance returns to the pool
 - *Soft pool* - an instance is created if the pool is empty. At the end of usage instance returns to the pool or deleted if the pool is full
 
-2. Example registration of lock pool for 10 instances
-3. Example registration of multiple instance by default (or add `.AsMultipleInstance()`)
-4. Example registration of single instance
+Examples:
+2. registration of lock pool for 10 instances
+3. registration of multiple instance by default (or add `.AsMultipleInstance()`)
+4. registration of single instance
 
 ### Keys
 
@@ -101,9 +102,17 @@ Where
 * `c` Get unique pointer (`std::unique_ptr<example::AbstractLogger, cpptoolkit::factory::Deleter<example::AbstractLogger>>`) with instance of `example::AbstractLogger`
 * `d` Get shared pointer for complex object with default key
 
-**NB** Before line `c` instance `b` and all dependencies of `b` will be deleted
+**NB** Before line `c` instance `b` and all dependencies of `b` will be deleted (for multiple instances) or returned to pool (for lock pool or soft pool)
+
+### Error on create an instance
+In error case the factory returns empty shared pointer (or unique pointer). Call `LastError()` to get more info:
+```cpp
+  auto action = core->GetShared<example::Action>();
+  if (!action) {
+    std::cout << "Error: " << core->LastError();
+  }
+```
 
 TODO:
-### Error handling
 
 ### For developers

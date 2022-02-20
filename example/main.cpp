@@ -50,6 +50,10 @@ int main() {
   auto a_logger_2 = core->GetUnique<example::AbstractLogger>();
   auto action = core->GetShared<example::Action>();
 
+  if (!action) {
+    std::cout << "Error: " << core->LastError();
+  }
+
   {
     const auto action = core->GetShared<example::Action>();
     action->Exec();
