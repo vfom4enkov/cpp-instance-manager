@@ -78,6 +78,9 @@ There are four types available:
 
 ### Keys
 
+If you need to register many types as base object (such as `(5)` and `(10)`) just add keys for these objects. '(5)' is registered with **DB_AND_FILE** key, `(10)` is registered with default key.
+How to get instance of object with specific key check the [Using of factory](#using-of-factory)
+
 ### Using of factory
 Save `std::unique_ptr<cf::Core> core_u_ptr` in public place after registration and use it:
 ```
@@ -89,8 +92,6 @@ std::unique_ptr<my_class, cf::Deleter<my_class>> instance = core_u_ptr->GetUniqu
 ```
 
 TODO:
-### Multiple implementations for base/abstract classes
-
 ### Error handling
 
 ### For developers
