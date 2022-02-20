@@ -76,6 +76,7 @@ There are four types available:
 - *Soft pool* - an instance is created if the pool is empty. At the end of usage instance returns to the pool or deleted if the pool is full
 
 Examples:
+
 2. registration of lock pool for 10 instances
 3. registration of multiple instance by default (or add `.AsMultipleInstance()`)
 4. registration of single instance
