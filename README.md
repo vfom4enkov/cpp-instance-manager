@@ -11,6 +11,8 @@ include_directories({pat_to_cpptoolkit-factory}/src)
 
 ### Register objects
 ```cpp
+#include <cpptoolkit/factory/builder.h>
+  ..
   namespace cf = cpptoolkit::factory;
   ...
   cf::Builder builder;                                                              // (1)
@@ -51,7 +53,7 @@ include_directories({pat_to_cpptoolkit-factory}/src)
 ```
 Where
 1. Create helper for registration object
-2. Register type `DbLogger` without dependencies and register as it as Lock pool object (check [Type of objects](#Type of objects) for more info) with pool size 10
+2. Register type `DbLogger` without dependencies and register as it as Lock pool object (check [Types of objects](#types-of-objects) for more info) with pool size 10
 3. Register type `FileLogger` without dependencies
 4. Register type `NetLogger` without dependencies and register as it as single instance 
 5. Register type `AbstractLogger` with dependencies
@@ -60,56 +62,19 @@ Where
 8. Create inherited object `ComplexLogger` and add dependencies and use it as `AbstractLogger`
 9. Add key `DB_AND_FILE` for type `AbstractLogger` (check [Keys](#Keys) for more info)
 10. Register another type `AbstractLogger` with dependencies
-11. Create the core, object contains all information about regitered types and creates objects on request
+11. Complete registration and create the Core
 12. Check errors on register objects operation if the builder contains an error core will not be created
 
-
-If an object without dependencies:
-```
-#include <cpptoolkit/factory/builder.h>
-...
-cpptoolkit::factory::Builder builder;
-builder.RegisterType<my_class>();
-```
-
-Object with dependencies:
-```
-#include <cpptoolkit/factory/builder.h>
-...
-namespace cf = cpptoolkit::factory;
-cf::Builder builder;
-builder
-  .Register<my_object>([](cf::Resolver& resolver) -> my_object* {
-    auto* dependency_1 = resolver.Get<dependency_object>();
-    auto* dependency_2 = resolver.Get<dependency_another_object>();
-    return cf::Create<my_object>(dependency_1, dependency_2);
-  });
-```
-Instances `dependency_1` and `dependency_2` will be deleted with `my_object` instance
-
-Then complete registration and check errors:
-```
-std::unique_ptr<cf::Core> core_u_ptr = builder.Build();
-  if (!core_u_ptr) {
-    std::cout << builder.Error() << std::endl;
-  }
-```
-
-### Type of objects
-There are available four types:
+### Types of objects
+There are four types available:
 - *Single* - an instance created once and used many times (shared for other instances)
 - *Multiple* - (default type) an instance is created every time on request
 - *Lock pool* - an instance is created if the pool is not full or the thread is blocked until another instance returns to the pool
 - *Soft pool* - an instance is created if the pool is empty. After the instance returns to the pool it is deleted if the pool is full
-Example registration of lock pool for 10 instances:
-```
-...
-builder.RegisterType<my_class>()
-  .AsLockPoolInstance(10);
-  // or .AsMultipleInstance() - for multiple instances
-  // or .AsSingleInstance()	- for single instance
-  // or .AsSoftPoolInstance(10) - for soft pool instances
-```
+
+2. Example registration of lock pool for 10 instances
+3. Example registration of multiple instance by default (or add `.AsMultipleInstance()`)
+4. Example registration of single instance
 
 ### Keys
 
