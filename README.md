@@ -10,7 +10,7 @@ include_directories({pat_to_cpptoolkit-factory}/src)
 ```
 
 ### Register objects
-```cpp class:"lineNo"
+```cpp
   namespace cf = cpptoolkit::factory;
   ...
   cf::Builder builder;                                                              // (1)
@@ -19,13 +19,13 @@ include_directories({pat_to_cpptoolkit-factory}/src)
   builder.RegisterType<NetLogger>().AsSingleInstance();                             // (4)
   builder
       .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {     // (5)
-        auto* file_logger = resolver.Get<FileLogger>();
-        auto* db_logger = resolver.Get<DbLogger>();
-        return cf::Create<ComplexLogger>(file_logger, db_logger);
+        auto* file_logger = resolver.Get<FileLogger>();                             // (6)
+        auto* db_logger = resolver.Get<DbLogger>();                                 // (7)
+        return cf::Create<ComplexLogger>(file_logger, db_logger);                   // (8)
       })
-      .SetKey("DB_AND_FILE");
+      .SetKey("DB_AND_FILE");                                                       // (9)
   builder
-      .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {
+      .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {     // (10)
         auto* file_and_db_logger = resolver.Get<AbstractLogger>("DB_AND_FILE");
         auto* net_logger = resolver.Get<NetLogger>();
         return cf::Create<ComplexLogger>(file_and_db_logger, net_logger);
@@ -44,13 +44,24 @@ include_directories({pat_to_cpptoolkit-factory}/src)
       })
       .SetKey("LIGHT");
 
-  std::unique_ptr<cf::Core> core = builder.Build();
-  if (!core) {
+  std::unique_ptr<cf::Core> core = builder.Build();                                 // (11)
+  if (!core) {                                                                      // (12)
     error = builder.Error();
   }
-
-  return core;
 ```
+Where
+1 Create helper for registration object
+2 Register type `DbLogger` without dependencies and register as it as Lock pool object (check [Type of objects](#Type of objects) for more info) with pool size 10
+3 Register type `FileLogger` without dependencies
+4 Register type `NetLogger` without dependencies and register as it as single instance 
+5 Register type `AbstractLogger` with dependencies
+6 Get dependency object `FileLogger` for `AbstractLogger`
+7 Get dependency object `DbLogger` for `AbstractLogger`
+8 Create inherited object `ComplexLogger` and add dependencies and use it as `AbstractLogger`
+9 Add key `DB_AND_FILE` for type `AbstractLogger` (check [Keys](#Keys) for more info)
+10 Register another type `AbstractLogger` with dependencies
+11 Create the core, object contains all information about regitered types and creates objects on request
+12 Check errors on register objects operation if the builder contains an error core will not be created
 
 
 If an object without dependencies:
@@ -99,6 +110,8 @@ builder.RegisterType<my_class>()
   // or .AsSingleInstance()	- for single instance
   // or .AsSoftPoolInstance(10) - for soft pool instances
 ```
+
+### Keys
 
 ### Using of factory
 Save `std::unique_ptr<cf::Core> core_u_ptr` in public place after registration and use it:
