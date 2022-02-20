@@ -1,15 +1,58 @@
 # CppToolKit-Factory
-Header based tool provides control of lifetime for C++ business logic objects.
+This header based tool and provides control of lifetime for C++ business logic objects.
 
 ## How to use
 
 ### Add the tool to your project
-Download the tool and add the path to `src` to the `PATH`. Or if you use `cmake` just add the line to your `CMakeLists.txt`:
+Download (or clone) the tool and add the path to `src` to the system `PATH`. Or if you use `cmake` just add the line to your `CMakeLists.txt`:
 ```
 include_directories({pat_to_cpptoolkit-factory}/src)
 ```
 
 ### Register objects
+```cpp
+  namespace cf = cpptoolkit::factory;
+  ...
+  cf::Builder builder;                                                              // (1)
+  builder.RegisterType<DbLogger>().AsLockPoolInstance(10);                          // (2)
+  builder.RegisterType<FileLogger>();                                               // (3)
+  builder.RegisterType<NetLogger>().AsSingleInstance();                             // (4)
+  builder
+      .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {     // (5)
+        auto* file_logger = resolver.Get<FileLogger>();
+        auto* db_logger = resolver.Get<DbLogger>();
+        return cf::Create<ComplexLogger>(file_logger, db_logger);
+      })
+      .SetKey("DB_AND_FILE");
+  builder
+      .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {
+        auto* file_and_db_logger = resolver.Get<AbstractLogger>("DB_AND_FILE");
+        auto* net_logger = resolver.Get<NetLogger>();
+        return cf::Create<ComplexLogger>(file_and_db_logger, net_logger);
+      });
+
+  builder
+      .Register<Action>([](cf::Resolver& resolver) -> Action* {
+        auto* logger = resolver.Get<AbstractLogger>();
+        return cf::Create<Action>(logger);
+      });
+
+  builder
+      .Register<Action>([](cf::Resolver& resolver) -> Action* {
+        auto* logger = resolver.Get<FileLogger>();
+        return cf::Create<Action>(logger);
+      })
+      .SetKey("LIGHT");
+
+  std::unique_ptr<cf::Core> core = builder.Build();
+  if (!core) {
+    error = builder.Error();
+  }
+
+  return core;
+```
+
+
 If an object without dependencies:
 ```
 #include <cpptoolkit/factory/builder.h>
