@@ -96,10 +96,10 @@ Save `std::unique_ptr<cf::Core> core` and use when you need to create instance:
   auto action = core->GetShared<example::Action>();                             // d
 ```
 Where
-# `a` Get shared pointer with instance of `example::FileLogger`
-# `b` Get shared pointer with instance of `example::AbstractLogger` and key **DB_AND_FILE**
-# `c` Get unique pointer (`std::unique_ptr<example::AbstractLogger, cpptoolkit::factory::Deleter<example::AbstractLogger>>`) with instance of `example::AbstractLogger`
-# `d` Get shared pointer for complex object with default key
+* `a` Get shared pointer with instance of `example::FileLogger`
+* `b` Get shared pointer with instance of `example::AbstractLogger` and key **DB_AND_FILE**
+* `c` Get unique pointer (`std::unique_ptr<example::AbstractLogger, cpptoolkit::factory::Deleter<example::AbstractLogger>>`) with instance of `example::AbstractLogger`
+* `d` Get shared pointer for complex object with default key
 
 **NB** Before line `c` instance `b` and all dependencies of `b` will be deleted
 
