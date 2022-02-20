@@ -1,10 +1,10 @@
 # CppToolKit-Factory
-This header based tool and provides control of lifetime for C++ business logic objects.
+This header based tool provides control of lifetime for C++ business logic objects.
 
 ## How to use
 
 ### Add the tool to your project
-Download (or clone) the tool and add the path to `src` to the system `PATH`. Or if you use `cmake` just add the line to your `CMakeLists.txt`:
+Download (or clone) the tool and add the path to `src` to the system `PATH`. Or if you use `cmake` just add line to your `CMakeLists.txt`:
 ```
 include_directories({pat_to_cpptoolkit-factory}/src)
 ```
@@ -52,16 +52,16 @@ include_directories({pat_to_cpptoolkit-factory}/src)
   }
 ```
 Where
-1. Create helper for registration object
+1. Create helper for registration objects
 2. Register type `DbLogger` without dependencies and register as it as Lock pool object (check [Types of objects](#types-of-objects) for more info) with pool size 10
 3. Register type `FileLogger` without dependencies
-4. Register type `NetLogger` without dependencies and register as it as single instance 
+4. Register type `NetLogger` without dependencies as single instance 
 5. Register type `AbstractLogger` with dependencies
-6. Get dependency object `FileLogger` for `AbstractLogger`
-7. Get dependency object `DbLogger` for `AbstractLogger`
-8. Create inherited object `ComplexLogger` and add dependencies and use it as `AbstractLogger`
+6. Get dependency instance `FileLogger` for `AbstractLogger`
+7. Get dependency instance `DbLogger` for `AbstractLogger`
+8. Create inherited object `ComplexLogger` as `AbstractLogger` and add dependencies
 9. Add key `DB_AND_FILE` for type `AbstractLogger` (check [Keys](#Keys) for more info)
-10. Register another type `AbstractLogger` with dependencies
+10. Register another type of `AbstractLogger` with dependencies
 11. Get dependency object with key (check [Keys](#Keys) for more info)
 12. Register complex object with dependencies
 13. Get dependency object with inner dependencies and default key
