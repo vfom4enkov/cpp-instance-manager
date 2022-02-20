@@ -78,7 +78,7 @@ There are four types available:
 Examples:
 
 2. registration of lock pool for 10 instances
-3. registration of multiple instance by default (or add `.AsMultipleInstance()`)
+3. registration of multiple instance by default (or add `.AsMultipleInstance()` on type registration)
 4. registration of single instance
 
 ### Keys
@@ -114,6 +114,5 @@ In error case the factory returns empty shared pointer (or unique pointer). Call
   }
 ```
 
-TODO:
-
 ### For developers
+Required boost 1.73 for unit tests
