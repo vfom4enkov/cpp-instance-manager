@@ -50,18 +50,18 @@ include_directories({pat_to_cpptoolkit-factory}/src)
   }
 ```
 Where
-1 Create helper for registration object
-2 Register type `DbLogger` without dependencies and register as it as Lock pool object (check [Type of objects](#Type of objects) for more info) with pool size 10
-3 Register type `FileLogger` without dependencies
-4 Register type `NetLogger` without dependencies and register as it as single instance 
-5 Register type `AbstractLogger` with dependencies
-6 Get dependency object `FileLogger` for `AbstractLogger`
-7 Get dependency object `DbLogger` for `AbstractLogger`
-8 Create inherited object `ComplexLogger` and add dependencies and use it as `AbstractLogger`
-9 Add key `DB_AND_FILE` for type `AbstractLogger` (check [Keys](#Keys) for more info)
-10 Register another type `AbstractLogger` with dependencies
-11 Create the core, object contains all information about regitered types and creates objects on request
-12 Check errors on register objects operation if the builder contains an error core will not be created
+1. Create helper for registration object
+2. Register type `DbLogger` without dependencies and register as it as Lock pool object (check [Type of objects](#Type of objects) for more info) with pool size 10
+3. Register type `FileLogger` without dependencies
+4. Register type `NetLogger` without dependencies and register as it as single instance 
+5. Register type `AbstractLogger` with dependencies
+6. Get dependency object `FileLogger` for `AbstractLogger`
+7. Get dependency object `DbLogger` for `AbstractLogger`
+8. Create inherited object `ComplexLogger` and add dependencies and use it as `AbstractLogger`
+9. Add key `DB_AND_FILE` for type `AbstractLogger` (check [Keys](#Keys) for more info)
+10. Register another type `AbstractLogger` with dependencies
+11. Create the core, object contains all information about regitered types and creates objects on request
+12. Check errors on register objects operation if the builder contains an error core will not be created
 
 
 If an object without dependencies:
