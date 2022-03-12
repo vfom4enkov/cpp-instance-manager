@@ -27,21 +27,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EXAMPLE_ABSTRACT_DEFAULT_H_
-#define EXAMPLE_ABSTRACT_DEFAULT_H_
+#ifndef EXAMPLE_COMPLEX_LOGGER_H_
+#define EXAMPLE_COMPLEX_LOGGER_H_
 
-#include "abstract.h"
+#include <string>
+
+#include "abstract_logger.h"
 
 namespace example {
 
-class AbstractDefault : public Abstract {
+/// @brief Contains pointers to other loggers
+class ComplexLogger : public AbstractLogger {
  public:
-  AbstractDefault() noexcept;
-  virtual ~AbstractDefault() noexcept;
+  ComplexLogger(AbstractLogger* logger_1,
+                AbstractLogger* logger_2) noexcept;
+  virtual ~ComplexLogger() noexcept {};
+  virtual void Log(const std::string& message) noexcept;
 
-  void Action() noexcept override;
+ private:
+  AbstractLogger* logger_1_;
+  AbstractLogger* logger_2_;
 };
 
 }  // namespace example
 
-#endif  // EXAMPLE_ABSTRACT_DEFAULT_H_
+#endif  // EXAMPLE_COMPLEX_LOGGER_H_

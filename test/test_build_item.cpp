@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_pool_instance) {
       });
 
   // act
-  pool_item.AsPoolInstance(pool_size);
+  pool_item.AsSoftPoolInstance(pool_size);
   bool result = pool_item.Build(&core);
 
   // assert
@@ -174,7 +174,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_zero_count_option_pool_instance) {
       });
 
   // act
-  pool_item.AsPoolInstance(pool_size);
+  pool_item.AsSoftPoolInstance(pool_size);
   bool result = pool_item.Build(&core);
 
   // assert

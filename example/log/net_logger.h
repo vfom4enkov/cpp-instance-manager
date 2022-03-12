@@ -27,22 +27,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EXAMPLE_POOL_H_
-#define EXAMPLE_POOL_H_
+#ifndef EXAMPLE_NET_LOGGER_H_
+#define EXAMPLE_NET_LOGGER_H_
 
-#include "abstract.h"
+#include <string>
+
+#include "abstract_logger.h"
 
 namespace example {
-class Pool {
- public:
-  Pool(Abstract* abstract) noexcept;
-  ~Pool() noexcept;
-  void Action() const noexcept;
 
- private:
-  Abstract* abstract_;
+/// @brief Imitation of sending message over network
+class NetLogger : public AbstractLogger {
+ public:
+  virtual ~NetLogger() noexcept {};
+  void Log(const std::string& message) noexcept override;
 };
 
 }  // namespace example
 
-#endif  // EXAMPLE_POOL_H_
+#endif  // EXAMPLE_NET_LOGGER_H_

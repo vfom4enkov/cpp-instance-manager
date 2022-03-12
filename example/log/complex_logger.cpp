@@ -27,20 +27,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EXAMPLE_ABSTRACT_CUSTOM_H_
-#define EXAMPLE_ABSTRACT_CUSTOM_H_
+#include "complex_logger.h"
 
-#include "abstract.h"
+#include <iostream>
 
-namespace example {
-class AbstractCustom : public Abstract {
- public:
-  AbstractCustom() noexcept;
-  virtual ~AbstractCustom() noexcept;
+example::ComplexLogger::ComplexLogger(AbstractLogger* logger_1,
+                                      AbstractLogger* logger_2) noexcept
+    : logger_1_(logger_1), logger_2_(logger_2) {}
 
-  void Action() noexcept override;
-};
-
-}  // namespace example
-
-#endif  // EXAMPLE_ABSTRACT_CUSTOM_H_
+void example::ComplexLogger::Log(const std::string& message) noexcept {
+  logger_1_->Log(message);
+  logger_2_->Log(message);
+}

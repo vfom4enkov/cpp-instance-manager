@@ -27,18 +27,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EXAMPLE_ABSTRACT_H_
-#define EXAMPLE_ABSTRACT_H_
+#ifndef EXAMPLE_ABSTRACT_LOGGER_H_
+#define EXAMPLE_ABSTRACT_LOGGER_H_
+
+#include <string>
 
 namespace example {
 
-class Abstract {
+/// @brief Base class for logging
+class AbstractLogger {
  public:
-  Abstract() noexcept = default;
-  virtual ~Abstract() noexcept = default;
-  virtual void Action() noexcept = 0;
+  virtual ~AbstractLogger() noexcept = default;
+  virtual void Log(const std::string& message) noexcept = 0;
 };
 
 }  // namespace example
 
-#endif  // EXAMPLE_ABSTRACT_H_
+#endif  // EXAMPLE_ABSTRACT_LOGGER_H_

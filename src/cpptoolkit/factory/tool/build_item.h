@@ -107,7 +107,7 @@ class BuildItem : public ABuildItem {
   /// @brief Register as pool instance
   /// @param [in] pool_size - Pool size
   /// @return Pointer to current instance
-  BuildItem<T>& AsPoolInstance(uint32_t pool_size) noexcept;
+  BuildItem<T>& AsSoftPoolInstance(uint32_t pool_size) noexcept;
 
  private:
   std::function<T*(Resolver&)> create_;
@@ -186,6 +186,8 @@ const std::string& BuildItem<T>::Error() noexcept {
 
 template <typename T>
 BuildItem<T>& BuildItem<T>::SetKey(const std::string& key) noexcept {
+  // TODO (VFomchenkov) Add checking for key, it should be only ASCII symbols
+  // TODO (VFomchenkov) Convert key to lower
   key_ = key;
   return *this;
 }
@@ -210,7 +212,7 @@ BuildItem<T>& BuildItem<T>::AsLockPoolInstance(uint32_t pool_size) noexcept {
 }
 
 template <typename T>
-BuildItem<T>& BuildItem<T>::AsPoolInstance(uint32_t pool_size) noexcept {
+BuildItem<T>& BuildItem<T>::AsSoftPoolInstance(uint32_t pool_size) noexcept {
   count_option_ = InstanceCountOptionEnum::kSoftPool;
   pool_size_ = pool_size;
   return *this;

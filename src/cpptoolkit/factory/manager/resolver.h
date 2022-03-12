@@ -62,6 +62,7 @@ class Resolver {
   template <typename T>
   T* Get(const std::string& key = DEFAULT_KEY) noexcept;
 
+  // TODO (VFomchenkov) Add std::shared_ptr<T> GetShared(const std::string& key = DEFAULT_KEY) noexcept
  private:
   Core* core_;
   DependencyContainer* d_container_;

@@ -27,25 +27,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef EXAMPLE_ROOT_H_
-#define EXAMPLE_ROOT_H_
+#ifndef EXAMPLE_FILE_LOGGER_H_
+#define EXAMPLE_FILE_LOGGER_H_
 
-#include "pool.h"
-#include "single.h"
+#include <string>
+
+#include "abstract_logger.h"
 
 namespace example {
 
-class Root {
+/// @brief Imitation of saving message to file
+class FileLogger : public AbstractLogger {
  public:
-  Root(Pool* pool, Single* single) noexcept;
-  ~Root() noexcept;
-  void Action() const noexcept;
-
- private:
-  Pool* pool_;
-  Single* single_;
+  virtual ~FileLogger() noexcept {};
+  void Log(const std::string& message) noexcept override;
 };
 
 }  // namespace example
 
-#endif  // EXAMPLE_ROOT_H_
+#endif  // EXAMPLE_FILE_LOGGER_H_
