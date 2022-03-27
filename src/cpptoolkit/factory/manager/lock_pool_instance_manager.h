@@ -55,7 +55,7 @@ class LockPoolInstanceManager : public BaseInstanceManager<T>,
   LockPoolInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create,
                           Core* core, uint32_t pool_size) noexcept
-      : BaseInstanceManager(class_name_key, std::move(create), core),
+      : BaseInstanceManager<T>(class_name_key, std::move(create), core),
         countdown_(pool_size),
         waiter_counter_(0){};
 
@@ -83,7 +83,7 @@ LockPoolInstanceManager<T>::Get() noexcept {
   if (countdown_ > 0 && queue_.empty()) {
     // create object for the pool
     std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-    Create(context.get());
+    BaseInstanceManager<T>::Create(context.get());
 
     if (!context->IsValid()) {
       return context;

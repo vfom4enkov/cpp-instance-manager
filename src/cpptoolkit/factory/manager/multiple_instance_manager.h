@@ -47,7 +47,7 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
   MultipleInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create,
                           Core* core) noexcept
-      : BaseInstanceManager(class_name_key, std::move(create), core){};
+      : BaseInstanceManager<T>(class_name_key, std::move(create), core){};
 
   virtual ~MultipleInstanceManager() noexcept {};
 
@@ -59,7 +59,7 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
 template <typename T>
 inline std::unique_ptr<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
   std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  Create(context.get());
+  BaseInstanceManager<T>::Create(context.get());
   return context;
 }
 

@@ -49,6 +49,7 @@ class AbstractPoolInstancePutback {
 /// @tparam T - Type of managed object
 template <typename T>
 class PoolContext : public BaseContext<T> {
+ using BaseContext<T>::instance_ptr_;
  public:
   /// @brief Create context
   /// @param putback - Pointer to observer

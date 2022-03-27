@@ -51,7 +51,7 @@ class SingleInstanceManager : public BaseInstanceManager<T> {
   SingleInstanceManager(std::string class_name_key,
                         std::function<T*(Resolver&)>&& create,
                         Core* core) noexcept
-      : BaseInstanceManager(class_name_key, std::move(create), core),
+      : BaseInstanceManager<T>(class_name_key, std::move(create), core),
         context_(nullptr){};
 
   virtual ~SingleInstanceManager() noexcept {};
@@ -84,7 +84,7 @@ inline std::unique_ptr<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept 
   }
 
   std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  Create(context.get());
+  BaseInstanceManager<T>::Create(context.get());
   if (context->IsValid()) {
     context_ = std::move(context);
     std::unique_ptr<WeakContext<T>> weak_context =

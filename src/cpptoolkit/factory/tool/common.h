@@ -35,9 +35,6 @@
 namespace cpptoolkit {
 namespace factory {
 
-/// @brief Key for objects without key
-static const std::string DEFAULT_KEY = "default";
-
 /// @brief Create instance
 /// @tparam T - The type of object to create
 /// @tparam ...Args - types of arguments for T

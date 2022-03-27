@@ -54,7 +54,7 @@ class Core {
   /// @brief Get context with managed object
   /// @tparam T - Type of managed object
   /// @param [in] key - Unique key for a given object type
-  /// @return PtrHolder with BaseContext and instance of managed object
+  /// @return unique_ptr with BaseContext and instance of managed object
   template <typename T>
   std::unique_ptr<BaseContext<T>> Get(
       const std::string& key = DEFAULT_KEY) noexcept;
@@ -126,6 +126,17 @@ inline std::shared_ptr<T> Core::GetShared(const std::string& key) noexcept {
   std::shared_ptr<T> sptr(
       instance, [ctx = std::move(context)](T* inst) mutable { ctx.reset(); });
   return sptr;
+}
+
+/// @brief Function helper for access to Core (forward declaration)
+/// @tparam T - Type of managed object
+/// @param [in] core - Pointer to core
+/// @param [in] key - Unique key for a given object type
+/// @return unique_ptr with BaseContext and instance of managed object
+template <typename T>
+inline std::unique_ptr<BaseContext<T>> GetContext(
+    Core* core, const std::string& key) noexcept {
+  return core->Get<T>(key);
 }
 
 }  // namespace factory

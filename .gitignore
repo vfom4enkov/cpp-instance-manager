@@ -1,5 +1,6 @@
 # Folders for build
 /build*/
+/.vscode/
 
 # Prerequisites
 *.d

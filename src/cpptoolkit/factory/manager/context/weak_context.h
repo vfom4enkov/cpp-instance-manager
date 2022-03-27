@@ -39,6 +39,7 @@ namespace factory {
 /// @tparam T - Type of managed object
 template <typename T>
 class WeakContext : public BaseContext<T> {
+ using BaseContext<T>::instance_ptr_;
  public:
   
   /// @brief Create instance

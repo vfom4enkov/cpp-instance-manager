@@ -30,15 +30,20 @@
 #ifndef CPP_TOOL_KIT_FACTORY_RESOLVER_H_
 #define CPP_TOOL_KIT_FACTORY_RESOLVER_H_
 
-#include <string>
 #include <memory>
+#include <string>
 
+#include "context/base_context.h"
 #include "context/dependency_container.h"
 
 namespace cpptoolkit {
 namespace factory {
 
 class Core;
+
+template <typename T>
+std::unique_ptr<BaseContext<T>> GetContext(Core* core,
+                                           const std::string& key) noexcept;
 
 /// Provides access to registered in Core objects
 /// These objects will be used as dependencies
@@ -62,7 +67,8 @@ class Resolver {
   template <typename T>
   T* Get(const std::string& key = DEFAULT_KEY) noexcept;
 
-  // TODO (VFomchenkov) Add std::shared_ptr<T> GetShared(const std::string& key = DEFAULT_KEY) noexcept
+  // TODO (VFomchenkov) Add std::shared_ptr<T> GetShared(const std::string& key
+  // = DEFAULT_KEY) noexcept
  private:
   Core* core_;
   DependencyContainer* d_container_;
@@ -74,10 +80,10 @@ class Resolver {
 template <typename T>
 inline T* Resolver::Get(const std::string& key) noexcept {
   if (!is_valid_dependency_context_) {  // No sense to do something here,
-    return nullptr;                     // a dependency context already has error
+    return nullptr;  // a dependency context already has error
   }
 
-  std::unique_ptr<BaseContext<T>> dependency = core_->Get<T>(key);
+  std::unique_ptr<BaseContext<T>> dependency = GetContext<T>(core_, key);
 
   // set error if the context is not valid
   is_valid_dependency_context_ = dependency->IsValid();

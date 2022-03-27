@@ -90,9 +90,8 @@ void Fixture::RegisterMockUnits() {
       });
   builder.Register<MockUnitThrowExceptionOncreate>(
       [](Resolver& resolver) -> MockUnitThrowExceptionOncreate* {
-        throw std::exception(
-            "Exception created on operation create "
-            "MockUnitThrowExceptionOncreate");
+        throw std::runtime_error(
+        "Exception created on operation create MockUnitThrowExceptionOncreate");
       });
   builder.Register<MockUnitThrowStrOncreate>(
       [](Resolver& resolver) -> MockUnitThrowStrOncreate* {
