@@ -84,7 +84,7 @@ inline std::unique_ptr<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept 
   }
 
   std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  Create(context.get());
+  BaseInstanceManager<T>::Create(context.get());
   if (context->IsValid()) {
     context_ = std::move(context);
     std::unique_ptr<WeakContext<T>> weak_context =

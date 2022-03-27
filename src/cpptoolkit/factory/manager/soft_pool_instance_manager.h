@@ -88,7 +88,7 @@ SoftPoolInstanceManager<T>::Get() noexcept {
 
   // Create new instance
   std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  Create(context.get());
+  BaseInstanceManager<T>::Create(context.get());
 
   if (!context->IsValid()) {
     return context;
