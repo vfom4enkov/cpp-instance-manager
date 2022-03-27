@@ -83,7 +83,7 @@ inline T* Resolver::Get(const std::string& key) noexcept {
     return nullptr;  // a dependency context already has error
   }
 
-  std::unique_ptr<BaseContext<T>> dependency = core_->Get<T>(key);
+  std::unique_ptr<BaseContext<T>> dependency = GetContext<T>(core_, key);
 
   // set error if the context is not valid
   is_valid_dependency_context_ = dependency->IsValid();
