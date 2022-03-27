@@ -40,7 +40,7 @@ class Mock : public BaseInstanceManager<T> {
   Mock(const std::string class_name_key,
                           std::function<T*(Resolver&)>&& create,
                           Core* core)
-      : BaseInstanceManager(class_name_key, std::move(create), core){};
+      : BaseInstanceManager<T>(class_name_key, std::move(create), core){};
 
   std::unique_ptr<BaseContext<T>> Get() noexcept override;
 };

@@ -47,7 +47,7 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
   MultipleInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create,
                           Core* core) noexcept
-      : BaseInstanceManager(class_name_key, std::move(create), core){};
+      : BaseInstanceManager<T>(class_name_key, std::move(create), core){};
 
   virtual ~MultipleInstanceManager() noexcept {};
 

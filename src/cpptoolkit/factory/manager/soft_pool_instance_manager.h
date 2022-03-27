@@ -55,7 +55,7 @@ class SoftPoolInstanceManager : public BaseInstanceManager<T>,
   SoftPoolInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create, Core* core,
                           uint32_t pool_size) noexcept
-      : BaseInstanceManager(class_name_key, std::move(create), core),
+      : BaseInstanceManager<T>(class_name_key, std::move(create), core),
         size_(pool_size){};
 
   virtual ~SoftPoolInstanceManager() noexcept = default;
