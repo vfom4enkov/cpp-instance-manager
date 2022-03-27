@@ -128,7 +128,7 @@ inline std::shared_ptr<T> Core::GetShared(const std::string& key) noexcept {
   return sptr;
 }
 
-/// @brief Function helper for access to Core (forvard declaration)
+/// @brief Function helper for access to Core (forward declaration)
 /// @tparam T - Type of managed object
 /// @param [in] core - Pointer to core
 /// @param [in] key - Unique key for a given object type

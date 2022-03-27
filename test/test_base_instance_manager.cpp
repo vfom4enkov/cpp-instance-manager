@@ -121,7 +121,7 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_throws_exception,
   Mock<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
       [](Resolver& resolver) -> MockUnitLevel_3* {
-        throw std::exception("empty_exception");
+        throw std::runtime_error("empty_exception");
         return new MockUnitLevel_3();
       },
       core_);
