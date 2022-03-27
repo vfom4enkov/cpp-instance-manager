@@ -136,32 +136,6 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_throws_exception,
   BOOST_CHECK_EQUAL(nullptr, context.GetInstance());
 }
 
-BOOST_FIXTURE_TEST_CASE(
-    test_base_instance_manager_create_throws_exception_if_context_already_has_error,
-    Fixture) {
-  // arrange
-  Mock<MockUnitLevel_3> manager(
-      "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* {
-        throw std::exception("empty_exception");
-        return new MockUnitLevel_3();
-      },
-      core_);
-  Context<MockUnitLevel_3> context;
-  std::string error = "Custom error for the context";
-  context.is_valid_ = false;
-  context.error_ = error;
-
-  // act
-  manager.Create(&context);
-
-  // assert
-  BOOST_CHECK(!context.IsValid());
-  BOOST_CHECK(!context.Error().empty());
-  BOOST_CHECK_EQUAL(nullptr, context.GetInstance());
-  BOOST_CHECK_EQUAL(error, context.Error());
-}
-
 BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_throws_something,
                         Fixture) {
   // arrange
@@ -181,32 +155,6 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_throws_something,
   BOOST_CHECK(!context.IsValid());
   BOOST_CHECK(!context.Error().empty());
   BOOST_CHECK(context.GetInstance() == nullptr);
-}
-
-BOOST_FIXTURE_TEST_CASE(
-    test_base_instance_manager_create_throws_something_if_context_already_has_error,
-                        Fixture) {
-  // arrange
-  Mock<MockUnitLevel_3> manager(
-      "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* {
-        throw "string_message";
-        return new MockUnitLevel_3();
-      },
-      core_);
-  Context<MockUnitLevel_3> context;
-  std::string error = "Custom error for the context";
-  context.is_valid_ = false;
-  context.error_ = error;
-
-  // act
-  manager.Create(&context);
-
-  // assert
-  BOOST_CHECK(!context.IsValid());
-  BOOST_CHECK(!context.Error().empty());
-  BOOST_CHECK_EQUAL(nullptr, context.GetInstance());
-  BOOST_CHECK_EQUAL(error, context.Error());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -34,6 +34,9 @@
 namespace cpptoolkit {
 namespace factory {
 
+/// @brief Key for objects without key
+static const std::string DEFAULT_KEY = "default";
+
 /// @brief Contains basic information about creation of managed object
 class AContext {
  public:
