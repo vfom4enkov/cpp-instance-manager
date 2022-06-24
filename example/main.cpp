@@ -57,7 +57,7 @@ class UPtr {
     inst_ = other.Relese();
   };
 
-  UPtr<T>& operator=(UPtr<T>&& other) noexcept { inst = other.Relese(); }
+  UPtr<T>& operator=(UPtr<T>&& other) noexcept { inst_ = other.Relese(); }
 
   // Ban copy and assign RAII operations
   UPtr(const UPtr<T>& other) = delete;
@@ -85,8 +85,6 @@ UPtr<T>::UPtr(UPtr<T>&& other) noexcept {
   inst_ = other.Relese();
 }
 
-
-
 class A {};
 
 class B : public A {};
@@ -102,6 +100,7 @@ int main() {
   UPtr<B> b(new B());
   UPtr<A> a = std::move(b);
 
+  std::cout << "All are OK!" << std::endl;
   // error
   //UPtr<C> c(new C());
   //UPtr<A> a3(std::move(c));
