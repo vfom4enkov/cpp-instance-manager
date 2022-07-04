@@ -169,7 +169,7 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
     }
     default:
       int option = static_cast<int>(count_option_);
-      error_ = "Unknown instance count option: " + option;
+      error_ = "Unknown instance count option: " + std::to_string(option);
       return false;
   }
 
