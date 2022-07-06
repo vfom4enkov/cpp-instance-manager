@@ -34,6 +34,7 @@
 
 #include "base_context.h"
 #include "dependency_container.h"
+#include "u_ptr.h"
 
 namespace cpptoolkit {
 namespace factory {
