@@ -51,5 +51,6 @@ void MockUnitLevel_3::reset() {
   constructor_counter_ = 0;
   destructor_counter_ = 0;
 }
+
 }  // namespace factory
 }  // namespace cpptoolkit

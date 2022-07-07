@@ -50,8 +50,8 @@ BOOST_FIXTURE_TEST_CASE(test_single_instance_manager_normal_case, Fixture) {
   SINGLE_INSTANCE_MANAGEG_MACRO;
 
   // act
-  UPtrBContext<MockUnitLevel_3> ptr_holder = manager.Get();
-  UPtrBContext<MockUnitLevel_3> ptr_holder_2 = manager.Get();
+  UPtr<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
+  UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
 
   // assert
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
@@ -70,7 +70,7 @@ BOOST_FIXTURE_TEST_CASE(
     SINGLE_INSTANCE_MANAGEG_MACRO;
 
     // act
-    UPtrBContext<MockUnitLevel_3> ptr_holder = manager.Get();
+    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
   }
 
   // assert

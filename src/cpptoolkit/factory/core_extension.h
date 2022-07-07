@@ -45,7 +45,7 @@ class CoreExtension : public Core {
   /// call 'Error()'
   /// @param [in] manager - Instance manager
   /// @return Operation result
-  bool Add(std::unique_ptr<AInstanceManager>&& mgr) noexcept {
+  bool Add(UPtr<AInstanceManager>&& mgr) noexcept {
     const std::string& type_key = mgr->TypeKey();
 
     if (index_.count(type_key) == 1) {

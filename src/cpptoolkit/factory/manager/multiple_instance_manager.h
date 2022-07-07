@@ -51,15 +51,15 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
 
   virtual ~MultipleInstanceManager() noexcept {};
 
-  std::unique_ptr<BaseContext<T>> Get() noexcept override;
+  UPtr<BaseContext<T>> Get() noexcept override;
 };
 
 // Implementation
 
 template <typename T>
-inline std::unique_ptr<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
-  std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  BaseInstanceManager<T>::Create(context.get());
+inline UPtr<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
+  UPtr<Context<T>> context = MakeUPtr<Context<T>>();
+  BaseInstanceManager<T>::Create(context.Get());
   return context;
 }
 

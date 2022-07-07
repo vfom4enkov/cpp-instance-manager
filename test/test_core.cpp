@@ -37,8 +37,8 @@ BOOST_AUTO_TEST_SUITE(TestCore)
 BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_normal_case, Fixture) {
   // arrange
   CoreExtension core;
-  std::unique_ptr<MultipleInstanceManager<MockUnitLevel_3>> manager =
-      MakeUnique<MultipleInstanceManager<MockUnitLevel_3>>(
+  UPtr<MultipleInstanceManager<MockUnitLevel_3>> manager =
+      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -55,16 +55,16 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_normal_case, Fixture) {
 BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_twice, Fixture) {
   // arrange
   CoreExtension core;
-  std::unique_ptr<MultipleInstanceManager<MockUnitLevel_3>> manager =
-      MakeUnique<MultipleInstanceManager<MockUnitLevel_3>>(
+  UPtr<MultipleInstanceManager<MockUnitLevel_3>> manager =
+      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
           },
           &core);
 
-  std::unique_ptr<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
-      MakeUnique<MultipleInstanceManager<MockUnitLevel_3>>(
+  UPtr<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
+      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -83,7 +83,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_twice, Fixture) {
 
 BOOST_FIXTURE_TEST_CASE(test_core_get_instance_normal_case, Fixture) {
   // arrange and act
-  std::unique_ptr<BaseContext<MockUnitLevel_1>> ptr_holder =
+  UPtr<BaseContext<MockUnitLevel_1>> ptr_holder =
       core_->Get<MockUnitLevel_1>();
 
   // assert
@@ -96,8 +96,8 @@ BOOST_FIXTURE_TEST_CASE(test_core_check_add_manager_to_manager_index, Fixture) {
   std::string error;
   CoreExtension core;
   BOOST_CHECK_EQUAL(0, core.index_.size());
-  std::unique_ptr<MultipleInstanceManager<MockUnitLevel_3>> manager =
-      MakeUnique<MultipleInstanceManager<MockUnitLevel_3>>(
+  UPtr<MultipleInstanceManager<MockUnitLevel_3>> manager =
+      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -118,8 +118,8 @@ BOOST_FIXTURE_TEST_CASE(test_core_try_to_register_type_twice, Fixture) {
   // arrange
   std::string error;
   CoreExtension core;
-  std::unique_ptr<MultipleInstanceManager<MockUnitLevel_3>> manager_1 =
-      MakeUnique<MultipleInstanceManager<MockUnitLevel_3>>(
+  UPtr<MultipleInstanceManager<MockUnitLevel_3>> manager_1 =
+      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -131,8 +131,8 @@ BOOST_FIXTURE_TEST_CASE(test_core_try_to_register_type_twice, Fixture) {
   BOOST_CHECK(error.empty());
 
   // act
-  std::unique_ptr<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
-      MakeUnique<MultipleInstanceManager<MockUnitLevel_3>>(
+  UPtr<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
+      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -146,14 +146,14 @@ BOOST_FIXTURE_TEST_CASE(test_core_try_to_register_type_twice, Fixture) {
   BOOST_CHECK(!error.empty());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_core_unit_constructor_and_destructor_counts,
+BOOST_FIXTURE_TEST_CASE(test_cleanup_all_dependency_objects_on_main_instance_destroy,
                         Fixture) {
   // arrange and act
-  std::unique_ptr<BaseContext<MockUnitLevel_1>> ptr_holder =
+  UPtr<BaseContext<MockUnitLevel_1>> ptr_holder =
       core_->Get<MockUnitLevel_1>();
   BOOST_CHECK(ptr_holder->IsValid());
   BOOST_CHECK(ptr_holder->GetInstance() != nullptr);
-  ptr_holder.reset();
+  ptr_holder.Reset();
 
   // assert
   BOOST_CHECK_EQUAL(1, MockUnitLevel_1::getConstructorCounter());
@@ -167,7 +167,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_unit_constructor_and_destructor_counts,
 BOOST_FIXTURE_TEST_CASE(
     test_core_get_instance_if_instance_manager_not_registered, Fixture) {
   // arrange and act
-  std::unique_ptr<BaseContext<MockUnitNotRegistered>> ptr_holder =
+  UPtr<BaseContext<MockUnitNotRegistered>> ptr_holder =
       core_->Get<MockUnitNotRegistered>();
 
   // assert
@@ -179,7 +179,7 @@ BOOST_FIXTURE_TEST_CASE(
 BOOST_FIXTURE_TEST_CASE(test_core_get_instance_if_instance_manager_return_error,
                         Fixture) {
   // arrange and act
-  std::unique_ptr<BaseContext<MockUnitThrowExceptionOncreate>> ptr_holder =
+  UPtr<BaseContext<MockUnitThrowExceptionOncreate>> ptr_holder =
       core_->Get<MockUnitThrowExceptionOncreate>();
 
   // assert
@@ -190,13 +190,13 @@ BOOST_FIXTURE_TEST_CASE(test_core_get_instance_if_instance_manager_return_error,
 
 BOOST_FIXTURE_TEST_CASE(test_core_get_single_instance_twice, Fixture) {
   // arrange
-  std::unique_ptr<BaseContext<MockUnitSingleInstance>> ptr_holder =
+  UPtr<BaseContext<MockUnitSingleInstance>> ptr_holder =
       core_->Get<MockUnitSingleInstance>();
   BOOST_CHECK_EQUAL(1, MockUnitSingleInstance::getConstructorCounter());
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
 
   // act
-  std::unique_ptr<BaseContext<MockUnitSingleInstance>> ptr_holder_2 =
+  UPtr<BaseContext<MockUnitSingleInstance>> ptr_holder_2 =
       core_->Get<MockUnitSingleInstance>();
   BOOST_CHECK_EQUAL(1, MockUnitSingleInstance::getConstructorCounter());
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
@@ -204,43 +204,6 @@ BOOST_FIXTURE_TEST_CASE(test_core_get_single_instance_twice, Fixture) {
   // assert
   BOOST_CHECK_EQUAL(ptr_holder->GetInstance()->getMyPtr(),
                     ptr_holder_2->GetInstance()->getMyPtr());
-}
-
-BOOST_FIXTURE_TEST_CASE(test_core_get_unique_ptr, Fixture) {
-  // arrange
-  std::unique_ptr<MockUnitLevel_1, Deleter<MockUnitLevel_1>> uptr(
-      nullptr, Deleter<MockUnitLevel_1>(nullptr));
-
-  // act
-  {
-    uptr = core_->GetUnique<MockUnitLevel_1>(DEFAULT_KEY);
-    uintptr_t ptr_value = uptr->getMyPtr();
-    BOOST_CHECK(ptr_value);
-  }
-  uptr.reset();
-
-  // assert
-  BOOST_CHECK_EQUAL(1, MockUnitLevel_1::getDestructorCounter());
-  BOOST_CHECK_EQUAL(2, MockUnitLevel_2::getDestructorCounter());
-  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
-}
-
-BOOST_FIXTURE_TEST_CASE(test_core_get_shared_ptr, Fixture) {
-  // arrange
-  std::shared_ptr<MockUnitLevel_1> sptr(nullptr);
-
-  // act
-  {
-    sptr = core_->GetShared<MockUnitLevel_1>(DEFAULT_KEY);
-    uintptr_t ptr_value = sptr->getMyPtr();
-    BOOST_CHECK(ptr_value);
-  }
-  sptr.reset();
-
-  // assert
-  BOOST_CHECK_EQUAL(1, MockUnitLevel_1::getDestructorCounter());
-  BOOST_CHECK_EQUAL(2, MockUnitLevel_2::getDestructorCounter());
-  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

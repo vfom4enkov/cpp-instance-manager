@@ -54,7 +54,7 @@ class Context : public BaseContext<T>, public DependencyContainer {
 
   ~Context() noexcept;
 
-  void Add(std::unique_ptr<AContext>&& dependency) noexcept override;
+  void Add(UPtr<AContext>&& dependency) noexcept override;
 
   // Ban RAII operations
   Context(const Context&) = delete;
@@ -63,7 +63,7 @@ class Context : public BaseContext<T>, public DependencyContainer {
   Context& operator=(const Context&) = delete;
 
  private:
-  std::vector<std::unique_ptr<AContext>> dependencies_;
+  std::vector<UPtr<AContext>> dependencies_;
 };
 
 // implementation
@@ -76,7 +76,7 @@ Context<T>::~Context() noexcept {
 }
 
 template <typename T>
-inline void Context<T>::Add(std::unique_ptr<AContext>&& dependency) noexcept {
+inline void Context<T>::Add(UPtr<AContext>&& dependency) noexcept {
   bool dependency_valid = dependency->IsValid();
   if (!dependency_valid) {
     is_valid_ = dependency_valid;

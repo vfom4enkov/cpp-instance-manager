@@ -49,10 +49,10 @@ BOOST_FIXTURE_TEST_CASE(test_lock_pool_normal_case, Fixture) {
   // act
   {
     BOOST_CHECK_EQUAL(2, manager.countdown_);
-    std::unique_ptr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
+    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
     BOOST_CHECK_EQUAL(1, manager.index_.size());
     BOOST_CHECK_EQUAL(1, manager.countdown_);
-    std::unique_ptr<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
+    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
     BOOST_CHECK_EQUAL(2, manager.index_.size());
   }
 
@@ -69,21 +69,21 @@ BOOST_FIXTURE_TEST_CASE(test_lock_pool_queue_work, Fixture) {
   uintptr_t ptr = 0;
   {
     {
-      std::unique_ptr<BaseContext<MockUnitLevel_3>> ptr_holder_1 =
+      UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 =
           manager.Get();
       ptr = ptr_holder_1->GetInstance()->getMyPtr();
       BOOST_CHECK_EQUAL(0, manager.queue_.size());
       // return MockUnitLevel_3 to the pool
     }
     BOOST_CHECK_EQUAL(1, manager.queue_.size());
-    std::unique_ptr<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
+    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
     BOOST_CHECK_EQUAL(0, manager.queue_.size());
   }
   BOOST_CHECK_EQUAL(1, manager.queue_.size());
 
   uintptr_t ptr_2 = 0;
   {
-    std::unique_ptr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
+    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
     ptr_2 = ptr_holder_1->GetInstance()->getMyPtr();
   }
 
@@ -103,7 +103,7 @@ BOOST_FIXTURE_TEST_CASE(test_lock_pool_error_on_create, Fixture) {
       core_, pool_size);
 
   // act
-  std::unique_ptr<BaseContext<MockUnitLevel_3>> item = manager.Get();
+  UPtr<BaseContext<MockUnitLevel_3>> item = manager.Get();
 
   // assert
   BOOST_CHECK(!item->IsValid());

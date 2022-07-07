@@ -47,7 +47,7 @@ BOOST_FIXTURE_TEST_CASE(test_multiple_instance_manager_normal_case, Fixture) {
   MULTIPLE_INSTANCE_MANAGEG_MACRO;
 
   // act
-  std::unique_ptr<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
+  UPtr<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
 
   // assert
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
@@ -60,7 +60,7 @@ BOOST_FIXTURE_TEST_CASE(test_multiple_instance_manager_check_delete_instance,
   MULTIPLE_INSTANCE_MANAGEG_MACRO;
   {
     // act
-    std::unique_ptr<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
+    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
     BOOST_CHECK(ptr_holder->IsValid());
   }
 

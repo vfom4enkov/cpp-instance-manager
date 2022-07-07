@@ -33,6 +33,7 @@
 #include <memory>
 
 #include "abstract_context.h"
+#include "u_ptr.h"
 
 namespace cpptoolkit {
 namespace factory {
@@ -44,7 +45,7 @@ class DependencyContainer {
 
   /// @brief Add context of dependent object pointer
   /// @param dependency - Context of dependent object
-  virtual void Add(std::unique_ptr<AContext>&& dependency) noexcept = 0;
+  virtual void Add(UPtr<AContext>&& dependency) noexcept = 0;
 };
 
 }  // namespace factory

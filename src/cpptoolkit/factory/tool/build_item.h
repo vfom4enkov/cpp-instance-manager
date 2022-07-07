@@ -47,7 +47,7 @@ class CoreExtension;
 class Resolver;
 
 template <typename T, typename... Args>
-std::unique_ptr<T> MakeUnique(Args&&... args) noexcept;
+UPtr<T> MakeUPtr(Args&&... args) noexcept;
 
 /// @brief Interface for collecting data for registration object in Core
 class ABuildItem {
@@ -132,15 +132,15 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
   bool result = true;
   switch (count_option_) {
     case InstanceCountOptionEnum::kMultiple: {
-      std::unique_ptr<MultipleInstanceManager<T>> m_manager =
-          MakeUnique<MultipleInstanceManager<T>>(type_key, std::move(create_),
+      UPtr<MultipleInstanceManager<T>> m_manager =
+          MakeUPtr<MultipleInstanceManager<T>>(type_key, std::move(create_),
                                                  core);
       result = core->Add(std::move(m_manager));
       break;
     }
     case InstanceCountOptionEnum::kSingle: {
-      std::unique_ptr<SingleInstanceManager<T>> s_manager =
-          MakeUnique<SingleInstanceManager<T>>(type_key, std::move(create_),
+      UPtr<SingleInstanceManager<T>> s_manager =
+          MakeUPtr<SingleInstanceManager<T>>(type_key, std::move(create_),
                                                core);
       result = core->Add(std::move(s_manager));
       break;
@@ -150,8 +150,8 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         error_ = type_name + ": pool size can not be 0";
         return false;
       }
-      std::unique_ptr<SoftPoolInstanceManager<T>> p_manager =
-          MakeUnique<SoftPoolInstanceManager<T>>(type_key, std::move(create_), core,
+      UPtr<SoftPoolInstanceManager<T>> p_manager =
+          MakeUPtr<SoftPoolInstanceManager<T>>(type_key, std::move(create_), core,
                                              pool_size_);
       result = core->Add(std::move(p_manager));
       break;
@@ -161,8 +161,8 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         error_ = type_name + ": pool size can not be 0";
         return false;
       }
-      std::unique_ptr<LockPoolInstanceManager<T>> lp_manager =
-          MakeUnique<LockPoolInstanceManager<T>>(type_key, std::move(create_),
+      UPtr<LockPoolInstanceManager<T>> lp_manager =
+          MakeUPtr<LockPoolInstanceManager<T>>(type_key, std::move(create_),
                                                  core, pool_size_);
       result = core->Add(std::move(lp_manager));
       break;

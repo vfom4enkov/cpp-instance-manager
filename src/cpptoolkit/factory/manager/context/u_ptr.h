@@ -30,6 +30,8 @@
 #ifndef CPP_TOOL_KIT_FACTORY_U_PTR_H_
 #define CPP_TOOL_KIT_FACTORY_U_PTR_H_
 
+#include <memory>
+
 namespace cpptoolkit {
 namespace factory {
 
@@ -59,18 +61,30 @@ class UPtr {
     UPtr(const UPtr<T> &other) = delete;
     UPtr<T> &operator=(const UPtr<T> &other) = delete;
 
-    T* operator->() const noexcept;
+    T *operator->() const noexcept;
 
     T *Get() noexcept;
     T *Relese() noexcept;
+    void Reset() noexcept;
 
    private:
     T *instance_ptr_;
 };
 
+/// @brief Create UPtr (RAII wrapper)
+/// @tparam T - The type of object to create
+/// @tparam ...Args - types of arguments for T
+/// @param [in] ...args - arguments for T constructor
+/// @return UPtr with instance
+template <typename T, typename... Args>
+inline UPtr<T> MakeUPtr(Args &&...args) noexcept {
+    UPtr<T> uptr(new T(std::forward<Args>(args)...));
+    return std::move(uptr);
+}
+
 template <class T>
 UPtr<T>::~UPtr() noexcept {
-    if (instance_ptr_ != nullptr) delete instance_ptr_;
+    Reset();
 }
 
 template <class T>
@@ -84,8 +98,8 @@ UPtr<T> &UPtr<T>::operator=(UPtr<T> &&other) noexcept {
     return *this;
 }
 
-template<class T>
-T* UPtr<T>::operator->() const noexcept {
+template <class T>
+T *UPtr<T>::operator->() const noexcept {
     return instance_ptr_;
 }
 
@@ -99,6 +113,14 @@ T *UPtr<T>::Relese() noexcept {
     T *inst = instance_ptr_;
     instance_ptr_ = nullptr;
     return inst;
+}
+
+template <class T>
+void UPtr<T>::Reset() noexcept {
+    if (instance_ptr_ != nullptr) {
+        delete instance_ptr_;
+        instance_ptr_ = nullptr;
+    }
 }
 
 }  // namespace factory

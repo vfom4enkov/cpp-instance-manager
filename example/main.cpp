@@ -39,74 +39,9 @@ namespace cf = cpptoolkit::factory;
 
 namespace {
 
-template <class T>
-class UPtr {
- public:
-  UPtr(T* inst) noexcept : inst_(inst){};
-  ~UPtr() noexcept;
-  UPtr(UPtr<T>&& other) noexcept;
-
-  template <class N, class = typename std::enable_if<
-                         std::is_convertible<N*, T*>::value>::type>
-  UPtr(UPtr<N>&& other) noexcept {
-    inst_ = other.Relese();
-  };
-
-  template <class N, class = typename std::enable_if<std::is_convertible<N*, T*>::value>::type>
-  UPtr<T>& operator=(UPtr<N>&& other) noexcept {
-    inst_ = other.Relese();
-  };
-
-  UPtr<T>& operator=(UPtr<T>&& other) noexcept { inst_ = other.Relese(); }
-
-  // Ban copy and assign RAII operations
-  UPtr(const UPtr<T>& other) = delete;
-  UPtr<T>& operator=(const UPtr<T>& other) = delete;
-
-  T* Get() noexcept { return inst_; }
-
-  T* Relese() noexcept {
-    T* inst = inst_;
-    inst_ = nullptr;
-    return inst;
-  }
-
- private:
-  T* inst_;
-};
-
-template<class T>
-UPtr<T>::~UPtr() noexcept {
-  if (inst_ != nullptr) delete inst_;
-}
-
-template<class T>
-UPtr<T>::UPtr(UPtr<T>&& other) noexcept {
-  inst_ = other.Relese();
-}
-
-class A {};
-
-class B : public A {};
-
-class C {};
-
 }  // namespace
 
 int main() {
-  UPtr<B> b2(new B());
-  UPtr<A> a2(std::move(b2));
-
-  UPtr<B> b(new B());
-  UPtr<A> a = std::move(b);
-
-  std::cout << "All are OK!" << std::endl;
-  // error
-  //UPtr<C> c(new C());
-  //UPtr<A> a3(std::move(c));
-  //UPtr<A> a4 = std::move(c);
-  return 0;
-
   std::string error;
   auto core = example::RegisterObjects(error);
   if (!core) {
@@ -114,25 +49,25 @@ int main() {
     return -1;
   }
 
-  auto file_logger = core->GetShared<example::FileLogger>();
-  auto a_logger = core->GetShared<example::AbstractLogger>("DB_AND_FILE");
-  auto a_logger_2 = core->GetUnique<example::AbstractLogger>();
-  auto action = core->GetShared<example::Action>();
+  auto file_logger = core->Get<example::FileLogger>();
+  auto a_logger = core->Get<example::AbstractLogger>("DB_AND_FILE");
+  auto a_logger_2 = core->Get<example::AbstractLogger>();
+  auto action = core->Get<example::Action>();
 
-  if (!action) {
-    std::cout << "Error: " << core->LastError();
+  if (!action->IsValid()) {
+    std::cout << "Error: " << action->Error();
   }
 
   {
-    const auto action = core->GetShared<example::Action>();
-    action->Exec();
+    const auto action = core->Get<example::Action>();
+    action->GetInstance()->Exec();
   }
 
   std::cout << std::endl;
 
   {
-    const auto action = core->GetShared<example::Action>("LIGHT");
-    action->Exec();
+    const auto action = core->Get<example::Action>("LIGHT");
+    action->GetInstance()->Exec();
   }
 
   std::cout << "End program" << std::endl;

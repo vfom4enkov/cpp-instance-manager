@@ -68,7 +68,7 @@ class Builder {
       return std::unique_ptr<Core>(nullptr);
     }
 
-    std::unique_ptr<CoreExtension> uptr_core = MakeUnique<CoreExtension>();
+    std::unique_ptr<CoreExtension> uptr_core(new (std::nothrow) CoreExtension());
 
     CoreExtension* core = uptr_core.get();
     for (auto& item : items_) {
@@ -88,7 +88,7 @@ class Builder {
   const std::string& Error() noexcept { return error_; };
 
  private:
-  std::vector<std::unique_ptr<ABuildItem>> items_;
+  std::vector<UPtr<ABuildItem>> items_;
   std::string error_;
 };
 
@@ -97,9 +97,8 @@ class Builder {
 template <typename T>
 inline BuildItem<T>& Builder::Register(
     std::function<T*(Resolver&)>&& create) noexcept {
-  std::unique_ptr<BuildItem<T>> item =
-      MakeUnique<BuildItem<T>>(std::move(create));
-  BuildItem<T>* ptr = item.get();
+  UPtr<BuildItem<T>> item = MakeUPtr<BuildItem<T>>(std::move(create));
+  BuildItem<T>* ptr = item.Get();
   items_.push_back(std::move(item));
   return *ptr;
 }
