@@ -68,7 +68,8 @@ class Builder {
       return std::unique_ptr<Core>(nullptr);
     }
 
-    std::unique_ptr<CoreExtension> uptr_core(new (std::nothrow) CoreExtension());
+    std::unique_ptr<CoreExtension> uptr_core(new (std::nothrow)
+                                                 CoreExtension());
 
     CoreExtension* core = uptr_core.get();
     for (auto& item : items_) {

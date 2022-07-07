@@ -42,7 +42,9 @@ uintptr_t MockUnitSingleInstance::getMyPtr() {
 int32_t MockUnitSingleInstance::getConstructorCounter() {
   return constructor_counter_;
 }
-int32_t MockUnitSingleInstance::getDestructorCounter() { return destructor_counter_; }
+int32_t MockUnitSingleInstance::getDestructorCounter() {
+  return destructor_counter_;
+}
 
 void MockUnitSingleInstance::reset() {
   constructor_counter_ = 0;

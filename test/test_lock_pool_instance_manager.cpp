@@ -69,8 +69,7 @@ BOOST_FIXTURE_TEST_CASE(test_lock_pool_queue_work, Fixture) {
   uintptr_t ptr = 0;
   {
     {
-      UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 =
-          manager.Get();
+      UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
       ptr = ptr_holder_1->GetInstance()->getMyPtr();
       BOOST_CHECK_EQUAL(0, manager.queue_.size());
       // return MockUnitLevel_3 to the pool

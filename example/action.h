@@ -40,7 +40,7 @@ class Action {
   Action(AbstractLogger* logger) noexcept;
   void Exec() noexcept;
 
-private:
+ private:
   AbstractLogger* logger_;
 };
 }  // namespace example

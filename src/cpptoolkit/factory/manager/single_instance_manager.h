@@ -43,56 +43,56 @@ namespace factory {
 /// @tparam T Type of managed object
 template <typename T>
 class SingleInstanceManager : public BaseInstanceManager<T> {
-   public:
-    /// @brief Create SingleInstanceManager
-    /// @param [in] class_name_key - Unique key for current manager
-    /// @param [in] create - Function for create instance of managed object
-    /// @param [in] core - Pointer to the core_ with registered objects
-    SingleInstanceManager(std::string class_name_key,
-                          std::function<T*(Resolver&)>&& create,
-                          Core* core) noexcept
-        : BaseInstanceManager<T>(class_name_key, std::move(create), core),
-          context_(nullptr){};
+ public:
+  /// @brief Create SingleInstanceManager
+  /// @param [in] class_name_key - Unique key for current manager
+  /// @param [in] create - Function for create instance of managed object
+  /// @param [in] core - Pointer to the core_ with registered objects
+  SingleInstanceManager(std::string class_name_key,
+                        std::function<T*(Resolver&)>&& create,
+                        Core* core) noexcept
+      : BaseInstanceManager<T>(class_name_key, std::move(create), core),
+        context_(nullptr){};
 
-    virtual ~SingleInstanceManager() noexcept {};
+  virtual ~SingleInstanceManager() noexcept {};
 
-    UPtr<BaseContext<T>> Get() noexcept override;
+  UPtr<BaseContext<T>> Get() noexcept override;
 
-   private:
-    UPtr<Context<T>> context_;
-    std::mutex mutex_;
+ private:
+  UPtr<Context<T>> context_;
+  std::mutex mutex_;
 };
 
 // Implementation
 
 template <typename T>
 inline UPtr<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
-    if (context_.Get() != nullptr) {
-        UPtr<WeakContext<T>> weak_context =
-            MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
-        return weak_context;
-    }
+  if (context_.Get() != nullptr) {
+    UPtr<WeakContext<T>> weak_context =
+        MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
+    return weak_context;
+  }
 
-    std::unique_lock<std::mutex> locker(mutex_);
-    // check the context second time,
-    // for avoid the case when another thread, already created instance
-    // when current thread was locked
-    if (context_.Get() != nullptr) {
-        UPtr<WeakContext<T>> weak_context =
-            MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
-        return weak_context;
-    }
+  std::unique_lock<std::mutex> locker(mutex_);
+  // check the context second time,
+  // for avoid the case when another thread, already created instance
+  // when current thread was locked
+  if (context_.Get() != nullptr) {
+    UPtr<WeakContext<T>> weak_context =
+        MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
+    return weak_context;
+  }
 
-    UPtr<Context<T>> context = MakeUPtr<Context<T>>();
-    BaseInstanceManager<T>::Create(context.Get());
-    if (context->IsValid()) {
-        context_ = std::move(context);
-        UPtr<WeakContext<T>> weak_context =
-            MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
-        return weak_context;
-    } else {
-        return context;
-    }
+  UPtr<Context<T>> context = MakeUPtr<Context<T>>();
+  BaseInstanceManager<T>::Create(context.Get());
+  if (context->IsValid()) {
+    context_ = std::move(context);
+    UPtr<WeakContext<T>> weak_context =
+        MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
+    return weak_context;
+  } else {
+    return context;
+  }
 }
 
 }  // namespace factory

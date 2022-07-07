@@ -35,94 +35,94 @@ namespace factory {
 BOOST_AUTO_TEST_SUITE(TestUPtr)
 
 BOOST_FIXTURE_TEST_CASE(test_uptr_delete_instance, Fixture) {
-    // arrange
-    {
-        UPtr<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
-        BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
-        BOOST_CHECK_EQUAL(0, MockUnitLevel_3::getDestructorCounter());
-        // act: delete object at end of the block
-    }
-
-    // assert
+  // arrange
+  {
+    UPtr<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
     BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
-    BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
+    BOOST_CHECK_EQUAL(0, MockUnitLevel_3::getDestructorCounter());
+    // act: delete object at end of the block
+  }
+
+  // assert
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
 }
 
 BOOST_FIXTURE_TEST_CASE(test_uptr_move_ctor, Fixture) {
-    // arrange
-    UPtr<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
+  // arrange
+  UPtr<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
 
-    // act
-    UPtr<MockUnitLevel_3> uptr_2(std::move(uptr));
+  // act
+  UPtr<MockUnitLevel_3> uptr_2(std::move(uptr));
 
-    // assert
-    BOOST_CHECK_EQUAL(nullptr, uptr.Get());
-    BOOST_CHECK(uptr_2.Get() != nullptr);
+  // assert
+  BOOST_CHECK_EQUAL(nullptr, uptr.Get());
+  BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_uptr_move_assign, Fixture) {
-    // arrange
-    UPtr<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
+  // arrange
+  UPtr<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
 
-    // act
-    UPtr<MockUnitLevel_3> uptr_2(nullptr);
-    uptr_2 = std::move(uptr);
+  // act
+  UPtr<MockUnitLevel_3> uptr_2(nullptr);
+  uptr_2 = std::move(uptr);
 
-    // assert
-    BOOST_CHECK_EQUAL(nullptr, uptr.Get());
-    BOOST_CHECK(uptr_2.Get() != nullptr);
+  // assert
+  BOOST_CHECK_EQUAL(nullptr, uptr.Get());
+  BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_uptr_move_ctor_for_inherited_object, Fixture) {
-    // arrange
-    UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
+  // arrange
+  UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
 
-    // act
-    UPtr<MockUnitLevel_2> uptr_2(std::move(uptr));
+  // act
+  UPtr<MockUnitLevel_2> uptr_2(std::move(uptr));
 
-    // assert
-    BOOST_CHECK_EQUAL(nullptr, uptr.Get());
-    BOOST_CHECK(uptr_2.Get() != nullptr);
+  // assert
+  BOOST_CHECK_EQUAL(nullptr, uptr.Get());
+  BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_uptr_move_assign_for_inherited_object, Fixture) {
-    // arrange
-    UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
+  // arrange
+  UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
 
-    // act
-    UPtr<MockUnitLevel_2> uptr_2(nullptr);
-    uptr_2 = std::move(uptr);
+  // act
+  UPtr<MockUnitLevel_2> uptr_2(nullptr);
+  uptr_2 = std::move(uptr);
 
-    // assert
-    BOOST_CHECK_EQUAL(nullptr, uptr.Get());
-    BOOST_CHECK(uptr_2.Get() != nullptr);
+  // assert
+  BOOST_CHECK_EQUAL(nullptr, uptr.Get());
+  BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(test_uptr_move_to_vector, Fixture) {
-    // arrange
-    std::vector<UPtr<MockUnitLevel_2>> vector;
+  // arrange
+  std::vector<UPtr<MockUnitLevel_2>> vector;
 
-    // act
-    {
-        UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
-        vector.push_back(std::move(uptr));
-    }
+  // act
+  {
+    UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
+    vector.push_back(std::move(uptr));
+  }
 
-    // assert
-    BOOST_CHECK_EQUAL(1, MockUnitLevel_2::getConstructorCounter());
-    BOOST_CHECK_EQUAL(0, MockUnitLevel_2::getDestructorCounter());
-    BOOST_CHECK_EQUAL(1, vector.size());
+  // assert
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_2::getConstructorCounter());
+  BOOST_CHECK_EQUAL(0, MockUnitLevel_2::getDestructorCounter());
+  BOOST_CHECK_EQUAL(1, vector.size());
 }
 
 BOOST_FIXTURE_TEST_CASE(test_uptr_access_operator, Fixture) {
-    // arrange
-    UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
+  // arrange
+  UPtr<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
 
-    // act
-    uintptr_t ptr_value = uptr->getMyPtr();
+  // act
+  uintptr_t ptr_value = uptr->getMyPtr();
 
-    // assert
-    BOOST_CHECK(ptr_value != 0);
+  // assert
+  BOOST_CHECK(ptr_value != 0);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

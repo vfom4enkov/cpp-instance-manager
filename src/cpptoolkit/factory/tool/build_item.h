@@ -134,14 +134,14 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
     case InstanceCountOptionEnum::kMultiple: {
       UPtr<MultipleInstanceManager<T>> m_manager =
           MakeUPtr<MultipleInstanceManager<T>>(type_key, std::move(create_),
-                                                 core);
+                                               core);
       result = core->Add(std::move(m_manager));
       break;
     }
     case InstanceCountOptionEnum::kSingle: {
       UPtr<SingleInstanceManager<T>> s_manager =
           MakeUPtr<SingleInstanceManager<T>>(type_key, std::move(create_),
-                                               core);
+                                             core);
       result = core->Add(std::move(s_manager));
       break;
     }
@@ -151,8 +151,8 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         return false;
       }
       UPtr<SoftPoolInstanceManager<T>> p_manager =
-          MakeUPtr<SoftPoolInstanceManager<T>>(type_key, std::move(create_), core,
-                                             pool_size_);
+          MakeUPtr<SoftPoolInstanceManager<T>>(type_key, std::move(create_),
+                                               core, pool_size_);
       result = core->Add(std::move(p_manager));
       break;
     }
@@ -163,7 +163,7 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
       }
       UPtr<LockPoolInstanceManager<T>> lp_manager =
           MakeUPtr<LockPoolInstanceManager<T>>(type_key, std::move(create_),
-                                                 core, pool_size_);
+                                               core, pool_size_);
       result = core->Add(std::move(lp_manager));
       break;
     }

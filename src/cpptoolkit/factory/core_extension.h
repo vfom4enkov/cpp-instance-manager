@@ -41,6 +41,10 @@ class CoreExtension : public Core {
   CoreExtension() = default;
   virtual ~CoreExtension() = default;
 
+  /// @brief Get last error description
+  /// @return Last error
+  const std::string& LastError() noexcept { return error_; };
+
   /// @brief Add instance manager to Core, in fail case get error description
   /// call 'Error()'
   /// @param [in] manager - Instance manager
@@ -56,6 +60,9 @@ class CoreExtension : public Core {
     index_.emplace(type_key, std::move(mgr));
     return true;
   };
+
+ private:
+  std::string error_;
 };
 
 }  // namespace factory

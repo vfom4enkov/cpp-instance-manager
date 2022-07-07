@@ -37,10 +37,6 @@
 
 namespace cf = cpptoolkit::factory;
 
-namespace {
-
-}  // namespace
-
 int main() {
   std::string error;
   auto core = example::RegisterObjects(error);

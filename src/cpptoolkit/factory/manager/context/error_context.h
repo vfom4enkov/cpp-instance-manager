@@ -41,7 +41,8 @@ namespace factory {
 /// @tparam T - Type of managed object
 template <typename T>
 class ErrorContext : public BaseContext<T> {
- using BaseContext<T>::error_;
+  using BaseContext<T>::error_;
+
  public:
   /// @brief Create error context
   /// @param error - error description

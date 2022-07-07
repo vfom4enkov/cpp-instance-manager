@@ -45,9 +45,10 @@ class Core;
 /// @tparam T - Type of managed object
 template <typename T>
 class Context : public BaseContext<T>, public DependencyContainer {
- using BaseContext<T>::instance_ptr_;
- using BaseContext<T>::is_valid_;
- using BaseContext<T>::error_;
+  using BaseContext<T>::instance_ptr_;
+  using BaseContext<T>::is_valid_;
+  using BaseContext<T>::error_;
+
  public:
   /// @brief Create context
   Context() noexcept : BaseContext<T>(true){};

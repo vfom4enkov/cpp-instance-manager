@@ -37,38 +37,38 @@ namespace factory {
 
 template <class T>
 class UPtr {
-   public:
-    UPtr(T *inst) noexcept : instance_ptr_(inst){};
-    UPtr(UPtr<T> &&other) noexcept;
-    ~UPtr() noexcept;
+ public:
+  UPtr(T *inst) noexcept : instance_ptr_(inst){};
+  UPtr(UPtr<T> &&other) noexcept;
+  ~UPtr() noexcept;
 
-    template <class N, class = typename std::enable_if<
-                           std::is_convertible<N *, T *>::value>::type>
-    UPtr(UPtr<N> &&other) noexcept {
-        instance_ptr_ = other.Relese();
-    };
+  template <class N, class = typename std::enable_if<
+                         std::is_convertible<N *, T *>::value>::type>
+  UPtr(UPtr<N> &&other) noexcept {
+    instance_ptr_ = other.Relese();
+  };
 
-    template <class N, class = typename std::enable_if<
-                           std::is_convertible<N *, T *>::value>::type>
-    UPtr<T> &operator=(UPtr<N> &&other) noexcept {
-        instance_ptr_ = other.Relese();
-        return *this;
-    };
+  template <class N, class = typename std::enable_if<
+                         std::is_convertible<N *, T *>::value>::type>
+  UPtr<T> &operator=(UPtr<N> &&other) noexcept {
+    instance_ptr_ = other.Relese();
+    return *this;
+  };
 
-    UPtr<T> &operator=(UPtr<T> &&other) noexcept;
+  UPtr<T> &operator=(UPtr<T> &&other) noexcept;
 
-    // Ban copy and assign RAII operations
-    UPtr(const UPtr<T> &other) = delete;
-    UPtr<T> &operator=(const UPtr<T> &other) = delete;
+  // Ban copy and assign RAII operations
+  UPtr(const UPtr<T> &other) = delete;
+  UPtr<T> &operator=(const UPtr<T> &other) = delete;
 
-    T *operator->() const noexcept;
+  T *operator->() const noexcept;
 
-    T *Get() noexcept;
-    T *Relese() noexcept;
-    void Reset() noexcept;
+  T *Get() noexcept;
+  T *Relese() noexcept;
+  void Reset() noexcept;
 
-   private:
-    T *instance_ptr_;
+ private:
+  T *instance_ptr_;
 };
 
 /// @brief Create UPtr (RAII wrapper)
@@ -78,49 +78,49 @@ class UPtr {
 /// @return UPtr with instance
 template <typename T, typename... Args>
 inline UPtr<T> MakeUPtr(Args &&...args) noexcept {
-    UPtr<T> uptr(new T(std::forward<Args>(args)...));
-    return std::move(uptr);
+  UPtr<T> uptr(new T(std::forward<Args>(args)...));
+  return std::move(uptr);
 }
 
 template <class T>
 UPtr<T>::~UPtr() noexcept {
-    Reset();
+  Reset();
 }
 
 template <class T>
 UPtr<T>::UPtr(UPtr<T> &&other) noexcept {
-    instance_ptr_ = other.Relese();
+  instance_ptr_ = other.Relese();
 }
 
 template <class T>
 UPtr<T> &UPtr<T>::operator=(UPtr<T> &&other) noexcept {
-    instance_ptr_ = other.Relese();
-    return *this;
+  instance_ptr_ = other.Relese();
+  return *this;
 }
 
 template <class T>
 T *UPtr<T>::operator->() const noexcept {
-    return instance_ptr_;
+  return instance_ptr_;
 }
 
 template <class T>
 T *UPtr<T>::Get() noexcept {
-    return instance_ptr_;
+  return instance_ptr_;
 }
 
 template <class T>
 T *UPtr<T>::Relese() noexcept {
-    T *inst = instance_ptr_;
-    instance_ptr_ = nullptr;
-    return inst;
+  T *inst = instance_ptr_;
+  instance_ptr_ = nullptr;
+  return inst;
 }
 
 template <class T>
 void UPtr<T>::Reset() noexcept {
-    if (instance_ptr_ != nullptr) {
-        delete instance_ptr_;
-        instance_ptr_ = nullptr;
-    }
+  if (instance_ptr_ != nullptr) {
+    delete instance_ptr_;
+    instance_ptr_ = nullptr;
+  }
 }
 
 }  // namespace factory
