@@ -40,14 +40,14 @@ namespace cpptoolkit {
 namespace factory {
 
 /// @brief Instance manager for single object
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class SingleInstanceManager : public BaseInstanceManager<T> {
  public:
   /// @brief Create SingleInstanceManager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
   SingleInstanceManager(std::string class_name_key,
                         std::function<T*(Resolver&)>&& create,
                         Core* core) noexcept

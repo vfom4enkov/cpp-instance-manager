@@ -42,16 +42,16 @@ namespace cpptoolkit {
 namespace factory {
 
 /// Locks the thread until an instance was put back to the pool (if it is empty)
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class LockPoolInstanceManager : public BaseInstanceManager<T>,
                                 public AbstractPoolInstancePutback {
  public:
   /// @brief Create instance manager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
-  /// @param [in] pool_size - Size of pool object
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
+  /// @param pool_size [in] size of pool object
   LockPoolInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create, Core* core,
                           uint32_t pool_size) noexcept
@@ -69,8 +69,9 @@ class LockPoolInstanceManager : public BaseInstanceManager<T>,
   uint32_t waiter_counter_;  // size of waiting threads
 
   std::queue<uintptr_t> queue_;  // free objects in the pool
-  std::unordered_map<uintptr_t, UPtr<Context<T>>>
-      index_;  // all created objects in the pool
+
+  // all created objects in the pool
+  std::unordered_map<uintptr_t, UPtr<Context<T>>> index_;
 
   std::condition_variable queue_cv_;
   std::mutex mutex_;

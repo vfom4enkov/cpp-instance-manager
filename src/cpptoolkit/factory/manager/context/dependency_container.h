@@ -44,7 +44,7 @@ class DependencyContainer {
   virtual ~DependencyContainer() noexcept = default;
 
   /// @brief Add context of dependent object pointer
-  /// @param dependency - Context of dependent object
+  /// @param dependency context of dependent object
   virtual void Add(UPtr<AContext>&& dependency) noexcept = 0;
 };
 

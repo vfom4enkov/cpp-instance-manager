@@ -40,18 +40,18 @@
 namespace cpptoolkit {
 namespace factory {
 
-/// @brief If the pool is emty this manager creates new one, if the pool is full
+/// If the pool is emty this manager creates new one, if the pool is full
 /// the object will be destroyed
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class SoftPoolInstanceManager : public BaseInstanceManager<T>,
                                 public AbstractPoolInstancePutback {
  public:
   /// @brief Create instance manager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
-  /// @param [in] pool_size - Size of pool object
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
+  /// @param pool_size [in] size of pool object
   SoftPoolInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create, Core* core,
                           uint32_t pool_size) noexcept

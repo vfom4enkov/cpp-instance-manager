@@ -35,19 +35,35 @@
 namespace cpptoolkit {
 namespace factory {
 
+///@brief Contains pointer to object in heap, provides only move operations
+///@tparam T type of managed object
 template <class T>
 class UPtr {
  public:
+  ///@brief Construct a new UPtr object
+  ///@param inst [in] pointer to managed object
   UPtr(T *inst) noexcept : instance_ptr_(inst){};
+
+  ///@brief Construct a new UPtr object
+  ///@param other another instance of UPtr
   UPtr(UPtr<T> &&other) noexcept;
+
+  ///@brief Destroy the UPtr object and delete managed object (if it is not
+  /// nullptr)
   ~UPtr() noexcept;
 
+  ///@brief Construct a new UPtr object
+  ///@tparam N type of base object
+  ///@param other another instance of UPtr
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N *, T *>::value>::type>
   UPtr(UPtr<N> &&other) noexcept {
     instance_ptr_ = other.Relese();
   };
 
+  ///@brief Assign on move operation
+  ///@tparam N type of base object
+  ///@param other another instance of UPtr
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N *, T *>::value>::type>
   UPtr<T> &operator=(UPtr<N> &&other) noexcept {
@@ -55,16 +71,23 @@ class UPtr {
     return *this;
   };
 
-  UPtr<T> &operator=(UPtr<T> &&other) noexcept;
-
-  // Ban copy and assign RAII operations
+  // Block copy and assign RAII operations
   UPtr(const UPtr<T> &other) = delete;
   UPtr<T> &operator=(const UPtr<T> &other) = delete;
 
+  ///@brief Get access to public methods and fields of managed object
+  ///@return Pointer to managed object
   T *operator->() const noexcept;
 
+  ///@brief Get pointer to managed object
+  ///@return Pointer to managed object
   T *Get() noexcept;
+
+  ///@brief Reset pointer to managed object without deleting
+  ///@return Pointer to managed object
   T *Relese() noexcept;
+
+  ///@brief Delete managed object
   void Reset() noexcept;
 
  private:
@@ -90,12 +113,6 @@ UPtr<T>::~UPtr() noexcept {
 template <class T>
 UPtr<T>::UPtr(UPtr<T> &&other) noexcept {
   instance_ptr_ = other.Relese();
-}
-
-template <class T>
-UPtr<T> &UPtr<T>::operator=(UPtr<T> &&other) noexcept {
-  instance_ptr_ = other.Relese();
-  return *this;
 }
 
 template <class T>

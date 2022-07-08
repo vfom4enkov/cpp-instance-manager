@@ -42,7 +42,7 @@ namespace factory {
 class Core;
 
 /// @brief Contains pointer to managed object
-/// @tparam T - Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class Context : public BaseContext<T>, public DependencyContainer {
   using BaseContext<T>::instance_ptr_;

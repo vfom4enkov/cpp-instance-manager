@@ -51,14 +51,14 @@ class AInstanceManager {
 };
 
 /// @brief Base object for instance managers
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class BaseInstanceManager : public AInstanceManager {
  public:
   /// @brief Create BaseInstanceManager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
   BaseInstanceManager(const std::string class_name_key,
                       std::function<T*(Resolver&)>&& create,
                       Core* core) noexcept
@@ -106,7 +106,6 @@ inline void BaseInstanceManager<T>::Create(Context<T>* context) noexcept {
       return;
     }
   } catch (std::exception& ex) {
-    // TODO add this case to documentation
     // If the context contains other error, then do not save current
     // exception
     if (context->IsValid()) {
@@ -115,7 +114,6 @@ inline void BaseInstanceManager<T>::Create(Context<T>* context) noexcept {
       AddError(context, error);
     }
   } catch (...) {
-    // TODO (VFomchenkov) add this case to documentation
     // The same behaviour for current case
     if (context->IsValid()) {
       std::string error =

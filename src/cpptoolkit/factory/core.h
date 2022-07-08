@@ -47,9 +47,9 @@ class Core {
   virtual ~Core() = default;
 
   /// @brief Get context with managed object
-  /// @tparam T - Type of managed object
-  /// @param [in] key - Unique key for a given object type
-  /// @return unique_ptr with BaseContext and instance of managed object
+  /// @tparam T type of managed object
+  /// @param key [in] unique key for a given object type
+  /// @return unique_ptr with BaseContext instance of managed object
   template <typename T>
   UPtr<BaseContext<T>> Get(const std::string& key = DEFAULT_KEY) noexcept;
 
@@ -75,10 +75,10 @@ inline UPtr<BaseContext<T>> Core::Get(const std::string& key) noexcept {
 }
 
 /// @brief Function helper for access to Core (forward declaration)
-/// @tparam T - Type of managed object
-/// @param [in] core - Pointer to core
-/// @param [in] key - Unique key for a given object type
-/// @return unique_ptr with BaseContext and instance of managed object
+/// @tparam T type of managed object
+/// @param core [in] pointer to core
+/// @param key [in] unique key for a given object type
+/// @return unique_ptr with BaseContext instance of managed object
 template <typename T>
 inline UPtr<BaseContext<T>> GetContext(Core* core,
                                        const std::string& key) noexcept {

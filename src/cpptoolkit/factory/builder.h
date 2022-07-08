@@ -45,17 +45,17 @@ class Builder {
   Builder() noexcept = default;
   ~Builder() noexcept = default;
 
-  /// @brief Create fluent helper allows to set properties for the registered
+  /// Create fluent helper allows to set properties for the registered
   /// object
-  /// @tparam T - Type of managed object
-  /// @param [in] create - Function for create instance of managed object
+  /// @tparam T type of managed object
+  /// @param create [in] function for create instance of managed object
   /// @return Reference to helper
   template <typename T>
   BuildItem<T>& Register(std::function<T*(Resolver&)>&& create) noexcept;
 
-  /// @brief Create fluent helper allows to set properties for the registered
+  /// Create fluent helper allows to set properties for the registered
   /// object without dependencies
-  /// @tparam T - Type of managed object
+  /// @tparam T type of managed object
   /// @return Reference to helper
   template <typename T>
   BuildItem<T>& RegisterType() noexcept;

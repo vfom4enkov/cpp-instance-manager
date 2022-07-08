@@ -37,14 +37,14 @@ namespace factory {
 
 /// @brief Holds pointer to managed object but does not delete it at end of life
 /// time
-/// @tparam T - Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class WeakContext : public BaseContext<T> {
   using BaseContext<T>::instance_ptr_;
 
  public:
   /// @brief Create instance
-  /// @param context - Source context
+  /// @param context source context
   WeakContext(T* instance_ptr) noexcept;
 
   ~WeakContext() noexcept {};

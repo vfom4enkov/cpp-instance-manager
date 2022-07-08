@@ -45,9 +45,9 @@ class CoreExtension : public Core {
   /// @return Last error
   const std::string& LastError() noexcept { return error_; };
 
-  /// @brief Add instance manager to Core, in fail case get error description
-  /// call 'Error()'
-  /// @param [in] manager - Instance manager
+  /// Add instance manager to Core, in fail case get error description call
+  /// 'Error()'
+  /// @param manager [in] instance manager
   /// @return Operation result
   bool Add(UPtr<AInstanceManager>&& mgr) noexcept {
     const std::string& type_key = mgr->TypeKey();

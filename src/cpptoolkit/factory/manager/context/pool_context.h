@@ -41,20 +41,20 @@ class AbstractPoolInstancePutback {
   virtual ~AbstractPoolInstancePutback() noexcept = default;
 
   /// @brief Event notification, to put back object to the pool
-  /// @param key - Index key of managed object
+  /// @param key [in] index key of managed object
   virtual void Callback(uintptr_t key) noexcept = 0;
 };
 
 /// @brief Contains info about instance from the pool
-/// @tparam T - Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class PoolContext : public BaseContext<T> {
   using BaseContext<T>::instance_ptr_;
 
  public:
   /// @brief Create context
-  /// @param putback - Pointer to observer
-  /// @param context - Pointer to context (with object instance and validation
+  /// @param putback [in] pointer to observer
+  /// @param context [in] pointer to context (with object instance and validation
   /// state)
   PoolContext(AbstractPoolInstancePutback* putback, Context<T>* ctx,
               uintptr_t key) noexcept
