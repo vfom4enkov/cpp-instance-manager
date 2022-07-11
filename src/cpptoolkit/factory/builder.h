@@ -60,33 +60,20 @@ class Builder {
   template <typename T>
   BuildItem<T>& RegisterType() noexcept;
 
-  /// @brief Create Core, if Core is nullptr check 'Error()'
-  /// @return Core for produce objects
-  std::unique_ptr<Core> Build() noexcept {
-    if (items_.size() == 0) {
-      error_ = "There are no object for registration, list is empty";
-      return std::unique_ptr<Core>(nullptr);
-    }
+  /// @brief Create Core, if the Core is nullptr check 'Error()'
+  /// @return std::unique_ptr<Core> for produce objects
+  std::unique_ptr<Core> BuildUnique() noexcept;
 
-    std::unique_ptr<CoreExtension> uptr_core(new (std::nothrow)
-                                                 CoreExtension());
-
-    CoreExtension* core = uptr_core.get();
-    for (auto& item : items_) {
-      if (!item->Build(core)) {
-        error_ = item->Error();
-        return std::unique_ptr<Core>(nullptr);
-      }
-    }
-
-    items_.clear();
-
-    return std::move(uptr_core);
-  };
+  /// @brief Create Core, if the Core is nullptr check 'Error()'
+  /// @return std::shared_ptr<Core> for produce objects
+  std::shared_ptr<Core> BuildShared() noexcept;
 
   /// @brief Date about last error
   /// @return Error description
   const std::string& Error() noexcept { return error_; };
+
+ private:
+  bool Build(CoreExtension* core) noexcept;
 
  private:
   std::vector<UPtr<ABuildItem>> items_;
@@ -110,6 +97,43 @@ inline BuildItem<T>& Builder::RegisterType() noexcept {
     return Create<T>();
   };
   return Register(std::move(create));
+}
+
+inline bool Builder::Build(CoreExtension* core) noexcept {
+  if (items_.size() == 0) {
+    error_ = "There are no object for registration, list is empty";
+    return false;
+  }
+
+  for (auto& item : items_) {
+    if (!item->Build(core)) {
+      error_ = item->Error();
+      return false;
+    }
+  }
+
+  items_.clear();
+
+  return true;
+}
+
+inline std::unique_ptr<Core> Builder::BuildUnique() noexcept {
+  std::unique_ptr<CoreExtension> uptr_core(new (std::nothrow) CoreExtension());
+  if (Build(uptr_core.get())) {
+    return std::move(uptr_core);
+  }
+
+  std::unique_ptr<CoreExtension> empty(nullptr);
+  return std::move(empty);
+}
+
+inline std::shared_ptr<Core> Builder::BuildShared() noexcept {
+  std::shared_ptr<CoreExtension> sptr_core(new (std::nothrow) CoreExtension());
+  if (Build(sptr_core.get())) {
+    return sptr_core;
+  }
+
+  return std::shared_ptr<Core>(nullptr);
 }
 
 }  // namespace factory

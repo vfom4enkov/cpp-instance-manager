@@ -72,7 +72,7 @@ std::unique_ptr<cf::Core> RegisterObjects(std::string& error) {
       })
       .SetKey("LIGHT");
 
-  std::unique_ptr<cf::Core> core = builder.Build();
+  std::unique_ptr<cf::Core> core = builder.BuildUnique();
   if (!core) {
     error = builder.Error();
   }

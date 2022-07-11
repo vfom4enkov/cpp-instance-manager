@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE(test_builder_normal_case) {
   builder.RegisterType<MockUnitLevel_3>();
 
   // act
-  std::unique_ptr<Core> uptr = builder.Build();
+  std::unique_ptr<Core> uptr = builder.BuildUnique();
   Core* core = uptr.get();
 
   // assert
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(test_builder_clear_all_registered_objects_after_build) {
   builder.RegisterType<MockUnitLevel_3>();
 
   // act
-  builder.Build();
+  builder.BuildShared();
 
   // assert
   BOOST_CHECK_EQUAL(0, builder.items_.size());
@@ -64,12 +64,12 @@ BOOST_AUTO_TEST_CASE(test_builder_call_build_twice) {
   // arrange
   Builder builder;
   builder.RegisterType<MockUnitLevel_3>();
-  std::unique_ptr<Core> uptr_1 = builder.Build();
+  std::unique_ptr<Core> uptr_1 = builder.BuildUnique();
   Core* core = uptr_1.get();
   BOOST_CHECK(core);
 
   // act
-  std::unique_ptr<Core> uptr_2 = builder.Build();
+  std::unique_ptr<Core> uptr_2 = builder.BuildUnique();
   core = uptr_2.get();
 
   // assert
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(test_builder_error_transfer) {
   builder.RegisterType<MockUnitLevel_3>();  // register one type twice
 
   // act
-  std::unique_ptr<Core> uptr = builder.Build();
+  std::shared_ptr<Core> uptr = builder.BuildShared();
   Core* core = uptr.get();
 
   // assert
