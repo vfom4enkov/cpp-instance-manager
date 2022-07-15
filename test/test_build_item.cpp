@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_single_instance) {
   BOOST_CHECK(result);
   BOOST_CHECK_EQUAL(1, core.index_.size());
   for (auto& it : core.index_) {
-    UPtr<AInstanceManager>& u_ptr = it.second;
+    PtrHolder<AInstanceManager>& u_ptr = it.second;
     auto manager =
         dynamic_cast<SingleInstanceManager<MockUnitLevel_3>*>(u_ptr.Get());
     BOOST_CHECK(manager != nullptr);
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_multiple_instance) {
   BOOST_CHECK(result);
   BOOST_CHECK_EQUAL(1, core.index_.size());
   for (auto& it : core.index_) {
-    UPtr<AInstanceManager>& u_ptr = it.second;
+    PtrHolder<AInstanceManager>& u_ptr = it.second;
     auto manager =
         dynamic_cast<MultipleInstanceManager<MockUnitLevel_3>*>(u_ptr.Get());
     BOOST_CHECK(manager != nullptr);
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_lock_pool_instance) {
   BOOST_CHECK(result);
   BOOST_CHECK_EQUAL(1, core.index_.size());
   for (auto& it : core.index_) {
-    UPtr<AInstanceManager>& u_ptr = it.second;
+    PtrHolder<AInstanceManager>& u_ptr = it.second;
     auto manager =
         dynamic_cast<LockPoolInstanceManager<MockUnitLevel_3>*>(u_ptr.Get());
     BOOST_CHECK(manager != nullptr);
@@ -137,7 +137,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_pool_instance) {
   BOOST_CHECK(result);
   BOOST_CHECK_EQUAL(1, core.index_.size());
   for (auto& it : core.index_) {
-    UPtr<AInstanceManager>& u_ptr = it.second;
+    PtrHolder<AInstanceManager>& u_ptr = it.second;
     auto manager =
         dynamic_cast<SoftPoolInstanceManager<MockUnitLevel_3>*>(u_ptr.Get());
     BOOST_CHECK(manager != nullptr);

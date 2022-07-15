@@ -34,7 +34,7 @@
 
 #include "base_context.h"
 #include "dependency_container.h"
-#include "u_ptr.h"
+#include "ptr_holder.h"
 
 namespace cpptoolkit {
 namespace factory {
@@ -55,7 +55,7 @@ class Context : public BaseContext<T>, public DependencyContainer {
 
   ~Context() noexcept;
 
-  void Add(UPtr<AContext>&& dependency) noexcept override;
+  void Add(PtrHolder<AContext>&& dependency) noexcept override;
 
   // Ban RAII operations
   Context(const Context&) = delete;
@@ -64,7 +64,7 @@ class Context : public BaseContext<T>, public DependencyContainer {
   Context& operator=(const Context&) = delete;
 
  private:
-  std::vector<UPtr<AContext>> dependencies_;
+  std::vector<PtrHolder<AContext>> dependencies_;
 };
 
 // implementation
@@ -77,7 +77,7 @@ Context<T>::~Context() noexcept {
 }
 
 template <typename T>
-inline void Context<T>::Add(UPtr<AContext>&& dependency) noexcept {
+inline void Context<T>::Add(PtrHolder<AContext>&& dependency) noexcept {
   bool dependency_valid = dependency->IsValid();
   if (!dependency_valid) {
     is_valid_ = dependency_valid;

@@ -47,7 +47,7 @@ class CoreExtension;
 class Resolver;
 
 template <typename T, typename... Args>
-UPtr<T> MakeUPtr(Args&&... args) noexcept;
+PtrHolder<T> MakeUPtr(Args&&... args) noexcept;
 
 /// @brief Interface for collecting data for registration object in Core
 class ABuildItem {
@@ -132,14 +132,14 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
   bool result = true;
   switch (count_option_) {
     case InstanceCountOptionEnum::kMultiple: {
-      UPtr<MultipleInstanceManager<T>> m_manager =
+      PtrHolder<MultipleInstanceManager<T>> m_manager =
           MakeUPtr<MultipleInstanceManager<T>>(type_key, std::move(create_),
                                                core);
       result = core->Add(std::move(m_manager));
       break;
     }
     case InstanceCountOptionEnum::kSingle: {
-      UPtr<SingleInstanceManager<T>> s_manager =
+      PtrHolder<SingleInstanceManager<T>> s_manager =
           MakeUPtr<SingleInstanceManager<T>>(type_key, std::move(create_),
                                              core);
       result = core->Add(std::move(s_manager));
@@ -150,7 +150,7 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         error_ = type_name + ": pool size can not be 0";
         return false;
       }
-      UPtr<SoftPoolInstanceManager<T>> p_manager =
+      PtrHolder<SoftPoolInstanceManager<T>> p_manager =
           MakeUPtr<SoftPoolInstanceManager<T>>(type_key, std::move(create_),
                                                core, pool_size_);
       result = core->Add(std::move(p_manager));
@@ -161,7 +161,7 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         error_ = type_name + ": pool size can not be 0";
         return false;
       }
-      UPtr<LockPoolInstanceManager<T>> lp_manager =
+      PtrHolder<LockPoolInstanceManager<T>> lp_manager =
           MakeUPtr<LockPoolInstanceManager<T>>(type_key, std::move(create_),
                                                core, pool_size_);
       result = core->Add(std::move(lp_manager));

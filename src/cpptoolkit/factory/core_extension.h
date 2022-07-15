@@ -49,7 +49,7 @@ class CoreExtension : public Core {
   /// 'Error()'
   /// @param manager [in] instance manager
   /// @return Operation result
-  bool Add(UPtr<AInstanceManager>&& mgr) noexcept {
+  bool Add(PtrHolder<AInstanceManager>&& mgr) noexcept {
     const std::string& type_key = mgr->TypeKey();
 
     if (index_.count(type_key) == 1) {

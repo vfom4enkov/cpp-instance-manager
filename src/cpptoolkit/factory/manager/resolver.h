@@ -42,7 +42,7 @@ namespace factory {
 class Core;
 
 template <typename T>
-UPtr<BaseContext<T>> GetContext(Core* core, const std::string& key) noexcept;
+PtrHolder<BaseContext<T>> GetContext(Core* core, const std::string& key) noexcept;
 
 /// Provides access to registered in Core objects
 /// These objects will be used as dependencies
@@ -80,7 +80,7 @@ inline T* Resolver::Get(const std::string& key) noexcept {
     return nullptr;  // a dependency context already has error
   }
 
-  UPtr<BaseContext<T>> dependency = GetContext<T>(core_, key);
+  PtrHolder<BaseContext<T>> dependency = GetContext<T>(core_, key);
 
   // set error if the context is not valid
   is_valid_dependency_context_ = dependency->IsValid();

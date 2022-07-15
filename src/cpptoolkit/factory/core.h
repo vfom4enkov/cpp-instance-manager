@@ -51,21 +51,21 @@ class Core {
   /// @param key [in] unique key for a given object type
   /// @return unique_ptr with BaseContext instance of managed object
   template <typename T>
-  UPtr<BaseContext<T>> Get(const std::string& key = DEFAULT_KEY) noexcept;
+  PtrHolder<BaseContext<T>> Get(const std::string& key = DEFAULT_KEY) noexcept;
 
  protected:
-  std::unordered_map<std::string, UPtr<AInstanceManager>> index_;
+  std::unordered_map<std::string, PtrHolder<AInstanceManager>> index_;
 };
 
 // Implementation
 
 template <typename T>
-inline UPtr<BaseContext<T>> Core::Get(const std::string& key) noexcept {
+inline PtrHolder<BaseContext<T>> Core::Get(const std::string& key) noexcept {
   std::string type_key = TypeKey<T>(key);
   const auto it = index_.find(type_key);
   if (it == index_.end()) {
     std::string error = "Type: " + type_key + " is not registered";
-    UPtr<ErrorContext<T>> error_context = MakeUPtr<ErrorContext<T>>(error);
+    PtrHolder<ErrorContext<T>> error_context = MakeUPtr<ErrorContext<T>>(error);
     return error_context;
   }
 
@@ -80,7 +80,7 @@ inline UPtr<BaseContext<T>> Core::Get(const std::string& key) noexcept {
 /// @param key [in] unique key for a given object type
 /// @return unique_ptr with BaseContext instance of managed object
 template <typename T>
-inline UPtr<BaseContext<T>> GetContext(Core* core,
+inline PtrHolder<BaseContext<T>> GetContext(Core* core,
                                        const std::string& key) noexcept {
   return core->Get<T>(key);
 }

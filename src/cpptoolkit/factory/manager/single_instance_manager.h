@@ -56,19 +56,19 @@ class SingleInstanceManager : public BaseInstanceManager<T> {
 
   virtual ~SingleInstanceManager() noexcept {};
 
-  UPtr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
 
  private:
-  UPtr<Context<T>> context_;
+  PtrHolder<Context<T>> context_;
   std::mutex mutex_;
 };
 
 // Implementation
 
 template <typename T>
-inline UPtr<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
+inline PtrHolder<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
   if (context_.Get() != nullptr) {
-    UPtr<WeakContext<T>> weak_context =
+    PtrHolder<WeakContext<T>> weak_context =
         MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   }
@@ -78,16 +78,16 @@ inline UPtr<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
   // for avoid the case when another thread, already created instance
   // when current thread was locked
   if (context_.Get() != nullptr) {
-    UPtr<WeakContext<T>> weak_context =
+    PtrHolder<WeakContext<T>> weak_context =
         MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   }
 
-  UPtr<Context<T>> context = MakeUPtr<Context<T>>();
+  PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
   BaseInstanceManager<T>::Create(context.Get());
   if (context->IsValid()) {
     context_ = std::move(context);
-    UPtr<WeakContext<T>> weak_context =
+    PtrHolder<WeakContext<T>> weak_context =
         MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   } else {

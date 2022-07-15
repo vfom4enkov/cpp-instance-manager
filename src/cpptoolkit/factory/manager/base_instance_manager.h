@@ -68,7 +68,7 @@ class BaseInstanceManager : public AInstanceManager {
 
   /// @brief Create instance of managed object and save it to the context
   /// @return Context with instance of managed object
-  virtual UPtr<BaseContext<T>> Get() noexcept = 0;
+  virtual PtrHolder<BaseContext<T>> Get() noexcept = 0;
 
   const std::string& TypeKey() noexcept override;
 
@@ -126,7 +126,7 @@ inline void BaseInstanceManager<T>::Create(Context<T>* context) noexcept {
 template <typename T>
 inline void BaseInstanceManager<T>::AddError(Context<T>* context,
                                              std::string& error) noexcept {
-  UPtr<ErrorContext<T>> error_context = MakeUPtr<ErrorContext<T>>(error);
+  PtrHolder<ErrorContext<T>> error_context = MakeUPtr<ErrorContext<T>>(error);
   context->Add(std::move(error_context));
 }
 

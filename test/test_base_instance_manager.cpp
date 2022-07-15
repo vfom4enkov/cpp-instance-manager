@@ -41,12 +41,12 @@ class Mock : public BaseInstanceManager<T> {
        Core* core)
       : BaseInstanceManager<T>(class_name_key, std::move(create), core){};
 
-  UPtr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
 };
 
 template <typename T>
-UPtr<BaseContext<T>> Mock<T>::Get() noexcept {
-  UPtr<BaseContext<T>> item(new Context<T>());
+PtrHolder<BaseContext<T>> Mock<T>::Get() noexcept {
+  PtrHolder<BaseContext<T>> item(new Context<T>());
   return std::move(item);
 }
 }  // namespace

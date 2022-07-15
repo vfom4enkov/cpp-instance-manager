@@ -48,9 +48,9 @@ BOOST_FIXTURE_TEST_CASE(test_pool_normal_case, Fixture) {
 
   // act
   {
-    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
+    PtrHolder<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
     BOOST_CHECK_EQUAL(1, manager.index_.size());
-    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
+    PtrHolder<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
     BOOST_CHECK_EQUAL(2, manager.index_.size());
   }
 
@@ -65,7 +65,7 @@ BOOST_FIXTURE_TEST_CASE(test_pool_queue_work, Fixture) {
   // act
   uintptr_t ptr = 0;
   {
-    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
+    PtrHolder<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
     ptr = ptr_holder_1->GetInstance()->getMyPtr();
     BOOST_CHECK_EQUAL(0, manager.queue_.size());
   }
@@ -73,7 +73,7 @@ BOOST_FIXTURE_TEST_CASE(test_pool_queue_work, Fixture) {
 
   uintptr_t ptr_2 = 0;
   {
-    UPtr<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
+    PtrHolder<BaseContext<MockUnitLevel_3>> ptr_holder_1 = manager.Get();
     ptr_2 = ptr_holder_1->GetInstance()->getMyPtr();
     BOOST_CHECK_EQUAL(0, manager.queue_.size());
   }
@@ -95,7 +95,7 @@ BOOST_FIXTURE_TEST_CASE(test_pool_error_on_create, Fixture) {
       core_, pool_size);
 
   // act
-  UPtr<BaseContext<MockUnitLevel_3>> item = manager.Get();
+  PtrHolder<BaseContext<MockUnitLevel_3>> item = manager.Get();
 
   // assert
   BOOST_CHECK(!item->IsValid());

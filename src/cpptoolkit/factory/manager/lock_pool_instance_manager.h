@@ -61,7 +61,7 @@ class LockPoolInstanceManager : public BaseInstanceManager<T>,
 
   virtual ~LockPoolInstanceManager() noexcept = default;
 
-  UPtr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
   void Callback(uintptr_t key) noexcept override;
 
  private:
@@ -71,19 +71,19 @@ class LockPoolInstanceManager : public BaseInstanceManager<T>,
   std::queue<uintptr_t> queue_;  // free objects in the pool
 
   // all created objects in the pool
-  std::unordered_map<uintptr_t, UPtr<Context<T>>> index_;
+  std::unordered_map<uintptr_t, PtrHolder<Context<T>>> index_;
 
   std::condition_variable queue_cv_;
   std::mutex mutex_;
 };
 
 template <typename T>
-inline UPtr<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
+inline PtrHolder<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
   std::unique_lock<std::mutex> locker(mutex_);
 
   if (countdown_ > 0 && queue_.empty()) {
     // create object for the pool
-    UPtr<Context<T>> context = MakeUPtr<Context<T>>();
+    PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
     BaseInstanceManager<T>::Create(context.Get());
 
     if (!context->IsValid()) {
@@ -91,7 +91,7 @@ inline UPtr<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
     }
 
     uintptr_t context_key = reinterpret_cast<uintptr_t>(context.Get());
-    UPtr<PoolContext<T>> pool_ctx =
+    PtrHolder<PoolContext<T>> pool_ctx =
         MakeUPtr<PoolContext<T>>(this, context.Get(), context_key);
     index_.emplace(context_key, std::move(context));
     --countdown_;
@@ -108,8 +108,8 @@ inline UPtr<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
   uintptr_t key = queue_.front();
   queue_.pop();
   const auto it = index_.find(key);
-  UPtr<Context<T>>& context = it->second;
-  UPtr<PoolContext<T>> pool_context =
+  PtrHolder<Context<T>>& context = it->second;
+  PtrHolder<PoolContext<T>> pool_context =
       MakeUPtr<PoolContext<T>>(this, context.Get(), key);
   return pool_context;
 }

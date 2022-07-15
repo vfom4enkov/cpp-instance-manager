@@ -60,33 +60,33 @@ class SoftPoolInstanceManager : public BaseInstanceManager<T>,
 
   virtual ~SoftPoolInstanceManager() noexcept = default;
 
-  UPtr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
   void Callback(uintptr_t key) noexcept override;
 
  private:
   uint32_t size_;
   std::queue<uintptr_t> queue_;
-  std::unordered_map<uintptr_t, UPtr<Context<T>>> index_;
+  std::unordered_map<uintptr_t, PtrHolder<Context<T>>> index_;
 
   // thread section
   std::mutex mutex_;
 };
 
 template <typename T>
-inline UPtr<BaseContext<T>> SoftPoolInstanceManager<T>::Get() noexcept {
+inline PtrHolder<BaseContext<T>> SoftPoolInstanceManager<T>::Get() noexcept {
   std::unique_lock<std::mutex> locker(mutex_);
 
   if (!queue_.empty()) {  // Get istance from pool
     uintptr_t key = queue_.front();
     const auto it = index_.find(key);
-    UPtr<PoolContext<T>> ctx =
+    PtrHolder<PoolContext<T>> ctx =
         MakeUPtr<PoolContext<T>>(this, it->second.Get(), key);
     queue_.pop();
     return ctx;
   }
 
   // Create new instance
-  UPtr<Context<T>> context = MakeUPtr<Context<T>>();
+  PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
   BaseInstanceManager<T>::Create(context.Get());
 
   if (!context->IsValid()) {
@@ -95,7 +95,7 @@ inline UPtr<BaseContext<T>> SoftPoolInstanceManager<T>::Get() noexcept {
 
   Context<T>* context_ptr = context.Get();
   uintptr_t key = reinterpret_cast<uintptr_t>(context_ptr);
-  UPtr<PoolContext<T>> ctx = MakeUPtr<PoolContext<T>>(this, context_ptr, key);
+  PtrHolder<PoolContext<T>> ctx = MakeUPtr<PoolContext<T>>(this, context_ptr, key);
   index_.emplace(key, std::move(context));
   return ctx;
 }

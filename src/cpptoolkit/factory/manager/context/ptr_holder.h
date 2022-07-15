@@ -38,42 +38,42 @@ namespace factory {
 /// @brief Contains pointer to object in heap, provides only move operations
 /// @tparam T type of managed object
 template <class T>
-class UPtr {
+class PtrHolder {
  public:
-  /// @brief Construct a new UPtr object
+  /// @brief Construct a new PtrHolder object
   /// @param inst [in] pointer to managed object
-  UPtr(T *inst) noexcept : instance_ptr_(inst){};
+  PtrHolder(T *inst) noexcept : instance_ptr_(inst){};
 
-  /// @brief Construct a new UPtr object
-  /// @param other another instance of UPtr
-  UPtr(UPtr<T> &&other) noexcept;
+  /// @brief Construct a new PtrHolder object
+  /// @param other another instance of PtrHolder
+  PtrHolder(PtrHolder<T> &&other) noexcept;
 
-  /// @brief Destroy the UPtr object and delete managed object (if it is not
+  /// @brief Destroy the PtrHolder object and delete managed object (if it is not
   /// nullptr)
-  ~UPtr() noexcept;
+  ~PtrHolder() noexcept;
 
-  /// @brief Construct a new UPtr object
+  /// @brief Construct a new PtrHolder object
   /// @tparam N type of base object
-  /// @param other another instance of UPtr
+  /// @param other another instance of PtrHolder
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N *, T *>::value>::type>
-  UPtr(UPtr<N> &&other) noexcept {
+  PtrHolder(PtrHolder<N> &&other) noexcept {
     instance_ptr_ = other.Relese();
   };
 
   /// @brief Assign on move operation
   /// @tparam N type of base object
-  /// @param other another instance of UPtr
+  /// @param other another instance of PtrHolder
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N *, T *>::value>::type>
-  UPtr<T> &operator=(UPtr<N> &&other) noexcept {
+  PtrHolder<T> &operator=(PtrHolder<N> &&other) noexcept {
     instance_ptr_ = other.Relese();
     return *this;
   };
 
   // Block copy and assign RAII operations
-  UPtr(const UPtr<T> &other) = delete;
-  UPtr<T> &operator=(const UPtr<T> &other) = delete;
+  PtrHolder(const PtrHolder<T> &other) = delete;
+  PtrHolder<T> &operator=(const PtrHolder<T> &other) = delete;
 
   /// @brief Get access to public methods and fields of managed object
   /// @return Pointer to managed object
@@ -94,46 +94,46 @@ class UPtr {
   T *instance_ptr_;
 };
 
-/// @brief Create UPtr (RAII wrapper)
+/// @brief Create PtrHolder (RAII wrapper)
 /// @tparam T - The type of object to create
 /// @tparam ...Args - types of arguments for T
 /// @param [in] ...args - arguments for T constructor
-/// @return UPtr with instance
+/// @return PtrHolder with instance
 template <typename T, typename... Args>
-inline UPtr<T> MakeUPtr(Args &&...args) noexcept {
-  UPtr<T> uptr(new T(std::forward<Args>(args)...));
+inline PtrHolder<T> MakeUPtr(Args &&...args) noexcept {
+  PtrHolder<T> uptr(new T(std::forward<Args>(args)...));
   return std::move(uptr);
 }
 
 template <class T>
-UPtr<T>::~UPtr() noexcept {
+PtrHolder<T>::~PtrHolder() noexcept {
   Reset();
 }
 
 template <class T>
-UPtr<T>::UPtr(UPtr<T> &&other) noexcept {
+PtrHolder<T>::PtrHolder(PtrHolder<T> &&other) noexcept {
   instance_ptr_ = other.Relese();
 }
 
 template <class T>
-T *UPtr<T>::operator->() const noexcept {
+T *PtrHolder<T>::operator->() const noexcept {
   return instance_ptr_;
 }
 
 template <class T>
-T *UPtr<T>::Get() noexcept {
+T *PtrHolder<T>::Get() noexcept {
   return instance_ptr_;
 }
 
 template <class T>
-T *UPtr<T>::Relese() noexcept {
+T *PtrHolder<T>::Relese() noexcept {
   T *inst = instance_ptr_;
   instance_ptr_ = nullptr;
   return inst;
 }
 
 template <class T>
-void UPtr<T>::Reset() noexcept {
+void PtrHolder<T>::Reset() noexcept {
   if (instance_ptr_ != nullptr) {
     delete instance_ptr_;
     instance_ptr_ = nullptr;

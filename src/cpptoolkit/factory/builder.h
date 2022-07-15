@@ -76,7 +76,7 @@ class Builder {
   bool Build(CoreExtension* core) noexcept;
 
  private:
-  std::vector<UPtr<ABuildItem>> items_;
+  std::vector<PtrHolder<ABuildItem>> items_;
   std::string error_;
 };
 
@@ -85,7 +85,7 @@ class Builder {
 template <typename T>
 inline BuildItem<T>& Builder::Register(
     std::function<T*(Resolver&)>&& create) noexcept {
-  UPtr<BuildItem<T>> item = MakeUPtr<BuildItem<T>>(std::move(create));
+  PtrHolder<BuildItem<T>> item = MakeUPtr<BuildItem<T>>(std::move(create));
   BuildItem<T>* ptr = item.Get();
   items_.push_back(std::move(item));
   return *ptr;

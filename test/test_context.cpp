@@ -86,7 +86,7 @@ BOOST_FIXTURE_TEST_CASE(test_context_add_dependency_normal_case, Fixture) {
   // act
   Context<MockUnitLevel_2_B>* a_context = new Context<MockUnitLevel_2_B>();
   a_context->SetInstance(new MockUnitLevel_2_B());
-  UPtr<AContext> a_context_ptr(a_context);
+  PtrHolder<AContext> a_context_ptr(a_context);
   context.Add(std::move(a_context_ptr));
 
   // assert
@@ -96,7 +96,7 @@ BOOST_FIXTURE_TEST_CASE(test_context_add_dependency_normal_case, Fixture) {
 BOOST_FIXTURE_TEST_CASE(test_context_check_error_transfer, Fixture) {
   // arrange
   std::string error = "error";
-  UPtr<ErrorContext<MockUnitLevel_3>> invalid_ctx =
+  PtrHolder<ErrorContext<MockUnitLevel_3>> invalid_ctx =
       MakeUPtr<ErrorContext<MockUnitLevel_3>>(error);
   Context<MockUnitLevel_2_B> valid_ctx;
   valid_ctx.SetInstance(new MockUnitLevel_2_B());
@@ -125,19 +125,19 @@ BOOST_FIXTURE_TEST_CASE(test_context_check_clearing_all_dependencies, Fixture) {
 
     Context<MockUnitLevel_3>* context_3 = new Context<MockUnitLevel_3>();
     context_3->SetInstance(unit_3);
-    UPtr<AContext> context_3_ptr(context_3);
+    PtrHolder<AContext> context_3_ptr(context_3);
 
     Context<MockUnitLevel_2>* context_2_b = new Context<MockUnitLevel_2>();
     context_2_b->SetInstance(unit_2_b);
-    UPtr<AContext> context_2_b_ptr(context_2_b);
+    PtrHolder<AContext> context_2_b_ptr(context_2_b);
 
     Context<MockUnitLevel_2>* context_2_a = new Context<MockUnitLevel_2>();
     context_2_a->SetInstance(unit_2_a);
-    UPtr<AContext> context_2_a_ptr(context_2_a);
+    PtrHolder<AContext> context_2_a_ptr(context_2_a);
 
     Context<MockUnitLevel_1>* context_1 = new Context<MockUnitLevel_1>();
     context_1->SetInstance(unit_1);
-    UPtr<Context<MockUnitLevel_1>> context_1_ptr(context_1);
+    PtrHolder<Context<MockUnitLevel_1>> context_1_ptr(context_1);
 
     // act
     context_2_a->Add(std::move(context_3_ptr));
@@ -161,7 +161,7 @@ BOOST_FIXTURE_TEST_CASE(test_weak_context_create_and_delete, Fixture) {
 
   // act
   {
-    UPtr<WeakContext<MockUnitLevel_3>> weak_context_ptr_h =
+    PtrHolder<WeakContext<MockUnitLevel_3>> weak_context_ptr_h =
         MakeUPtr<WeakContext<MockUnitLevel_3>>(
             context_ptr_h.get()->GetInstance());
     BOOST_CHECK(weak_context_ptr_h->IsValid());

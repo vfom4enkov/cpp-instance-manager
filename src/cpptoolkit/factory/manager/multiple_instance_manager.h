@@ -51,14 +51,14 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
 
   virtual ~MultipleInstanceManager() noexcept {};
 
-  UPtr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
 };
 
 // Implementation
 
 template <typename T>
-inline UPtr<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
-  UPtr<Context<T>> context = MakeUPtr<Context<T>>();
+inline PtrHolder<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
+  PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
   BaseInstanceManager<T>::Create(context.Get());
   return context;
 }
