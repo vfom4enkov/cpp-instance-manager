@@ -80,13 +80,13 @@ inline PtrHolder<BaseContext<T>> SoftPoolInstanceManager<T>::Get() noexcept {
     uintptr_t key = queue_.front();
     const auto it = index_.find(key);
     PtrHolder<PoolContext<T>> ctx =
-        MakeUPtr<PoolContext<T>>(this, it->second.Get(), key);
+        MakePtrHolder<PoolContext<T>>(this, it->second.Get(), key);
     queue_.pop();
     return ctx;
   }
 
   // Create new instance
-  PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
+  PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
   BaseInstanceManager<T>::Create(context.Get());
 
   if (!context->IsValid()) {
@@ -95,7 +95,7 @@ inline PtrHolder<BaseContext<T>> SoftPoolInstanceManager<T>::Get() noexcept {
 
   Context<T>* context_ptr = context.Get();
   uintptr_t key = reinterpret_cast<uintptr_t>(context_ptr);
-  PtrHolder<PoolContext<T>> ctx = MakeUPtr<PoolContext<T>>(this, context_ptr, key);
+  PtrHolder<PoolContext<T>> ctx = MakePtrHolder<PoolContext<T>>(this, context_ptr, key);
   index_.emplace(key, std::move(context));
   return ctx;
 }

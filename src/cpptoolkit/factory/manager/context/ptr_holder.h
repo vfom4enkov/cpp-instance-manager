@@ -100,7 +100,7 @@ class PtrHolder {
 /// @param [in] ...args - arguments for T constructor
 /// @return PtrHolder with instance
 template <typename T, typename... Args>
-inline PtrHolder<T> MakeUPtr(Args &&...args) noexcept {
+inline PtrHolder<T> MakePtrHolder(Args &&...args) noexcept {
   PtrHolder<T> uptr(new T(std::forward<Args>(args)...));
   return std::move(uptr);
 }

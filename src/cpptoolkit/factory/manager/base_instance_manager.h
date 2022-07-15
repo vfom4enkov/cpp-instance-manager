@@ -126,7 +126,7 @@ inline void BaseInstanceManager<T>::Create(Context<T>* context) noexcept {
 template <typename T>
 inline void BaseInstanceManager<T>::AddError(Context<T>* context,
                                              std::string& error) noexcept {
-  PtrHolder<ErrorContext<T>> error_context = MakeUPtr<ErrorContext<T>>(error);
+  PtrHolder<ErrorContext<T>> error_context = MakePtrHolder<ErrorContext<T>>(error);
   context->Add(std::move(error_context));
 }
 

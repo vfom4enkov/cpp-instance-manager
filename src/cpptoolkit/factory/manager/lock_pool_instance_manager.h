@@ -83,7 +83,7 @@ inline PtrHolder<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
 
   if (countdown_ > 0 && queue_.empty()) {
     // create object for the pool
-    PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
+    PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
     BaseInstanceManager<T>::Create(context.Get());
 
     if (!context->IsValid()) {
@@ -92,7 +92,7 @@ inline PtrHolder<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
 
     uintptr_t context_key = reinterpret_cast<uintptr_t>(context.Get());
     PtrHolder<PoolContext<T>> pool_ctx =
-        MakeUPtr<PoolContext<T>>(this, context.Get(), context_key);
+        MakePtrHolder<PoolContext<T>>(this, context.Get(), context_key);
     index_.emplace(context_key, std::move(context));
     --countdown_;
     return pool_ctx;
@@ -110,7 +110,7 @@ inline PtrHolder<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
   const auto it = index_.find(key);
   PtrHolder<Context<T>>& context = it->second;
   PtrHolder<PoolContext<T>> pool_context =
-      MakeUPtr<PoolContext<T>>(this, context.Get(), key);
+      MakePtrHolder<PoolContext<T>>(this, context.Get(), key);
   return pool_context;
 }
 

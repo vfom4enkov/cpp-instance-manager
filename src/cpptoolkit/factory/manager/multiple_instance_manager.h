@@ -58,7 +58,7 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
 
 template <typename T>
 inline PtrHolder<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
-  PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
+  PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
   BaseInstanceManager<T>::Create(context.Get());
   return context;
 }

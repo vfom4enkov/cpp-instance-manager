@@ -38,7 +38,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_normal_case, Fixture) {
   // arrange
   CoreExtension core;
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager =
-      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
+      MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -56,7 +56,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_twice, Fixture) {
   // arrange
   CoreExtension core;
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager =
-      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
+      MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -64,7 +64,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_twice, Fixture) {
           &core);
 
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
-      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
+      MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -97,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_check_add_manager_to_manager_index, Fixture) {
   CoreExtension core;
   BOOST_CHECK_EQUAL(0, core.index_.size());
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager =
-      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
+      MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -119,7 +119,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_try_to_register_type_twice, Fixture) {
   std::string error;
   CoreExtension core;
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager_1 =
-      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
+      MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
@@ -132,7 +132,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_try_to_register_type_twice, Fixture) {
 
   // act
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
-      MakeUPtr<MultipleInstanceManager<MockUnitLevel_3>>(
+      MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
           [](Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();

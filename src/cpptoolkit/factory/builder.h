@@ -85,7 +85,7 @@ class Builder {
 template <typename T>
 inline BuildItem<T>& Builder::Register(
     std::function<T*(Resolver&)>&& create) noexcept {
-  PtrHolder<BuildItem<T>> item = MakeUPtr<BuildItem<T>>(std::move(create));
+  PtrHolder<BuildItem<T>> item = MakePtrHolder<BuildItem<T>>(std::move(create));
   BuildItem<T>* ptr = item.Get();
   items_.push_back(std::move(item));
   return *ptr;

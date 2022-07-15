@@ -69,7 +69,7 @@ template <typename T>
 inline PtrHolder<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
   if (context_.Get() != nullptr) {
     PtrHolder<WeakContext<T>> weak_context =
-        MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
+        MakePtrHolder<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   }
 
@@ -79,16 +79,16 @@ inline PtrHolder<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
   // when current thread was locked
   if (context_.Get() != nullptr) {
     PtrHolder<WeakContext<T>> weak_context =
-        MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
+        MakePtrHolder<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   }
 
-  PtrHolder<Context<T>> context = MakeUPtr<Context<T>>();
+  PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
   BaseInstanceManager<T>::Create(context.Get());
   if (context->IsValid()) {
     context_ = std::move(context);
     PtrHolder<WeakContext<T>> weak_context =
-        MakeUPtr<WeakContext<T>>(context_.Get()->GetInstance());
+        MakePtrHolder<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   } else {
     return context;

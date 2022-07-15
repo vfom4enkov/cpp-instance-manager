@@ -47,7 +47,7 @@ class CoreExtension;
 class Resolver;
 
 template <typename T, typename... Args>
-PtrHolder<T> MakeUPtr(Args&&... args) noexcept;
+PtrHolder<T> MakePtrHolder(Args&&... args) noexcept;
 
 /// @brief Interface for collecting data for registration object in Core
 class ABuildItem {
@@ -133,14 +133,14 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
   switch (count_option_) {
     case InstanceCountOptionEnum::kMultiple: {
       PtrHolder<MultipleInstanceManager<T>> m_manager =
-          MakeUPtr<MultipleInstanceManager<T>>(type_key, std::move(create_),
+          MakePtrHolder<MultipleInstanceManager<T>>(type_key, std::move(create_),
                                                core);
       result = core->Add(std::move(m_manager));
       break;
     }
     case InstanceCountOptionEnum::kSingle: {
       PtrHolder<SingleInstanceManager<T>> s_manager =
-          MakeUPtr<SingleInstanceManager<T>>(type_key, std::move(create_),
+          MakePtrHolder<SingleInstanceManager<T>>(type_key, std::move(create_),
                                              core);
       result = core->Add(std::move(s_manager));
       break;
@@ -151,7 +151,7 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         return false;
       }
       PtrHolder<SoftPoolInstanceManager<T>> p_manager =
-          MakeUPtr<SoftPoolInstanceManager<T>>(type_key, std::move(create_),
+          MakePtrHolder<SoftPoolInstanceManager<T>>(type_key, std::move(create_),
                                                core, pool_size_);
       result = core->Add(std::move(p_manager));
       break;
@@ -162,7 +162,7 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         return false;
       }
       PtrHolder<LockPoolInstanceManager<T>> lp_manager =
-          MakeUPtr<LockPoolInstanceManager<T>>(type_key, std::move(create_),
+          MakePtrHolder<LockPoolInstanceManager<T>>(type_key, std::move(create_),
                                                core, pool_size_);
       result = core->Add(std::move(lp_manager));
       break;

@@ -97,7 +97,7 @@ BOOST_FIXTURE_TEST_CASE(test_context_check_error_transfer, Fixture) {
   // arrange
   std::string error = "error";
   PtrHolder<ErrorContext<MockUnitLevel_3>> invalid_ctx =
-      MakeUPtr<ErrorContext<MockUnitLevel_3>>(error);
+      MakePtrHolder<ErrorContext<MockUnitLevel_3>>(error);
   Context<MockUnitLevel_2_B> valid_ctx;
   valid_ctx.SetInstance(new MockUnitLevel_2_B());
   BOOST_CHECK(valid_ctx.IsValid());
@@ -162,7 +162,7 @@ BOOST_FIXTURE_TEST_CASE(test_weak_context_create_and_delete, Fixture) {
   // act
   {
     PtrHolder<WeakContext<MockUnitLevel_3>> weak_context_ptr_h =
-        MakeUPtr<WeakContext<MockUnitLevel_3>>(
+        MakePtrHolder<WeakContext<MockUnitLevel_3>>(
             context_ptr_h.get()->GetInstance());
     BOOST_CHECK(weak_context_ptr_h->IsValid());
     BOOST_CHECK(weak_context_ptr_h->Error().empty());

@@ -65,7 +65,7 @@ inline PtrHolder<BaseContext<T>> Core::Get(const std::string& key) noexcept {
   const auto it = index_.find(type_key);
   if (it == index_.end()) {
     std::string error = "Type: " + type_key + " is not registered";
-    PtrHolder<ErrorContext<T>> error_context = MakeUPtr<ErrorContext<T>>(error);
+    PtrHolder<ErrorContext<T>> error_context = MakePtrHolder<ErrorContext<T>>(error);
     return error_context;
   }
 
