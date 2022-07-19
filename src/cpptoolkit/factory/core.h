@@ -51,7 +51,7 @@ class Core {
   /// @param key [in] unique key for a given object type
   /// @return unique_ptr with BaseContext instance of managed object
   template <typename T>
-  PtrHolder<BaseContext<T>> Get(const std::string& key = DEFAULT_KEY) noexcept;
+  PtrHolder<BaseContext<T>> GetContext(const std::string& key = DEFAULT_KEY) noexcept;
 
  protected:
   std::unordered_map<std::string, PtrHolder<AInstanceManager>> index_;
@@ -60,7 +60,7 @@ class Core {
 // Implementation
 
 template <typename T>
-inline PtrHolder<BaseContext<T>> Core::Get(const std::string& key) noexcept {
+inline PtrHolder<BaseContext<T>> Core::GetContext(const std::string& key) noexcept {
   std::string type_key = TypeKey<T>(key);
   const auto it = index_.find(type_key);
   if (it == index_.end()) {
@@ -82,7 +82,7 @@ inline PtrHolder<BaseContext<T>> Core::Get(const std::string& key) noexcept {
 template <typename T>
 inline PtrHolder<BaseContext<T>> GetContext(Core* core,
                                        const std::string& key) noexcept {
-  return core->Get<T>(key);
+  return core->GetContext<T>(key);
 }
 
 }  // namespace factory

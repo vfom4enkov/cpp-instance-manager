@@ -35,7 +35,7 @@
 namespace cpptoolkit {
 namespace factory {
 
-/// @brief Holds pointer to managed object
+/// @brief Holds pointer to managed object or error description in fail case
 /// @tparam T type of managed object
 template <typename T>
 class BaseContext : public AContext {

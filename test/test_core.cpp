@@ -84,7 +84,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_twice, Fixture) {
 BOOST_FIXTURE_TEST_CASE(test_core_get_instance_normal_case, Fixture) {
   // arrange and act
   PtrHolder<BaseContext<MockUnitLevel_1>> ptr_holder =
-      core_->Get<MockUnitLevel_1>();
+      core_->GetContext<MockUnitLevel_1>();
 
   // assert
   BOOST_CHECK(ptr_holder->IsValid());
@@ -150,7 +150,7 @@ BOOST_FIXTURE_TEST_CASE(test_cleanup_all_dependency_objects_on_main_instance_des
                         Fixture) {
   // arrange and act
   PtrHolder<BaseContext<MockUnitLevel_1>> ptr_holder =
-      core_->Get<MockUnitLevel_1>();
+      core_->GetContext<MockUnitLevel_1>();
   BOOST_CHECK(ptr_holder->IsValid());
   BOOST_CHECK(ptr_holder->GetInstance() != nullptr);
   ptr_holder.Reset();
@@ -168,7 +168,7 @@ BOOST_FIXTURE_TEST_CASE(
     test_core_get_instance_if_instance_manager_not_registered, Fixture) {
   // arrange and act
   PtrHolder<BaseContext<MockUnitNotRegistered>> ptr_holder =
-      core_->Get<MockUnitNotRegistered>();
+      core_->GetContext<MockUnitNotRegistered>();
 
   // assert
   BOOST_CHECK(!ptr_holder->IsValid());
@@ -180,7 +180,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_get_instance_if_instance_manager_return_error,
                         Fixture) {
   // arrange and act
   PtrHolder<BaseContext<MockUnitThrowExceptionOncreate>> ptr_holder =
-      core_->Get<MockUnitThrowExceptionOncreate>();
+      core_->GetContext<MockUnitThrowExceptionOncreate>();
 
   // assert
   BOOST_CHECK(!ptr_holder->IsValid());
@@ -191,13 +191,13 @@ BOOST_FIXTURE_TEST_CASE(test_core_get_instance_if_instance_manager_return_error,
 BOOST_FIXTURE_TEST_CASE(test_core_get_single_instance_twice, Fixture) {
   // arrange
   PtrHolder<BaseContext<MockUnitSingleInstance>> ptr_holder =
-      core_->Get<MockUnitSingleInstance>();
+      core_->GetContext<MockUnitSingleInstance>();
   BOOST_CHECK_EQUAL(1, MockUnitSingleInstance::getConstructorCounter());
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
 
   // act
   PtrHolder<BaseContext<MockUnitSingleInstance>> ptr_holder_2 =
-      core_->Get<MockUnitSingleInstance>();
+      core_->GetContext<MockUnitSingleInstance>();
   BOOST_CHECK_EQUAL(1, MockUnitSingleInstance::getConstructorCounter());
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
 

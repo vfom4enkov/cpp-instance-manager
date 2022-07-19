@@ -45,24 +45,24 @@ int main() {
     return -1;
   }
 
-  auto file_logger = core->Get<example::FileLogger>();
-  auto a_logger = core->Get<example::AbstractLogger>("DB_AND_FILE");
-  auto a_logger_2 = core->Get<example::AbstractLogger>();
-  auto action = core->Get<example::Action>();
+  auto file_logger = core->GetContext<example::FileLogger>();
+  auto a_logger = core->GetContext<example::AbstractLogger>("DB_AND_FILE");
+  auto a_logger_2 = core->GetContext<example::AbstractLogger>();
+  auto action = core->GetContext<example::Action>();
 
   if (!action->IsValid()) {
     std::cout << "Error: " << action->Error();
   }
 
   {
-    const auto action = core->Get<example::Action>();
+    const auto action = core->GetContext<example::Action>();
     action->GetInstance()->Exec();
   }
 
   std::cout << std::endl;
 
   {
-    const auto action = core->Get<example::Action>("LIGHT");
+    const auto action = core->GetContext<example::Action>("LIGHT");
     action->GetInstance()->Exec();
   }
 
