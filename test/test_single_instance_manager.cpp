@@ -34,9 +34,6 @@ namespace factory {
 
 BOOST_AUTO_TEST_SUITE(TestSingleInstanceManager)
 
-template <typename T>
-using UPtrBContext = std::unique_ptr<BaseContext<T>>;
-
 #define SINGLE_INSTANCE_MANAGEG_MACRO              \
   SingleInstanceManager<MockUnitLevel_3> manager(  \
       "MockUnitLevel_3",                           \

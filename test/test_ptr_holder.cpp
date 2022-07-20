@@ -32,9 +32,9 @@
 namespace cpptoolkit {
 namespace factory {
 
-BOOST_AUTO_TEST_SUITE(TestUPtr)
+BOOST_AUTO_TEST_SUITE(TestPtrHolder)
 
-BOOST_FIXTURE_TEST_CASE(test_uptr_delete_instance, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_delete_instance, Fixture) {
   // arrange
   {
     PtrHolder<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
@@ -48,7 +48,7 @@ BOOST_FIXTURE_TEST_CASE(test_uptr_delete_instance, Fixture) {
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_uptr_move_ctor, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_move_ctor, Fixture) {
   // arrange
   PtrHolder<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
 
@@ -60,7 +60,7 @@ BOOST_FIXTURE_TEST_CASE(test_uptr_move_ctor, Fixture) {
   BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_uptr_move_assign, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_move_assign, Fixture) {
   // arrange
   PtrHolder<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
 
@@ -73,7 +73,8 @@ BOOST_FIXTURE_TEST_CASE(test_uptr_move_assign, Fixture) {
   BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_uptr_move_ctor_for_inherited_object, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_move_ctor_for_inherited_object,
+                        Fixture) {
   // arrange
   PtrHolder<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
 
@@ -85,7 +86,8 @@ BOOST_FIXTURE_TEST_CASE(test_uptr_move_ctor_for_inherited_object, Fixture) {
   BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_uptr_move_assign_for_inherited_object, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_move_assign_for_inherited_object,
+                        Fixture) {
   // arrange
   PtrHolder<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
 
@@ -98,7 +100,7 @@ BOOST_FIXTURE_TEST_CASE(test_uptr_move_assign_for_inherited_object, Fixture) {
   BOOST_CHECK(uptr_2.Get() != nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(test_uptr_move_to_vector, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_move_to_vector, Fixture) {
   // arrange
   std::vector<PtrHolder<MockUnitLevel_2>> vector;
 
@@ -114,7 +116,7 @@ BOOST_FIXTURE_TEST_CASE(test_uptr_move_to_vector, Fixture) {
   BOOST_CHECK_EQUAL(1, vector.size());
 }
 
-BOOST_FIXTURE_TEST_CASE(test_uptr_access_operator, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_access_operator, Fixture) {
   // arrange
   PtrHolder<MockUnitLevel_2_B> uptr(new (std::nothrow) MockUnitLevel_2_B());
 

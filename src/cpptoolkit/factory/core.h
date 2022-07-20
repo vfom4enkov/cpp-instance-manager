@@ -36,6 +36,7 @@
 
 #include "manager/base_instance_manager.h"
 #include "tool/common.h"
+#include "u_ptr.h"
 
 namespace cpptoolkit {
 namespace factory {
@@ -51,7 +52,14 @@ class Core {
   /// @param key [in] unique key for a given object type
   /// @return unique_ptr with BaseContext instance of managed object
   template <typename T>
-  PtrHolder<BaseContext<T>> GetContext(const std::string& key = DEFAULT_KEY) noexcept;
+  PtrHolder<BaseContext<T>> GetContext(const std::string& key) noexcept;
+
+  /// @brief Get instance of BL object in RAII wrapper
+  /// @tparam T type of managed object
+  /// @param key [in] unique key for a given object type
+  /// @return Instance of BL object in UPtr wrapper
+  template <typename T>
+  UPtr<T> Get(const std::string& key = DEFAULT_KEY) noexcept;
 
  protected:
   std::unordered_map<std::string, PtrHolder<AInstanceManager>> index_;
@@ -60,18 +68,27 @@ class Core {
 // Implementation
 
 template <typename T>
-inline PtrHolder<BaseContext<T>> Core::GetContext(const std::string& key) noexcept {
+inline PtrHolder<BaseContext<T>> Core::GetContext(
+    const std::string& key) noexcept {
   std::string type_key = TypeKey<T>(key);
   const auto it = index_.find(type_key);
   if (it == index_.end()) {
     std::string error = "Type: " + type_key + " is not registered";
-    PtrHolder<ErrorContext<T>> error_context = MakePtrHolder<ErrorContext<T>>(error);
+    PtrHolder<ErrorContext<T>> error_context =
+        MakePtrHolder<ErrorContext<T>>(error);
     return error_context;
   }
 
   BaseInstanceManager<T>* instance_manager =
       reinterpret_cast<BaseInstanceManager<T>*>(it->second.Get());
   return instance_manager->Get();
+}
+
+template <typename T>
+UPtr<T> Core::Get(const std::string& key) noexcept {
+  PtrHolder<BaseContext<T>> ptr_holder = GetContext<T>(key);
+  UPtr<T> uptr(std::move(ptr_holder));
+  return std::move(uptr);
 }
 
 /// @brief Function helper for access to Core (forward declaration)
@@ -81,7 +98,7 @@ inline PtrHolder<BaseContext<T>> Core::GetContext(const std::string& key) noexce
 /// @return unique_ptr with BaseContext instance of managed object
 template <typename T>
 inline PtrHolder<BaseContext<T>> GetContext(Core* core,
-                                       const std::string& key) noexcept {
+                                            const std::string& key) noexcept {
   return core->GetContext<T>(key);
 }
 

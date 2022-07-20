@@ -27,8 +27,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef CPP_TOOL_KIT_FACTORY_U_PTR_H_
-#define CPP_TOOL_KIT_FACTORY_U_PTR_H_
+#ifndef CPP_TOOL_KIT_FACTORY_PTR_HOLDER_H_
+#define CPP_TOOL_KIT_FACTORY_PTR_HOLDER_H_
 
 #include <memory>
 
@@ -48,12 +48,12 @@ class PtrHolder {
   /// @param other another instance of PtrHolder
   PtrHolder(PtrHolder<T> &&other) noexcept;
 
-  /// @brief Destroy the PtrHolder object and delete managed object (if it is not
-  /// nullptr)
+  /// @brief Destroy the PtrHolder object and delete managed object (if it is
+  /// not nullptr)
   ~PtrHolder() noexcept;
 
   /// @brief Construct a new PtrHolder object
-  /// @tparam N type of base object
+  /// @tparam N type of inherited object
   /// @param other another instance of PtrHolder
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N *, T *>::value>::type>
@@ -62,7 +62,7 @@ class PtrHolder {
   };
 
   /// @brief Assign on move operation
-  /// @tparam N type of base object
+  /// @tparam N type of inherided object
   /// @param other another instance of PtrHolder
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N *, T *>::value>::type>
@@ -143,4 +143,4 @@ void PtrHolder<T>::Reset() noexcept {
 }  // namespace factory
 }  // namespace cpptoolkit
 
-#endif  // CPP_TOOL_KIT_FACTORY_CONTEXT_H_
+#endif  // CPP_TOOL_KIT_FACTORY_PTR_HOLDER_H_
