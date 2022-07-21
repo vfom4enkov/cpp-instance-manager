@@ -52,12 +52,10 @@ int main() {
 
   if (!action.IsValid()) {
     std::cout << "Error: " << action.Error();
+    return 1;
   }
 
-  {
-    const auto action = core->Get<example::Action>();
-    action->Exec();
-  }
+  action->Exec();
 
   std::cout << std::endl;
 
