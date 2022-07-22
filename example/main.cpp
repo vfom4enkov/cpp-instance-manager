@@ -55,13 +55,13 @@ int main() {
     return 1;
   }
 
-  action->Exec();
+  action->ExecMyFunction();
 
   std::cout << std::endl;
 
   {
     const auto action = core->Get<example::Action>("LIGHT");
-    action->Exec();
+    action->ExecMyFunction();
   }
 
   std::cout << "End program" << std::endl;

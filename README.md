@@ -1,4 +1,4 @@
-# CppToolKit-Factory
+# C++ Factory
 Header based tool provides control of lifetime for C++ business logic objects.
 
 How to use?
@@ -10,7 +10,7 @@ Download (or clone) the tool and add the path to `src` to the system `PATH`. Or 
 include_directories({pat_to_cpptoolkit-factory}/src)
 ```
 
-## Step 2 - Register BL objects
+## Step 2 - Register business logic objects
 
 ```cpp
 #include <cpptoolkit/factory/builder.h>
@@ -79,9 +79,9 @@ There are four types available:
 
 Examples:
 
-2. registration of lock pool for 10 instances
-3. registration of multiple instance by default (or add `.AsMultipleInstance()` on type registration)
-4. registration of single instance
+- **(2)** registration of lock pool for 10 instances
+- **(3)** registration of multiple instance (default mode)
+- **(4)** registration of single instance
 
 ### Keys
 
@@ -99,13 +99,13 @@ How to get instance of object with specific key check the [Using of factory](#us
   auto action = core->Get<example::Action>();
   if (!action.IsValid()) {
     std::cout << "Error: " << action.Error();
-    return 1;
+    return 1; // or throw std::runtime_error("...")
   }
 
-  action->Exec();
+  action->ExecMyFunction();
 ```
 
-Create object with the key
+Example of creating the object with the key
 ```cpp
   auto a_logger = core->GetShared<example::AbstractLogger>("DB_AND_FILE");
 ```

@@ -38,7 +38,7 @@ namespace example {
 class Action {
  public:
   Action(AbstractLogger* logger) noexcept;
-  void Exec() noexcept;
+  void ExecMyFunction() noexcept;
 
  private:
   AbstractLogger* logger_;
