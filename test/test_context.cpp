@@ -31,6 +31,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 namespace {
 
@@ -190,5 +191,6 @@ BOOST_FIXTURE_TEST_CASE(test_pool_context_call_putback, Fixture) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

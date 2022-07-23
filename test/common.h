@@ -38,6 +38,8 @@
 
 #include <cpptoolkit/factory/core.h>
 
+namespace cf = cpptoolkit::factory;
+
 #include "mock/fixture.h"
 
 #endif  // CPP_TOOL_KIT_FACTORY_TEST_COMMON_H_

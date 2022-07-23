@@ -34,6 +34,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 // First implementation of Middle class
 class MockUnitLevel_1 {
@@ -57,6 +58,7 @@ class MockUnitLevel_1 {
   MockUnitLevel_2* unit_2_;
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

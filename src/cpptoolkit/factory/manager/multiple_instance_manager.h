@@ -45,9 +45,10 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
   /// @param class_name_key [in] unique key for current manager
   /// @param create [in] function for create instance of managed object
   /// @param core [in] pointer to the core_ with registered objects
-  MultipleInstanceManager(std::string class_name_key,
-                          std::function<T*(Resolver&)>&& create,
-                          Core* core) noexcept
+  MultipleInstanceManager(
+      std::string class_name_key,
+      std::function<T*(cpptoolkit::factory::Resolver&)>&& create,
+      cpptoolkit::factory::Core* core) noexcept
       : BaseInstanceManager<T>(class_name_key, std::move(create), core){};
 
   virtual ~MultipleInstanceManager() noexcept {};

@@ -60,9 +60,10 @@ class BaseInstanceManager : public AInstanceManager {
   /// @param class_name_key [in] unique key for current manager
   /// @param create [in] function for create instance of managed object
   /// @param core [in] pointer to the core_ with registered objects
-  BaseInstanceManager(const std::string class_name_key,
-                      std::function<T*(Resolver&)>&& create,
-                      Core* core) noexcept
+  BaseInstanceManager(
+      const std::string class_name_key,
+      std::function<T*(cpptoolkit::factory::Resolver&)>&& create,
+      cpptoolkit::factory::Core* core) noexcept
       : class_name_key_(class_name_key),
         create_(std::move(create)),
         core_(core){};
@@ -80,8 +81,8 @@ class BaseInstanceManager : public AInstanceManager {
   inline void AddError(Context<T>* context, std::string& error) noexcept;
 
  protected:
-  std::function<T*(Resolver&)> create_;
-  Core* core_;
+  std::function<T*(cpptoolkit::factory::Resolver&)> create_;
+  cpptoolkit::factory::Core* core_;
   std::string class_name_key_;
 };
 
@@ -127,7 +128,8 @@ inline void BaseInstanceManager<T>::Create(Context<T>* context) noexcept {
 template <typename T>
 inline void BaseInstanceManager<T>::AddError(Context<T>* context,
                                              std::string& error) noexcept {
-  PtrHolder<ErrorContext<T>> error_context = MakePtrHolder<ErrorContext<T>>(error);
+  PtrHolder<ErrorContext<T>> error_context =
+      MakePtrHolder<ErrorContext<T>>(error);
   context->Add(std::move(error_context));
 }
 

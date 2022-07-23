@@ -53,9 +53,10 @@ class LockPoolInstanceManager : public BaseInstanceManager<T>,
   /// @param create [in] function for create instance of managed object
   /// @param core [in] pointer to the core_ with registered objects
   /// @param pool_size [in] size of pool object
-  LockPoolInstanceManager(std::string class_name_key,
-                          std::function<T*(Resolver&)>&& create, Core* core,
-                          uint32_t pool_size) noexcept
+  LockPoolInstanceManager(
+      std::string class_name_key,
+      std::function<T*(cpptoolkit::factory::Resolver&)>&& create,
+      cpptoolkit::factory::Core* core, uint32_t pool_size) noexcept
       : BaseInstanceManager<T>(class_name_key, std::move(create), core),
         countdown_(pool_size),
         waiter_counter_(0){};

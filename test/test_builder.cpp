@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_SUITE(TestBuilder)
 BOOST_AUTO_TEST_CASE(test_builder_normal_case) {
   // arrange
   Builder builder;
-  builder.RegisterType<MockUnitLevel_3>();
+  builder.RegisterType<engine::MockUnitLevel_3>();
 
   // act
   std::unique_ptr<Core> uptr = builder.BuildUnique();
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(test_builder_normal_case) {
 BOOST_AUTO_TEST_CASE(test_builder_clear_all_registered_objects_after_build) {
   // arrange
   Builder builder;
-  builder.RegisterType<MockUnitLevel_3>();
+  builder.RegisterType<engine::MockUnitLevel_3>();
 
   // act
   builder.BuildShared();
@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE(test_builder_clear_all_registered_objects_after_build) {
 BOOST_AUTO_TEST_CASE(test_builder_call_build_twice) {
   // arrange
   Builder builder;
-  builder.RegisterType<MockUnitLevel_3>();
+  builder.RegisterType<engine::MockUnitLevel_3>();
   std::unique_ptr<Core> uptr_1 = builder.BuildUnique();
   Core* core = uptr_1.get();
   BOOST_CHECK(core);
@@ -80,8 +80,8 @@ BOOST_AUTO_TEST_CASE(test_builder_call_build_twice) {
 BOOST_AUTO_TEST_CASE(test_builder_error_transfer) {
   // arrange
   Builder builder;
-  builder.RegisterType<MockUnitLevel_3>();
-  builder.RegisterType<MockUnitLevel_3>();  // register one type twice
+  builder.RegisterType<engine::MockUnitLevel_3>();
+  builder.RegisterType<engine::MockUnitLevel_3>();  // register one type twice
 
   // act
   std::shared_ptr<Core> uptr = builder.BuildShared();

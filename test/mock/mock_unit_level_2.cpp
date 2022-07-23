@@ -31,6 +31,8 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
+
 int32_t MockUnitLevel_2::constructor_counter_ = 0;
 int32_t MockUnitLevel_2::destructor_counter_ = 0;
 
@@ -52,5 +54,7 @@ uintptr_t MockUnitLevel_2_A::getMyPtr() {
 uintptr_t MockUnitLevel_2_B::getMyPtr() {
   return reinterpret_cast<uintptr_t>(this);
 }
+
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

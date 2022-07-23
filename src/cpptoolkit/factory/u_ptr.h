@@ -43,7 +43,7 @@ class UPtr {
  public:
   /// @brief Construct a new UPtr object
   /// @param ptrHolder PtrHolder with Context of managed object
-  UPtr(PtrHolder<BaseContext<T>>&& ptrHolder) noexcept
+  UPtr(engine::PtrHolder<engine::BaseContext<T>>&& ptrHolder) noexcept
       : instance_(ptrHolder.Get()->GetInstance()),
         context_(std::move(ptrHolder)){};
 
@@ -91,7 +91,7 @@ class UPtr {
 
  private:
   T* instance_;
-  PtrHolder<AContext> context_;
+  engine::PtrHolder<engine::AContext> context_;
 };
 
 // Implementation

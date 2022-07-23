@@ -53,9 +53,10 @@ class SoftPoolInstanceManager : public BaseInstanceManager<T>,
   /// @param create [in] function for create instance of managed object
   /// @param core [in] pointer to the core_ with registered objects
   /// @param pool_size [in] size of pool object
-  SoftPoolInstanceManager(std::string class_name_key,
-                          std::function<T*(Resolver&)>&& create, Core* core,
-                          uint32_t pool_size) noexcept
+  SoftPoolInstanceManager(
+      std::string class_name_key,
+      std::function<T*(cpptoolkit::factory::Resolver&)>&& create,
+      cpptoolkit::factory::Core* core, uint32_t pool_size) noexcept
       : BaseInstanceManager<T>(class_name_key, std::move(create), core),
         size_(pool_size){};
 
@@ -96,7 +97,8 @@ inline PtrHolder<BaseContext<T>> SoftPoolInstanceManager<T>::Get() noexcept {
 
   Context<T>* context_ptr = context.Get();
   uintptr_t key = reinterpret_cast<uintptr_t>(context_ptr);
-  PtrHolder<PoolContext<T>> ctx = MakePtrHolder<PoolContext<T>>(this, context_ptr, key);
+  PtrHolder<PoolContext<T>> ctx =
+      MakePtrHolder<PoolContext<T>>(this, context_ptr, key);
   index_.emplace(key, std::move(context));
   return ctx;
 }

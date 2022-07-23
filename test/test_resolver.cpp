@@ -31,13 +31,14 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 BOOST_AUTO_TEST_SUITE(TestResolver)
 
 BOOST_FIXTURE_TEST_CASE(test_resolver_normal_case, Fixture) {
   // arrange
   Context<MockUnitLevel_3> base_context;
-  Resolver dh(core_, &base_context);
+  cf::Resolver dh(core_, &base_context);
 
   // act
   MockUnitLevel_3* item = dh.Get<MockUnitLevel_3>();
@@ -50,7 +51,7 @@ BOOST_FIXTURE_TEST_CASE(test_resolver_normal_case, Fixture) {
 BOOST_FIXTURE_TEST_CASE(resolver_factory_returns_error, Fixture) {
   // arrange
   Context<MockUnitLevel_3> context;
-  Resolver helper(core_, &context);
+  cf::Resolver helper(core_, &context);
 
   // act
   BOOST_CHECK(context.Error().empty());
@@ -65,5 +66,6 @@ BOOST_FIXTURE_TEST_CASE(resolver_factory_returns_error, Fixture) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

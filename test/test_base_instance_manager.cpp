@@ -31,14 +31,15 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 namespace {
 // Special object for testing BaseInstanceManager
 template <typename T>
 class Mock : public BaseInstanceManager<T> {
  public:
-  Mock(const std::string class_name_key, std::function<T*(Resolver&)>&& create,
-       Core* core)
+  Mock(const std::string class_name_key,
+       std::function<T*(cf::Resolver&)>&& create, cf::Core* core)
       : BaseInstanceManager<T>(class_name_key, std::move(create), core){};
 
   PtrHolder<BaseContext<T>> Get() noexcept override;
@@ -55,10 +56,10 @@ BOOST_AUTO_TEST_SUITE(TestBaseInstanceManager)
 
 BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_normal_case, Fixture) {
   // arrange
-  Core core;
+  cpptoolkit::factory::Core core;
   Mock<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         return new MockUnitLevel_3();
       },
       core_);
@@ -76,10 +77,10 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_normal_case, Fixture) {
 BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_dependency_helper_has_error,
                         Fixture) {
   // arrange
-  Core core;
+  cpptoolkit::factory::Core core;
   Mock<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         MockUnitNotRegistered* item = resolver.Get<MockUnitNotRegistered>();
         return new MockUnitLevel_3();
       },
@@ -98,10 +99,10 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_dependency_helper_has_error,
 BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_returns_null,
                         Fixture) {
   // arrange
-  Core core;
+  cpptoolkit::factory::Core core;
   Mock<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* { return nullptr; }, &core);
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* { return nullptr; }, &core);
   Context<MockUnitLevel_3> context;
 
   // act
@@ -118,7 +119,7 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_throws_exception,
   // arrange
   Mock<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         throw std::runtime_error("empty_exception");
         return new MockUnitLevel_3();
       },
@@ -139,7 +140,7 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_throws_something,
   // arrange
   Mock<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         throw "string_message";
         return new MockUnitLevel_3();
       },
@@ -157,5 +158,6 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_throws_something,
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
