@@ -34,6 +34,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Instance manager for multiple objects
 /// @tparam T type of managed object
@@ -63,6 +64,7 @@ inline PtrHolder<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
   return context;
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

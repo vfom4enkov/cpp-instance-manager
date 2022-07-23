@@ -39,6 +39,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// If the pool is emty this manager creates new one, if the pool is full
 /// the object will be destroyed
@@ -111,6 +112,7 @@ inline void SoftPoolInstanceManager<T>::Callback(uintptr_t key) noexcept {
   index_.erase(key);
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

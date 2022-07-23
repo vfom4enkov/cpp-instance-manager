@@ -40,6 +40,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// Locks the thread until an instance was put back to the pool (if it is empty)
 /// @tparam T type of managed object
@@ -123,6 +124,7 @@ inline void LockPoolInstanceManager<T>::Callback(uintptr_t key) noexcept {
   }
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

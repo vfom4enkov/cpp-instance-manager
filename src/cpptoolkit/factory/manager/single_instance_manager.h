@@ -38,6 +38,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Instance manager for single object
 /// @tparam T type of managed object
@@ -95,6 +96,7 @@ inline PtrHolder<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
   }
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

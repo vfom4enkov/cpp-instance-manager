@@ -34,9 +34,10 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Extends Core class provides registration of instance manager in Core
-class CoreExtension : public Core {
+class CoreExtension : public cpptoolkit::factory::Core {
  public:
   CoreExtension() = default;
   virtual ~CoreExtension() = default;
@@ -65,6 +66,7 @@ class CoreExtension : public Core {
   std::string error_;
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

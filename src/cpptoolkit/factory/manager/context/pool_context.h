@@ -34,6 +34,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Observer for return object back to the pool
 class AbstractPoolInstancePutback {
@@ -82,6 +83,7 @@ PoolContext<T>::~PoolContext() noexcept {
   putback_->Callback(key_);
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

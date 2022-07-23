@@ -42,7 +42,8 @@ namespace factory {
 class Core;
 
 template <typename T>
-PtrHolder<BaseContext<T>> GetContext(Core* core, const std::string& key) noexcept;
+engine::PtrHolder<engine::BaseContext<T>> GetContext(
+    Core* core, const std::string& key) noexcept;
 
 /// Provides access to registered in Core objects
 /// These objects will be used as dependencies
@@ -54,7 +55,7 @@ class Resolver {
   /// @brief Create instance of the helper
   /// @param core [in] pointer to the core_ with registered objects
   /// @param d_container [in] collector for save dependencies
-  Resolver(Core* core, DependencyContainer* d_container) noexcept
+  Resolver(Core* core, engine::DependencyContainer* d_container) noexcept
       : core_(core),
         d_container_(d_container),
         is_valid_dependency_context_(true){};
@@ -64,11 +65,11 @@ class Resolver {
   /// @param key [in] the key for access
   /// @return Pointer to dependency object or 'nullptr' in error case
   template <typename T>
-  T* Get(const std::string& key = DEFAULT_KEY) noexcept;
+  T* Get(const std::string& key = engine::DEFAULT_KEY) noexcept;
 
  private:
   Core* core_;
-  DependencyContainer* d_container_;
+  engine::DependencyContainer* d_container_;
   bool is_valid_dependency_context_;
 };
 
@@ -80,7 +81,7 @@ inline T* Resolver::Get(const std::string& key) noexcept {
     return nullptr;  // a dependency context already has error
   }
 
-  PtrHolder<BaseContext<T>> dependency = GetContext<T>(core_, key);
+  engine::PtrHolder<engine::BaseContext<T>> dependency = GetContext<T>(core_, key);
 
   // set error if the context is not valid
   is_valid_dependency_context_ = dependency->IsValid();

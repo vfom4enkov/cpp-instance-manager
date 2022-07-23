@@ -34,6 +34,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Key for objects without key
 static const std::string DEFAULT_KEY = "default";
@@ -52,6 +53,7 @@ class AContext {
   virtual std::string Error() noexcept = 0;
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

@@ -37,6 +37,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Contains base information about dependency
 class DependencyContainer {
@@ -48,6 +49,7 @@ class DependencyContainer {
   virtual void Add(PtrHolder<AContext>&& dependency) noexcept = 0;
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

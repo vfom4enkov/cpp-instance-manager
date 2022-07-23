@@ -39,6 +39,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Base class for all object managers
 class AInstanceManager {
@@ -130,6 +131,7 @@ inline void BaseInstanceManager<T>::AddError(Context<T>* context,
   context->Add(std::move(error_context));
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

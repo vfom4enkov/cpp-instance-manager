@@ -43,8 +43,11 @@
 namespace cpptoolkit {
 namespace factory {
 
-class CoreExtension;
 class Resolver;
+
+namespace engine {
+
+class CoreExtension;
 
 template <typename T, typename... Args>
 PtrHolder<T> MakePtrHolder(Args&&... args) noexcept;
@@ -216,6 +219,7 @@ BuildItem<T>& BuildItem<T>::AsSoftPoolInstance(uint32_t pool_size) noexcept {
   return *this;
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

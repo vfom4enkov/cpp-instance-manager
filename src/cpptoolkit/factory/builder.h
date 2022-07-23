@@ -51,14 +51,15 @@ class Builder {
   /// @param create [in] function for create instance of managed object
   /// @return Reference to helper
   template <typename T>
-  BuildItem<T>& Register(std::function<T*(Resolver&)>&& create) noexcept;
+  engine::BuildItem<T>& Register(
+      std::function<T*(Resolver&)>&& create) noexcept;
 
   /// Create fluent helper allows to set properties for the registered
   /// object without dependencies
   /// @tparam T type of managed object
   /// @return Reference to helper
   template <typename T>
-  BuildItem<T>& RegisterType() noexcept;
+  engine::BuildItem<T>& RegisterType() noexcept;
 
   /// @brief Create Core, if the Core is nullptr check 'Error()'
   /// @return std::unique_ptr<Core> for produce objects
@@ -73,17 +74,17 @@ class Builder {
   const std::string& Error() noexcept { return error_; };
 
  private:
-  bool Build(CoreExtension* core) noexcept;
+  bool Build(engine::CoreExtension* core) noexcept;
 
  private:
-  std::vector<PtrHolder<ABuildItem>> items_;
+  std::vector<engine::PtrHolder<engine::ABuildItem>> items_;
   std::string error_;
 };
 
 // Implementation
 
 template <typename T>
-inline BuildItem<T>& Builder::Register(
+inline engine::BuildItem<T>& Builder::Register(
     std::function<T*(Resolver&)>&& create) noexcept {
   PtrHolder<BuildItem<T>> item = MakePtrHolder<BuildItem<T>>(std::move(create));
   BuildItem<T>* ptr = item.Get();
@@ -92,14 +93,14 @@ inline BuildItem<T>& Builder::Register(
 }
 
 template <typename T>
-inline BuildItem<T>& Builder::RegisterType() noexcept {
+inline engine::BuildItem<T>& Builder::RegisterType() noexcept {
   std::function<T*(Resolver&)> create = [](Resolver& resolver) -> T* {
     return Create<T>();
   };
   return Register(std::move(create));
 }
 
-inline bool Builder::Build(CoreExtension* core) noexcept {
+inline bool Builder::Build(engine::CoreExtension* core) noexcept {
   if (items_.size() == 0) {
     error_ = "There are no object for registration, list is empty";
     return false;
@@ -118,17 +119,19 @@ inline bool Builder::Build(CoreExtension* core) noexcept {
 }
 
 inline std::unique_ptr<Core> Builder::BuildUnique() noexcept {
-  std::unique_ptr<CoreExtension> uptr_core(new (std::nothrow) CoreExtension());
+  std::unique_ptr<engine::CoreExtension> uptr_core(new (std::nothrow)
+                                                       engine::CoreExtension());
   if (Build(uptr_core.get())) {
     return std::move(uptr_core);
   }
 
-  std::unique_ptr<CoreExtension> empty(nullptr);
+  std::unique_ptr<engine::CoreExtension> empty(nullptr);
   return std::move(empty);
 }
 
 inline std::shared_ptr<Core> Builder::BuildShared() noexcept {
-  std::shared_ptr<CoreExtension> sptr_core(new (std::nothrow) CoreExtension());
+  std::shared_ptr<engine::CoreExtension> sptr_core(new (std::nothrow)
+                                                       engine::CoreExtension());
   if (Build(sptr_core.get())) {
     return sptr_core;
   }
