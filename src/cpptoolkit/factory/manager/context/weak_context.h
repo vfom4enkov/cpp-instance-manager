@@ -34,6 +34,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Holds pointer to managed object but does not delete it at end of life
 /// time
@@ -63,6 +64,7 @@ WeakContext<T>::WeakContext(T* instance_ptr) noexcept : BaseContext<T>(true) {
   instance_ptr_ = instance_ptr;
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

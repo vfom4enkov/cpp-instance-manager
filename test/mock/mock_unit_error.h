@@ -32,6 +32,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 struct MockUnitNotRegistered {};
 
@@ -41,6 +42,7 @@ struct MockUnitThrowExceptionOncreate {};
 
 struct MockUnitThrowStrOncreate {};
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

@@ -32,6 +32,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Number of copies produced objects
 enum class InstanceCountOptionEnum {
@@ -49,6 +50,7 @@ enum class InstanceCountOptionEnum {
   kSoftPool = 3
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

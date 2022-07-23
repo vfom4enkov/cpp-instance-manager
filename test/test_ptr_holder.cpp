@@ -31,6 +31,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 BOOST_AUTO_TEST_SUITE(TestPtrHolder)
 
@@ -129,5 +130,6 @@ BOOST_FIXTURE_TEST_CASE(test_ptr_holder_access_operator, Fixture) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

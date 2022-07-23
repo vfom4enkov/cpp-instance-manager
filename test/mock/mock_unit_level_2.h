@@ -36,6 +36,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 class MockUnitLevel_2 {
  public:
@@ -68,6 +69,8 @@ class MockUnitLevel_2_B : public MockUnitLevel_2 {
   MockUnitLevel_2_B() : MockUnitLevel_2(){};
   uintptr_t getMyPtr() override;
 };
+
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

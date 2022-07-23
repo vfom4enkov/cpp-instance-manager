@@ -31,13 +31,14 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 BOOST_AUTO_TEST_SUITE(TestPoolHelper)
 
 #define POOL_INSTANCE_MANAGEG_MACRO                 \
   SoftPoolInstanceManager<MockUnitLevel_3> manager( \
       "MockUnitLevel_3",                            \
-      [](Resolver& resolver) -> MockUnitLevel_3* {  \
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {  \
         return new MockUnitLevel_3();               \
       },                                            \
       core_, 2);
@@ -88,7 +89,7 @@ BOOST_FIXTURE_TEST_CASE(test_pool_error_on_create, Fixture) {
   uint32_t pool_size = 2;
   SoftPoolInstanceManager<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         auto* error_item = resolver.Get<MockUnitNotRegistered>();
         return new MockUnitLevel_3();
       },
@@ -107,5 +108,6 @@ BOOST_FIXTURE_TEST_CASE(test_pool_error_on_create, Fixture) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

@@ -43,6 +43,9 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
+
+namespace cf = cpptoolkit::factory;
 
 class Fixture {
  public:
@@ -54,12 +57,13 @@ class Fixture {
 
  private:
   static std::mutex mutex_;
-  std::unique_ptr<Core> core_u_ptr_;
+  std::unique_ptr<cf::Core> core_u_ptr_;
 
  public:
-  Core* core_;
+  cf::Core* core_;
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

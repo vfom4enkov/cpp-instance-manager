@@ -31,6 +31,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 BOOST_AUTO_TEST_SUITE(TestCore)
 
@@ -40,7 +41,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_normal_case, Fixture) {
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager =
       MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
-          [](Resolver& resolver) -> MockUnitLevel_3* {
+          [](cf::Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
           },
           &core);
@@ -58,7 +59,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_twice, Fixture) {
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager =
       MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
-          [](Resolver& resolver) -> MockUnitLevel_3* {
+          [](cf::Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
           },
           &core);
@@ -66,7 +67,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_extension_add_manager_twice, Fixture) {
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
       MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           "MockUnitLevel_3",
-          [](Resolver& resolver) -> MockUnitLevel_3* {
+          [](cf::Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
           },
           &core);
@@ -99,7 +100,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_check_add_manager_to_manager_index, Fixture) {
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager =
       MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
-          [](Resolver& resolver) -> MockUnitLevel_3* {
+          [](cf::Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
           },
           &core);
@@ -121,7 +122,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_try_to_register_type_twice, Fixture) {
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager_1 =
       MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
-          [](Resolver& resolver) -> MockUnitLevel_3* {
+          [](cf::Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
           },
           &core);
@@ -134,7 +135,7 @@ BOOST_FIXTURE_TEST_CASE(test_core_try_to_register_type_twice, Fixture) {
   PtrHolder<MultipleInstanceManager<MockUnitLevel_3>> manager_2 =
       MakePtrHolder<MultipleInstanceManager<MockUnitLevel_3>>(
           DEFAULT_KEY,
-          [](Resolver& resolver) -> MockUnitLevel_3* {
+          [](cf::Resolver& resolver) -> MockUnitLevel_3* {
             return new MockUnitLevel_3();
           },
           &core);
@@ -228,5 +229,6 @@ BOOST_FIXTURE_TEST_CASE(test_core_check_transit_error_object, Fixture) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

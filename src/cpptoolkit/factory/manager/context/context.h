@@ -38,6 +38,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 class Core;
 
@@ -87,6 +88,7 @@ inline void Context<T>::Add(PtrHolder<AContext>&& dependency) noexcept {
   dependencies_.push_back(std::move(dependency));
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

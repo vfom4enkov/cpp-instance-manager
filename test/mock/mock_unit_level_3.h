@@ -34,6 +34,8 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
+
 class MockUnitLevel_3 {
  public:
   MockUnitLevel_3();
@@ -48,6 +50,8 @@ class MockUnitLevel_3 {
   static int32_t destructor_counter_;
   static void reset();
 };
+
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

@@ -31,13 +31,14 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 BOOST_AUTO_TEST_SUITE(TestMultipleInstanceManager)
 
 #define MULTIPLE_INSTANCE_MANAGEG_MACRO             \
   MultipleInstanceManager<MockUnitLevel_3> manager( \
       "MockUnitLevel_3",                            \
-      [](Resolver& resolver) -> MockUnitLevel_3* {  \
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {  \
         return new MockUnitLevel_3();               \
       },                                            \
       core_);
@@ -73,5 +74,6 @@ BOOST_FIXTURE_TEST_CASE(test_multiple_instance_manager_check_delete_instance,
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

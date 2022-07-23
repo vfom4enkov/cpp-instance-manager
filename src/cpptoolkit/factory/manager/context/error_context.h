@@ -36,6 +36,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Contains error description
 /// @tparam T type of managed object
@@ -57,6 +58,7 @@ class ErrorContext : public BaseContext<T> {
   ErrorContext& operator=(const ErrorContext&) = delete;
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

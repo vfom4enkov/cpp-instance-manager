@@ -34,6 +34,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Holds pointer to managed object or error description in fail case
 /// @tparam T type of managed object
@@ -92,6 +93,7 @@ inline std::string BaseContext<T>::Error() noexcept {
   return error_;
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

@@ -35,6 +35,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 class MockUnitSingleInstanceTop {
  public:
@@ -57,6 +58,7 @@ class MockUnitSingleInstanceTop {
   MockUnitSingleInstance* unit_2_;
 };
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

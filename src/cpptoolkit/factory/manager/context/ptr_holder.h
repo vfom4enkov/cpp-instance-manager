@@ -34,6 +34,7 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 /// @brief Contains pointer to object in heap, provides only move operations
 /// @tparam T type of managed object
@@ -140,6 +141,7 @@ void PtrHolder<T>::Reset() noexcept {
   }
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
 

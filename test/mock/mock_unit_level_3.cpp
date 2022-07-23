@@ -31,6 +31,8 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
+
 int32_t MockUnitLevel_3::constructor_counter_ = 0;
 int32_t MockUnitLevel_3::destructor_counter_ = 0;
 MockUnitLevel_3::MockUnitLevel_3() { constructor_counter_++; }
@@ -52,5 +54,6 @@ void MockUnitLevel_3::reset() {
   destructor_counter_ = 0;
 }
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit

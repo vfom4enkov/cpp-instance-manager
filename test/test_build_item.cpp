@@ -31,15 +31,17 @@
 
 namespace cpptoolkit {
 namespace factory {
+namespace engine {
 
 BOOST_AUTO_TEST_SUITE(TestBuildItem)
 
 BOOST_AUTO_TEST_CASE(test_build_item_normal_case) {
   // arrange
   CoreExtension core;
-  BuildItem<MockUnitLevel_3> item([](Resolver& resolver) -> MockUnitLevel_3* {
-    return new MockUnitLevel_3();
-  });
+  BuildItem<MockUnitLevel_3> item(
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
+        return new MockUnitLevel_3();
+      });
 
   // act
   bool result = item.Build(&core);
@@ -53,7 +55,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_single_instance) {
   // arrange
   CoreExtension core;
   BuildItem<MockUnitLevel_3> single_item(
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         return new MockUnitLevel_3();
       });
 
@@ -76,7 +78,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_multiple_instance) {
   // arrange
   CoreExtension core;
   BuildItem<MockUnitLevel_3> single_item(
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         return new MockUnitLevel_3();
       });
 
@@ -100,7 +102,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_lock_pool_instance) {
   uint32_t pool_size = 3;
   CoreExtension core;
   BuildItem<MockUnitLevel_3> lock_pool_item(
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         return new MockUnitLevel_3();
       });
 
@@ -125,7 +127,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_count_option_pool_instance) {
   uint32_t pool_size = 3;
   CoreExtension core;
   BuildItem<MockUnitLevel_3> pool_item(
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         return new MockUnitLevel_3();
       });
 
@@ -150,7 +152,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_zero_count_option_lock_pool_instance) {
   uint32_t pool_size = 0;
   CoreExtension core;
   BuildItem<MockUnitLevel_3> lock_pool_item(
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         return new MockUnitLevel_3();
       });
 
@@ -169,7 +171,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_zero_count_option_pool_instance) {
   uint32_t pool_size = 0;
   CoreExtension core;
   BuildItem<MockUnitLevel_3> pool_item(
-      [](Resolver& resolver) -> MockUnitLevel_3* {
+      [](cf::Resolver& resolver) -> MockUnitLevel_3* {
         return new MockUnitLevel_3();
       });
 
@@ -186,7 +188,7 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_zero_count_option_pool_instance) {
 BOOST_AUTO_TEST_CASE(test_build_item_set_empty_key) {
   // arrange
   CoreExtension core;
-  BuildItem<MockUnitLevel_3> item([](Resolver& resolver) -> MockUnitLevel_3* {
+  BuildItem<MockUnitLevel_3> item([](cf::Resolver& resolver) -> MockUnitLevel_3* {
     return new MockUnitLevel_3();
   });
 
@@ -203,10 +205,10 @@ BOOST_AUTO_TEST_CASE(test_build_item_set_empty_key) {
 BOOST_AUTO_TEST_CASE(test_build_item_register_one_type_twice) {
   // arrange
   CoreExtension core;
-  BuildItem<MockUnitLevel_3> item_1([](Resolver& resolver) -> MockUnitLevel_3* {
+  BuildItem<MockUnitLevel_3> item_1([](cf::Resolver& resolver) -> MockUnitLevel_3* {
     return new MockUnitLevel_3();
   });
-  BuildItem<MockUnitLevel_3> item_2([](Resolver& resolver) -> MockUnitLevel_3* {
+  BuildItem<MockUnitLevel_3> item_2([](cf::Resolver& resolver) -> MockUnitLevel_3* {
     return new MockUnitLevel_3();
   });
   // act
@@ -222,5 +224,6 @@ BOOST_AUTO_TEST_CASE(test_build_item_register_one_type_twice) {
 
 BOOST_AUTO_TEST_SUITE_END()
 
+}  // namespace engine
 }  // namespace factory
 }  // namespace cpptoolkit
