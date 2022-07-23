@@ -35,17 +35,18 @@
 namespace cpptoolkit {
 namespace factory {
 
-/// @brief Holds pointer to managed object but does not delete it at end of life time
-/// @tparam T - Type of managed object
+/// @brief Holds pointer to managed object but does not delete it at end of life
+/// time
+/// @tparam T type of managed object
 template <typename T>
 class WeakContext : public BaseContext<T> {
- using BaseContext<T>::instance_ptr_;
+  using BaseContext<T>::instance_ptr_;
+
  public:
-  
   /// @brief Create instance
-  /// @param context - Source context
+  /// @param context source context
   WeakContext(T* instance_ptr) noexcept;
-  
+
   ~WeakContext() noexcept {};
 
   // Ban RAII operations
@@ -58,8 +59,7 @@ class WeakContext : public BaseContext<T> {
 // Implementation
 
 template <typename T>
-WeakContext<T>::WeakContext(T* instance_ptr) noexcept
-    : BaseContext<T>(true) {
+WeakContext<T>::WeakContext(T* instance_ptr) noexcept : BaseContext<T>(true) {
   instance_ptr_ = instance_ptr;
 }
 

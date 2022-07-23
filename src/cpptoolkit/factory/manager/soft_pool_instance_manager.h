@@ -40,18 +40,18 @@
 namespace cpptoolkit {
 namespace factory {
 
-/// @brief If the pool is emty this manager creates new one, if the pool is full
+/// If the pool is emty this manager creates new one, if the pool is full
 /// the object will be destroyed
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class SoftPoolInstanceManager : public BaseInstanceManager<T>,
                                 public AbstractPoolInstancePutback {
  public:
   /// @brief Create instance manager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
-  /// @param [in] pool_size - Size of pool object
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
+  /// @param pool_size [in] size of pool object
   SoftPoolInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create, Core* core,
                           uint32_t pool_size) noexcept
@@ -60,44 +60,42 @@ class SoftPoolInstanceManager : public BaseInstanceManager<T>,
 
   virtual ~SoftPoolInstanceManager() noexcept = default;
 
-  std::unique_ptr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
   void Callback(uintptr_t key) noexcept override;
 
  private:
   uint32_t size_;
   std::queue<uintptr_t> queue_;
-  std::unordered_map<uintptr_t, std::unique_ptr<Context<T>>> index_;
+  std::unordered_map<uintptr_t, PtrHolder<Context<T>>> index_;
 
   // thread section
   std::mutex mutex_;
 };
 
 template <typename T>
-inline std::unique_ptr<BaseContext<T>>
-SoftPoolInstanceManager<T>::Get() noexcept {
+inline PtrHolder<BaseContext<T>> SoftPoolInstanceManager<T>::Get() noexcept {
   std::unique_lock<std::mutex> locker(mutex_);
 
   if (!queue_.empty()) {  // Get istance from pool
     uintptr_t key = queue_.front();
     const auto it = index_.find(key);
-    std::unique_ptr<PoolContext<T>> ctx =
-        MakeUnique<PoolContext<T>>(this, it->second.get(), key);
+    PtrHolder<PoolContext<T>> ctx =
+        MakePtrHolder<PoolContext<T>>(this, it->second.Get(), key);
     queue_.pop();
     return ctx;
   }
 
   // Create new instance
-  std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  BaseInstanceManager<T>::Create(context.get());
+  PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
+  BaseInstanceManager<T>::Create(context.Get());
 
   if (!context->IsValid()) {
     return context;
   }
 
-  Context<T>* context_ptr = context.get();
+  Context<T>* context_ptr = context.Get();
   uintptr_t key = reinterpret_cast<uintptr_t>(context_ptr);
-  std::unique_ptr<PoolContext<T>> ctx =
-      MakeUnique<PoolContext<T>>(this, context_ptr, key);
+  PtrHolder<PoolContext<T>> ctx = MakePtrHolder<PoolContext<T>>(this, context_ptr, key);
   index_.emplace(key, std::move(context));
   return ctx;
 }

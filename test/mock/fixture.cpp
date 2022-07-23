@@ -91,13 +91,14 @@ void Fixture::RegisterMockUnits() {
   builder.Register<MockUnitThrowExceptionOncreate>(
       [](Resolver& resolver) -> MockUnitThrowExceptionOncreate* {
         throw std::runtime_error(
-        "Exception created on operation create MockUnitThrowExceptionOncreate");
+            "Exception created on operation create "
+            "MockUnitThrowExceptionOncreate");
       });
   builder.Register<MockUnitThrowStrOncreate>(
       [](Resolver& resolver) -> MockUnitThrowStrOncreate* {
         throw "String created on operation create MockUnitThrowExceptionOncreate";
       });
-  core_u_ptr_ = builder.Build();
+  core_u_ptr_ = builder.BuildUnique();
   core_ = core_u_ptr_.get();
   if (core_ == nullptr) {
     std::cout << builder.Error() << std::endl;

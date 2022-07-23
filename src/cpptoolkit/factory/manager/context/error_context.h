@@ -38,13 +38,14 @@ namespace cpptoolkit {
 namespace factory {
 
 /// @brief Contains error description
-/// @tparam T - Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class ErrorContext : public BaseContext<T> {
- using BaseContext<T>::error_;
+  using BaseContext<T>::error_;
+
  public:
   /// @brief Create error context
-  /// @param error - error description
+  /// @param error error description
   ErrorContext(std::string error) noexcept : BaseContext<T>(false) {
     error_ = error;
   };

@@ -36,7 +36,6 @@
 #include "context/context.h"
 #include "context/error_context.h"
 #include "resolver.h"
-#include "unique_ptr_tool.h"
 
 namespace cpptoolkit {
 namespace factory {
@@ -52,14 +51,14 @@ class AInstanceManager {
 };
 
 /// @brief Base object for instance managers
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class BaseInstanceManager : public AInstanceManager {
  public:
   /// @brief Create BaseInstanceManager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
   BaseInstanceManager(const std::string class_name_key,
                       std::function<T*(Resolver&)>&& create,
                       Core* core) noexcept
@@ -69,7 +68,7 @@ class BaseInstanceManager : public AInstanceManager {
 
   /// @brief Create instance of managed object and save it to the context
   /// @return Context with instance of managed object
-  virtual std::unique_ptr<BaseContext<T>> Get() noexcept = 0;
+  virtual PtrHolder<BaseContext<T>> Get() noexcept = 0;
 
   const std::string& TypeKey() noexcept override;
 
@@ -107,15 +106,14 @@ inline void BaseInstanceManager<T>::Create(Context<T>* context) noexcept {
       return;
     }
   } catch (std::exception& ex) {
-    // TODO add this case to documentation
-    // If the context contains other error, then do not save current exception
+    // If the context contains other error, then do not save current
+    // exception
     if (context->IsValid()) {
       std::string error = "Error on create instance: " + class_name_key_ +
                           " Error: " + ex.what();
       AddError(context, error);
     }
   } catch (...) {
-    // TODO (VFomchenkov) add this case to documentation
     // The same behaviour for current case
     if (context->IsValid()) {
       std::string error =
@@ -128,8 +126,7 @@ inline void BaseInstanceManager<T>::Create(Context<T>* context) noexcept {
 template <typename T>
 inline void BaseInstanceManager<T>::AddError(Context<T>* context,
                                              std::string& error) noexcept {
-  std::unique_ptr<ErrorContext<T>> error_context =
-      MakeUnique<ErrorContext<T>>(error);
+  PtrHolder<ErrorContext<T>> error_context = MakePtrHolder<ErrorContext<T>>(error);
   context->Add(std::move(error_context));
 }
 

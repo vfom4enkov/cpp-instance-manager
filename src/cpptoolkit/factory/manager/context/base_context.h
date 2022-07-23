@@ -35,24 +35,24 @@
 namespace cpptoolkit {
 namespace factory {
 
-/// @brief Holds pointer to managed object
-/// @tparam T - Type of managed object
+/// @brief Holds pointer to managed object or error description in fail case
+/// @tparam T type of managed object
 template <typename T>
 class BaseContext : public AContext {
  public:
   /// @brief Create BaseContext
-  /// @param is_valid - Context validation flag
+  /// @param is_valid context validation flag
   BaseContext(bool is_valid) noexcept
       : instance_ptr_(nullptr), is_valid_(is_valid){};
 
   virtual ~BaseContext() noexcept {};
 
   /// @brief Set pointer to managed object
-  /// @param instance_ptr - Pointer to managed object
+  /// @param instance_ptr pointer to managed object
   void SetInstance(T* instance_ptr) noexcept;
 
   /// @brief Get pointer to managed object
-  /// @return Pointer to managed object
+  /// @return pointer to managed object
   T* GetInstance() noexcept;
 
   bool IsValid() noexcept override;

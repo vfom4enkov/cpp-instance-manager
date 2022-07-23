@@ -36,18 +36,18 @@ namespace cpptoolkit {
 namespace factory {
 
 /// @brief Create instance
-/// @tparam T - The type of object to create
-/// @tparam ...Args - types of arguments for T
-/// @param [in] ...args - arguments for T constructor
-/// @return pointer for T
+/// @tparam T the type of object to create
+/// @tparam ...Args types of arguments for T
+/// @param ...args [in] arguments for T constructor
+/// @return pointer to instance in heap
 template <typename T, typename... Args>
 inline T* Create(Args&&... args) {
   return new T(std::forward<Args>(args)...);
 }
 
 /// @brief Generate unique key for managed object
-/// @tparam T - Type of managed object
-/// @param [in] key - Key value
+/// @tparam T type of managed object
+/// @param key [in] key value
 /// @return Key for managed object
 template <typename T>
 inline std::string TypeKey(const std::string& key) noexcept {

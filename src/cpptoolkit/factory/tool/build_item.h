@@ -47,7 +47,7 @@ class CoreExtension;
 class Resolver;
 
 template <typename T, typename... Args>
-std::unique_ptr<T> MakeUnique(Args&&... args) noexcept;
+PtrHolder<T> MakePtrHolder(Args&&... args) noexcept;
 
 /// @brief Interface for collecting data for registration object in Core
 class ABuildItem {
@@ -55,7 +55,7 @@ class ABuildItem {
   virtual ~ABuildItem() noexcept = default;
 
   /// @brief Register type in Core, in false case check 'Error()'
-  /// @param [in] core - Pointer to for type registration
+  /// @param core [in] pointer to for type registration
   /// @return Operation result
   virtual bool Build(CoreExtension* core) noexcept = 0;
 
@@ -65,13 +65,13 @@ class ABuildItem {
 };
 
 /// @brief Provides fluent interface for type registation
-/// @tparam T - Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class BuildItem : public ABuildItem {
  public:
   /// @brief Create instance
-  /// @param [in] create - Function for create instance of managed object
-  /// @tparam T - Type of managed object
+  /// @param create [in] function for create instance of managed object
+  /// @tparam T Type of managed object
   BuildItem(std::function<T*(Resolver&)>&& create) noexcept
       : create_(std::move(create)),
         count_option_(InstanceCountOptionEnum::kMultiple),
@@ -85,7 +85,7 @@ class BuildItem : public ABuildItem {
   virtual const std::string& Error() noexcept override;
 
   /// @brief Set unique key for a given object type
-  /// @param [in] key - Key value
+  /// @param key [in] key value
   /// @return Pointer to current instance
   BuildItem<T>& SetKey(const std::string& key) noexcept;
 
@@ -100,12 +100,12 @@ class BuildItem : public ABuildItem {
   BuildItem<T>& AsMultipleInstance() noexcept;
 
   /// @brief Register as lock pool instance
-  /// @param [in] pool_size - Pool size
+  /// @param pool_size [in] pool size
   /// @return Pointer to current instance
   BuildItem<T>& AsLockPoolInstance(uint32_t pool_size) noexcept;
 
   /// @brief Register as pool instance
-  /// @param [in] pool_size - Pool size
+  /// @param pool_size [in] pool size
   /// @return Pointer to current instance
   BuildItem<T>& AsSoftPoolInstance(uint32_t pool_size) noexcept;
 
@@ -132,16 +132,16 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
   bool result = true;
   switch (count_option_) {
     case InstanceCountOptionEnum::kMultiple: {
-      std::unique_ptr<MultipleInstanceManager<T>> m_manager =
-          MakeUnique<MultipleInstanceManager<T>>(type_key, std::move(create_),
-                                                 core);
+      PtrHolder<MultipleInstanceManager<T>> m_manager =
+          MakePtrHolder<MultipleInstanceManager<T>>(type_key, std::move(create_),
+                                               core);
       result = core->Add(std::move(m_manager));
       break;
     }
     case InstanceCountOptionEnum::kSingle: {
-      std::unique_ptr<SingleInstanceManager<T>> s_manager =
-          MakeUnique<SingleInstanceManager<T>>(type_key, std::move(create_),
-                                               core);
+      PtrHolder<SingleInstanceManager<T>> s_manager =
+          MakePtrHolder<SingleInstanceManager<T>>(type_key, std::move(create_),
+                                             core);
       result = core->Add(std::move(s_manager));
       break;
     }
@@ -150,9 +150,9 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         error_ = type_name + ": pool size can not be 0";
         return false;
       }
-      std::unique_ptr<SoftPoolInstanceManager<T>> p_manager =
-          MakeUnique<SoftPoolInstanceManager<T>>(type_key, std::move(create_), core,
-                                             pool_size_);
+      PtrHolder<SoftPoolInstanceManager<T>> p_manager =
+          MakePtrHolder<SoftPoolInstanceManager<T>>(type_key, std::move(create_),
+                                               core, pool_size_);
       result = core->Add(std::move(p_manager));
       break;
     }
@@ -161,15 +161,15 @@ bool BuildItem<T>::Build(CoreExtension* core) noexcept {
         error_ = type_name + ": pool size can not be 0";
         return false;
       }
-      std::unique_ptr<LockPoolInstanceManager<T>> lp_manager =
-          MakeUnique<LockPoolInstanceManager<T>>(type_key, std::move(create_),
-                                                 core, pool_size_);
+      PtrHolder<LockPoolInstanceManager<T>> lp_manager =
+          MakePtrHolder<LockPoolInstanceManager<T>>(type_key, std::move(create_),
+                                               core, pool_size_);
       result = core->Add(std::move(lp_manager));
       break;
     }
     default:
       int option = static_cast<int>(count_option_);
-      error_ = "Unknown instance count option: " + option;
+      error_ = "Unknown instance count option: " + std::to_string(option);
       return false;
   }
 
@@ -186,8 +186,6 @@ const std::string& BuildItem<T>::Error() noexcept {
 
 template <typename T>
 BuildItem<T>& BuildItem<T>::SetKey(const std::string& key) noexcept {
-  // TODO (VFomchenkov) Add checking for key, it should be only ASCII symbols
-  // TODO (VFomchenkov) Convert key to lower
   key_ = key;
   return *this;
 }

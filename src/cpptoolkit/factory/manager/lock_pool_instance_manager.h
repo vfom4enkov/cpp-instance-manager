@@ -42,56 +42,57 @@ namespace cpptoolkit {
 namespace factory {
 
 /// Locks the thread until an instance was put back to the pool (if it is empty)
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class LockPoolInstanceManager : public BaseInstanceManager<T>,
                                 public AbstractPoolInstancePutback {
  public:
   /// @brief Create instance manager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
-  /// @param [in] pool_size - Size of pool object
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
+  /// @param pool_size [in] size of pool object
   LockPoolInstanceManager(std::string class_name_key,
-                          std::function<T*(Resolver&)>&& create,
-                          Core* core, uint32_t pool_size) noexcept
+                          std::function<T*(Resolver&)>&& create, Core* core,
+                          uint32_t pool_size) noexcept
       : BaseInstanceManager<T>(class_name_key, std::move(create), core),
         countdown_(pool_size),
         waiter_counter_(0){};
 
   virtual ~LockPoolInstanceManager() noexcept = default;
 
-  std::unique_ptr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
   void Callback(uintptr_t key) noexcept override;
 
  private:
-  uint32_t countdown_;       // counter of objects what will be created for the pool
+  uint32_t countdown_;  // counter of objects what will be created for the pool
   uint32_t waiter_counter_;  // size of waiting threads
 
   std::queue<uintptr_t> queue_;  // free objects in the pool
-  std::unordered_map<uintptr_t, std::unique_ptr<Context<T>>> index_;  // all created pool objects
+
+  // all created objects in the pool
+  std::unordered_map<uintptr_t, PtrHolder<Context<T>>> index_;
 
   std::condition_variable queue_cv_;
   std::mutex mutex_;
 };
 
 template <typename T>
-inline std::unique_ptr<BaseContext<T>>
-LockPoolInstanceManager<T>::Get() noexcept {
+inline PtrHolder<BaseContext<T>> LockPoolInstanceManager<T>::Get() noexcept {
   std::unique_lock<std::mutex> locker(mutex_);
 
   if (countdown_ > 0 && queue_.empty()) {
     // create object for the pool
-    std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-    BaseInstanceManager<T>::Create(context.get());
+    PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
+    BaseInstanceManager<T>::Create(context.Get());
 
     if (!context->IsValid()) {
       return context;
     }
 
-    uintptr_t context_key = reinterpret_cast<uintptr_t>(context.get());
-    std::unique_ptr<PoolContext<T>> pool_ctx =
-        MakeUnique<PoolContext<T>>(this, context.get(), context_key);
+    uintptr_t context_key = reinterpret_cast<uintptr_t>(context.Get());
+    PtrHolder<PoolContext<T>> pool_ctx =
+        MakePtrHolder<PoolContext<T>>(this, context.Get(), context_key);
     index_.emplace(context_key, std::move(context));
     --countdown_;
     return pool_ctx;
@@ -107,9 +108,9 @@ LockPoolInstanceManager<T>::Get() noexcept {
   uintptr_t key = queue_.front();
   queue_.pop();
   const auto it = index_.find(key);
-  std::unique_ptr<Context<T>>& context = it->second;
-  std::unique_ptr<PoolContext<T>> pool_context =
-      MakeUnique<PoolContext<T>>(this, context.get(), key);
+  PtrHolder<Context<T>>& context = it->second;
+  PtrHolder<PoolContext<T>> pool_context =
+      MakePtrHolder<PoolContext<T>>(this, context.Get(), key);
   return pool_context;
 }
 

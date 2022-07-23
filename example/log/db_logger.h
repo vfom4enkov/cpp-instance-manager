@@ -45,5 +45,4 @@ class DbLogger : public AbstractLogger {
 
 }  // namespace example
 
-
 #endif  // EXAMPLE_DB_LOGGER_H_

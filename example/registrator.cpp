@@ -53,18 +53,17 @@ std::unique_ptr<cf::Core> RegisterObjects(std::string& error) {
         return cf::Create<ComplexLogger>(file_logger, db_logger);
       })
       .SetKey("DB_AND_FILE");
-  builder
-      .Register<AbstractLogger>([](cf::Resolver& resolver) -> AbstractLogger* {
+  builder.Register<AbstractLogger>(
+      [](cf::Resolver& resolver) -> AbstractLogger* {
         auto* file_and_db_logger = resolver.Get<AbstractLogger>("DB_AND_FILE");
         auto* net_logger = resolver.Get<NetLogger>();
         return cf::Create<ComplexLogger>(file_and_db_logger, net_logger);
       });
 
-  builder
-      .Register<Action>([](cf::Resolver& resolver) -> Action* {
-        auto* logger = resolver.Get<AbstractLogger>();
-        return cf::Create<Action>(logger);
-      });
+  builder.Register<Action>([](cf::Resolver& resolver) -> Action* {
+    auto* logger = resolver.Get<AbstractLogger>();
+    return cf::Create<Action>(logger);
+  });
 
   builder
       .Register<Action>([](cf::Resolver& resolver) -> Action* {
@@ -73,7 +72,7 @@ std::unique_ptr<cf::Core> RegisterObjects(std::string& error) {
       })
       .SetKey("LIGHT");
 
-  std::unique_ptr<cf::Core> core = builder.Build();
+  std::unique_ptr<cf::Core> core = builder.BuildUnique();
   if (!core) {
     error = builder.Error();
   }

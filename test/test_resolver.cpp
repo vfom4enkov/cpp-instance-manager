@@ -38,7 +38,7 @@ BOOST_FIXTURE_TEST_CASE(test_resolver_normal_case, Fixture) {
   // arrange
   Context<MockUnitLevel_3> base_context;
   Resolver dh(core_, &base_context);
-  
+
   // act
   MockUnitLevel_3* item = dh.Get<MockUnitLevel_3>();
 

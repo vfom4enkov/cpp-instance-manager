@@ -42,8 +42,7 @@ namespace factory {
 class Core;
 
 template <typename T>
-std::unique_ptr<BaseContext<T>> GetContext(Core* core,
-                                           const std::string& key) noexcept;
+PtrHolder<BaseContext<T>> GetContext(Core* core, const std::string& key) noexcept;
 
 /// Provides access to registered in Core objects
 /// These objects will be used as dependencies
@@ -53,22 +52,20 @@ std::unique_ptr<BaseContext<T>> GetContext(Core* core,
 class Resolver {
  public:
   /// @brief Create instance of the helper
-  /// @param [in] core - Pointer to the core_ with registered objects
-  /// @param [in] d_container - Collector for save dependencies
+  /// @param core [in] pointer to the core_ with registered objects
+  /// @param d_container [in] collector for save dependencies
   Resolver(Core* core, DependencyContainer* d_container) noexcept
       : core_(core),
         d_container_(d_container),
         is_valid_dependency_context_(true){};
 
   /// @brief Get dependency, registered in the core_ with the key.
-  /// @tparam T - Type of dependency object
-  /// @param [in] key - The key for access
+  /// @tparam T type of dependency object
+  /// @param key [in] the key for access
   /// @return Pointer to dependency object or 'nullptr' in error case
   template <typename T>
   T* Get(const std::string& key = DEFAULT_KEY) noexcept;
 
-  // TODO (VFomchenkov) Add std::shared_ptr<T> GetShared(const std::string& key
-  // = DEFAULT_KEY) noexcept
  private:
   Core* core_;
   DependencyContainer* d_container_;
@@ -83,7 +80,7 @@ inline T* Resolver::Get(const std::string& key) noexcept {
     return nullptr;  // a dependency context already has error
   }
 
-  std::unique_ptr<BaseContext<T>> dependency = GetContext<T>(core_, key);
+  PtrHolder<BaseContext<T>> dependency = GetContext<T>(core_, key);
 
   // set error if the context is not valid
   is_valid_dependency_context_ = dependency->IsValid();

@@ -41,11 +41,15 @@ class CoreExtension : public Core {
   CoreExtension() = default;
   virtual ~CoreExtension() = default;
 
-  /// @brief Add instance manager to Core, in fail case get error description
-  /// call 'Error()'
-  /// @param [in] manager - Instance manager
+  /// @brief Get last error description
+  /// @return Last error
+  const std::string& LastError() noexcept { return error_; };
+
+  /// Add instance manager to Core, in fail case get error description call
+  /// 'Error()'
+  /// @param manager [in] instance manager
   /// @return Operation result
-  bool Add(std::unique_ptr<AInstanceManager>&& mgr) noexcept {
+  bool Add(PtrHolder<AInstanceManager>&& mgr) noexcept {
     const std::string& type_key = mgr->TypeKey();
 
     if (index_.count(type_key) == 1) {
@@ -56,6 +60,9 @@ class CoreExtension : public Core {
     index_.emplace(type_key, std::move(mgr));
     return true;
   };
+
+ private:
+  std::string error_;
 };
 
 }  // namespace factory

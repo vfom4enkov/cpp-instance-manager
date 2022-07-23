@@ -34,9 +34,6 @@ namespace factory {
 
 BOOST_AUTO_TEST_SUITE(TestSingleInstanceManager)
 
-template <typename T>
-using UPtrBContext = std::unique_ptr<BaseContext<T>>;
-
 #define SINGLE_INSTANCE_MANAGEG_MACRO              \
   SingleInstanceManager<MockUnitLevel_3> manager(  \
       "MockUnitLevel_3",                           \
@@ -50,8 +47,8 @@ BOOST_FIXTURE_TEST_CASE(test_single_instance_manager_normal_case, Fixture) {
   SINGLE_INSTANCE_MANAGEG_MACRO;
 
   // act
-  UPtrBContext<MockUnitLevel_3> ptr_holder = manager.Get();
-  UPtrBContext<MockUnitLevel_3> ptr_holder_2 = manager.Get();
+  PtrHolder<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
+  PtrHolder<BaseContext<MockUnitLevel_3>> ptr_holder_2 = manager.Get();
 
   // assert
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
@@ -70,7 +67,7 @@ BOOST_FIXTURE_TEST_CASE(
     SINGLE_INSTANCE_MANAGEG_MACRO;
 
     // act
-    UPtrBContext<MockUnitLevel_3> ptr_holder = manager.Get();
+    PtrHolder<BaseContext<MockUnitLevel_3>> ptr_holder = manager.Get();
   }
 
   // assert

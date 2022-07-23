@@ -33,7 +33,7 @@
 
 example::Action::Action(AbstractLogger* logger) noexcept : logger_(logger) {}
 
-void example::Action::Exec() noexcept {
+void example::Action::ExecMyFunction() noexcept {
   logger_->Log("Start action");
   // do something
   logger_->Log("Stop action");

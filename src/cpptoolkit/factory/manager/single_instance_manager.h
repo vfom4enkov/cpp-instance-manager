@@ -40,14 +40,14 @@ namespace cpptoolkit {
 namespace factory {
 
 /// @brief Instance manager for single object
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class SingleInstanceManager : public BaseInstanceManager<T> {
  public:
   /// @brief Create SingleInstanceManager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
   SingleInstanceManager(std::string class_name_key,
                         std::function<T*(Resolver&)>&& create,
                         Core* core) noexcept
@@ -56,39 +56,39 @@ class SingleInstanceManager : public BaseInstanceManager<T> {
 
   virtual ~SingleInstanceManager() noexcept {};
 
-  std::unique_ptr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
 
  private:
-  std::unique_ptr<Context<T>> context_;
+  PtrHolder<Context<T>> context_;
   std::mutex mutex_;
 };
 
 // Implementation
 
 template <typename T>
-inline std::unique_ptr<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
-  if (context_) {
-    std::unique_ptr<WeakContext<T>> weak_context =
-        MakeUnique<WeakContext<T>>(context_.get()->GetInstance());
+inline PtrHolder<BaseContext<T>> SingleInstanceManager<T>::Get() noexcept {
+  if (context_.Get() != nullptr) {
+    PtrHolder<WeakContext<T>> weak_context =
+        MakePtrHolder<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   }
 
   std::unique_lock<std::mutex> locker(mutex_);
   // check the context second time,
-  // for avoid the case when another thread, already created instance 
+  // for avoid the case when another thread, already created instance
   // when current thread was locked
-  if (context_) {
-    std::unique_ptr<WeakContext<T>> weak_context =
-        MakeUnique<WeakContext<T>>(context_.get()->GetInstance());
+  if (context_.Get() != nullptr) {
+    PtrHolder<WeakContext<T>> weak_context =
+        MakePtrHolder<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   }
 
-  std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  BaseInstanceManager<T>::Create(context.get());
+  PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
+  BaseInstanceManager<T>::Create(context.Get());
   if (context->IsValid()) {
     context_ = std::move(context);
-    std::unique_ptr<WeakContext<T>> weak_context =
-        MakeUnique<WeakContext<T>>(context_.get()->GetInstance());
+    PtrHolder<WeakContext<T>> weak_context =
+        MakePtrHolder<WeakContext<T>>(context_.Get()->GetInstance());
     return weak_context;
   } else {
     return context;

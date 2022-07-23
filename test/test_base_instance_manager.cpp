@@ -37,20 +37,19 @@ namespace {
 template <typename T>
 class Mock : public BaseInstanceManager<T> {
  public:
-  Mock(const std::string class_name_key,
-                          std::function<T*(Resolver&)>&& create,
-                          Core* core)
+  Mock(const std::string class_name_key, std::function<T*(Resolver&)>&& create,
+       Core* core)
       : BaseInstanceManager<T>(class_name_key, std::move(create), core){};
 
-  std::unique_ptr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
 };
 
 template <typename T>
-std::unique_ptr<BaseContext<T>> Mock<T>::Get() noexcept {
-  std::unique_ptr<BaseContext<T>> item(new Context<T>());
+PtrHolder<BaseContext<T>> Mock<T>::Get() noexcept {
+  PtrHolder<BaseContext<T>> item(new Context<T>());
   return std::move(item);
 }
-}
+}  // namespace
 
 BOOST_AUTO_TEST_SUITE(TestBaseInstanceManager)
 
@@ -102,8 +101,7 @@ BOOST_FIXTURE_TEST_CASE(test_base_instance_manager_create_returns_null,
   Core core;
   Mock<MockUnitLevel_3> manager(
       "MockUnitLevel_3",
-      [](Resolver& resolver) -> MockUnitLevel_3* { return nullptr; },
-      &core);
+      [](Resolver& resolver) -> MockUnitLevel_3* { return nullptr; }, &core);
   Context<MockUnitLevel_3> context;
 
   // act

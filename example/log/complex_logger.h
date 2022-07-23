@@ -39,8 +39,7 @@ namespace example {
 /// @brief Contains pointers to other loggers
 class ComplexLogger : public AbstractLogger {
  public:
-  ComplexLogger(AbstractLogger* logger_1,
-                AbstractLogger* logger_2) noexcept;
+  ComplexLogger(AbstractLogger* logger_1, AbstractLogger* logger_2) noexcept;
   virtual ~ComplexLogger() noexcept {};
   virtual void Log(const std::string& message) noexcept;
 

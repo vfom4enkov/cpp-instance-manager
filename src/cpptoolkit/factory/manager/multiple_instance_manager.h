@@ -36,14 +36,14 @@ namespace cpptoolkit {
 namespace factory {
 
 /// @brief Instance manager for multiple objects
-/// @tparam T Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class MultipleInstanceManager : public BaseInstanceManager<T> {
  public:
   /// @brief Create MultipleInstanceManager
-  /// @param [in] class_name_key - Unique key for current manager
-  /// @param [in] create - Function for create instance of managed object
-  /// @param [in] core - Pointer to the core_ with registered objects
+  /// @param class_name_key [in] unique key for current manager
+  /// @param create [in] function for create instance of managed object
+  /// @param core [in] pointer to the core_ with registered objects
   MultipleInstanceManager(std::string class_name_key,
                           std::function<T*(Resolver&)>&& create,
                           Core* core) noexcept
@@ -51,15 +51,15 @@ class MultipleInstanceManager : public BaseInstanceManager<T> {
 
   virtual ~MultipleInstanceManager() noexcept {};
 
-  std::unique_ptr<BaseContext<T>> Get() noexcept override;
+  PtrHolder<BaseContext<T>> Get() noexcept override;
 };
 
 // Implementation
 
 template <typename T>
-inline std::unique_ptr<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
-  std::unique_ptr<Context<T>> context = MakeUnique<Context<T>>();
-  BaseInstanceManager<T>::Create(context.get());
+inline PtrHolder<BaseContext<T>> MultipleInstanceManager<T>::Get() noexcept {
+  PtrHolder<Context<T>> context = MakePtrHolder<Context<T>>();
+  BaseInstanceManager<T>::Create(context.Get());
   return context;
 }
 

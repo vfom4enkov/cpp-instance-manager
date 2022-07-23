@@ -34,6 +34,7 @@
 
 #include "base_context.h"
 #include "dependency_container.h"
+#include "ptr_holder.h"
 
 namespace cpptoolkit {
 namespace factory {
@@ -41,19 +42,20 @@ namespace factory {
 class Core;
 
 /// @brief Contains pointer to managed object
-/// @tparam T - Type of managed object
+/// @tparam T type of managed object
 template <typename T>
 class Context : public BaseContext<T>, public DependencyContainer {
- using BaseContext<T>::instance_ptr_;
- using BaseContext<T>::is_valid_;
- using BaseContext<T>::error_;
+  using BaseContext<T>::instance_ptr_;
+  using BaseContext<T>::is_valid_;
+  using BaseContext<T>::error_;
+
  public:
   /// @brief Create context
   Context() noexcept : BaseContext<T>(true){};
 
   ~Context() noexcept;
 
-  void Add(std::unique_ptr<AContext>&& dependency) noexcept override;
+  void Add(PtrHolder<AContext>&& dependency) noexcept override;
 
   // Ban RAII operations
   Context(const Context&) = delete;
@@ -62,7 +64,7 @@ class Context : public BaseContext<T>, public DependencyContainer {
   Context& operator=(const Context&) = delete;
 
  private:
-  std::vector<std::unique_ptr<AContext>> dependencies_;
+  std::vector<PtrHolder<AContext>> dependencies_;
 };
 
 // implementation
@@ -75,7 +77,7 @@ Context<T>::~Context() noexcept {
 }
 
 template <typename T>
-inline void Context<T>::Add(std::unique_ptr<AContext>&& dependency) noexcept {
+inline void Context<T>::Add(PtrHolder<AContext>&& dependency) noexcept {
   bool dependency_valid = dependency->IsValid();
   if (!dependency_valid) {
     is_valid_ = dependency_valid;

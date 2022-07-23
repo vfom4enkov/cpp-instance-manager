@@ -32,8 +32,8 @@
 #include <iostream>
 
 #include "action.h"
-#include "registrator.h"
 #include "log/file_logger.h"
+#include "registrator.h"
 
 namespace cf = cpptoolkit::factory;
 
@@ -45,30 +45,27 @@ int main() {
     return -1;
   }
 
-  auto file_logger = core->GetShared<example::FileLogger>();
-  auto a_logger = core->GetShared<example::AbstractLogger>("DB_AND_FILE");
-  auto a_logger_2 = core->GetUnique<example::AbstractLogger>();
-  auto action = core->GetShared<example::Action>();
+  auto file_logger = core->Get<example::FileLogger>();
+  auto a_logger = core->Get<example::AbstractLogger>("DB_AND_FILE");
+  auto a_logger_2 = core->Get<example::AbstractLogger>();
+  auto action = core->Get<example::Action>();
 
-  if (!action) {
-    std::cout << "Error: " << core->LastError();
+  if (!action.IsValid()) {
+    std::cout << "Error: " << action.Error();
+    return 1;
   }
 
-  {
-    const auto action = core->GetShared<example::Action>();
-    action->Exec();
-  }
+  action->ExecMyFunction();
 
   std::cout << std::endl;
 
   {
-    const auto action = core->GetShared<example::Action>("LIGHT");
-    action->Exec();
+    const auto action = core->Get<example::Action>("LIGHT");
+    action->ExecMyFunction();
   }
 
   std::cout << "End program" << std::endl;
 }
-//}  // namespace example
 
 // Save message(Start action) to file
 // Save message(Start action) to db

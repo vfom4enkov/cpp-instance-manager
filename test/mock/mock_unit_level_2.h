@@ -40,7 +40,7 @@ namespace factory {
 class MockUnitLevel_2 {
  public:
   MockUnitLevel_2() { constructor_counter_++; }
-  ~MockUnitLevel_2() { destructor_counter_++; }
+  virtual ~MockUnitLevel_2() { destructor_counter_++; }
   virtual uintptr_t getMyPtr() = 0;
   static int32_t getConstructorCounter();
   static int32_t getDestructorCounter();

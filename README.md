@@ -1,15 +1,17 @@
-# CppToolKit-Factory
-This header based tool provides control of lifetime for C++ business logic objects.
+# C++ Factory
+Header based tool provides control of lifetime for C++ business logic objects.
 
-## How to use
+How to use?
 
-### Add the tool to your project
+## Step 1 - Add the tool to your project
+
 Download (or clone) the tool and add the path to `src` to the system `PATH`. Or if you use `cmake` just add line to your `CMakeLists.txt`:
 ```
 include_directories({pat_to_cpptoolkit-factory}/src)
 ```
 
-### Register objects
+## Step 2 - Register business logic objects
+
 ```cpp
 #include <cpptoolkit/factory/builder.h>
   ..
@@ -34,8 +36,8 @@ include_directories({pat_to_cpptoolkit-factory}/src)
       });
 
   builder
-      .Register<Action>([](cf::Resolver& resolver) -> Action* {                     // (12)
-        auto* logger = resolver.Get<AbstractLogger>();                              // (13)
+      .Register<Action>([](cf::Resolver& resolver) -> Action* {
+        auto* logger = resolver.Get<AbstractLogger>();
         return cf::Create<Action>(logger);
       });
 
@@ -46,27 +48,27 @@ include_directories({pat_to_cpptoolkit-factory}/src)
       })
       .SetKey("LIGHT");
 
-  std::unique_ptr<cf::Core> core = builder.Build();                                 // (14)
-  if (!core) {                                                                      // (15)
+  std::unique_ptr<cf::Core> core = builder.BuildUnique();                           // (12)
+  if (!core) {                                                                      // (13)
     error = builder.Error();
   }
 ```
 Where
-1. Create helper for registration objects
-2. Register type `DbLogger` without dependencies and register as it as Lock pool object (check [Types of objects](#types-of-objects) for more info) with pool size 10
+1. Create Builder (helper for registration objects)
+2. Register type `DbLogger` without dependencies in the pool (check [Types of objects](#types-of-objects) for more info) with size 10
 3. Register type `FileLogger` without dependencies
 4. Register type `NetLogger` without dependencies as single instance 
 5. Register type `AbstractLogger` with dependencies
 6. Get dependency instance `FileLogger` for `AbstractLogger`
 7. Get dependency instance `DbLogger` for `AbstractLogger`
-8. Create inherited object `ComplexLogger` as `AbstractLogger` and add dependencies
+8. Create object `ComplexLogger` as `AbstractLogger`
 9. Add key `DB_AND_FILE` for type `AbstractLogger` (check [Keys](#Keys) for more info)
 10. Register another type of `AbstractLogger` with dependencies
-11. Get dependency object with key (check [Keys](#Keys) for more info)
-12. Register complex object with dependencies
-13. Get dependency object with inner dependencies and default key
-14. Complete registration and create the Core
-15. Check errors on register objects operation if the builder contains an error core will not be created
+11. Get dependency object with key
+12. Complete registration and create the Core
+13. Check errors on register objects operation. If the builder contains an error core will not be created
+
+Save `std::unique_ptr<cf::Core> core` and use when you need to create instance of your BL object.
 
 ### Types of objects
 There are four types available:
@@ -77,42 +79,38 @@ There are four types available:
 
 Examples:
 
-2. registration of lock pool for 10 instances
-3. registration of multiple instance by default (or add `.AsMultipleInstance()` on type registration)
-4. registration of single instance
+- **(2)** registration of lock pool for 10 instances
+- **(3)** registration of multiple instance (default mode)
+- **(4)** registration of single instance
 
 ### Keys
 
 If you need to register many types as base object (such as `(5)` and `(10)`) just add keys for these objects. `(5)` is registered with **DB_AND_FILE** key, `(10)` is registered with default key.
 How to get instance of object with specific key check the [Using of factory](#using-of-factory)
 
-### Using of the factory
-Save `std::unique_ptr<cf::Core> core` and use when you need to create instance:
-```cpp
-  ...
-  auto file_logger = core->GetShared<example::FileLogger>();                    // a
-  {
-    auto a_logger = core->GetShared<example::AbstractLogger>("DB_AND_FILE");    // b
-  }
-  auto a_logger_2 = core->GetShared<example::AbstractLogger>();                 // c
-  auto action = core->GetShared<example::Action>();                             // d
-```
-Where
-* `a` Get shared pointer with instance of `example::FileLogger`
-* `b` Get shared pointer with instance of `example::AbstractLogger` and key **DB_AND_FILE**
-* `c` Get unique pointer (`std::unique_ptr<example::AbstractLogger, cpptoolkit::factory::Deleter<example::AbstractLogger>>`) with instance of `example::AbstractLogger`
-* `d` Get shared pointer for complex object with default key
+## Step 3 - Use of the factory
 
-**NB** Before line `c` instance `b` and all dependencies of `b` will be deleted (for multiple instances) or returned to pool (for lock pool or soft pool)
+* call the `Get<T>()` to create instance of your class
+* check if the instance was created without error
+* get description in fail case
+* call your mehods in success case
 
-### Error on create an instance
-In error case the factory returns empty shared pointer (or unique pointer). Call `LastError()` to get more info:
 ```cpp
-  auto action = core->GetShared<example::Action>();
-  if (!action) {
-    std::cout << "Error: " << core->LastError();
+  auto action = core->Get<example::Action>();
+  if (!action.IsValid()) {
+    std::cout << "Error: " << action.Error();
+    return 1; // or throw std::runtime_error("...")
   }
+
+  action->ExecMyFunction();
 ```
 
-### For developers
-Required boost 1.73 for unit tests
+Example of creating the object with the key
+```cpp
+  auto a_logger = core->GetShared<example::AbstractLogger>("DB_AND_FILE");
+```
+
+## Requirements
+
+* C++11
+* boost 1.73 (for unit tests only)
