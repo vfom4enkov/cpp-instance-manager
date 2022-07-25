@@ -43,12 +43,11 @@ class Core;
 
 namespace engine {
 
-
 template <typename T>
 PtrHolder<BaseContext<T>> GetContext(
     cpptoolkit::factory::Core* core, const std::string& key) noexcept;
 
-}
+}  // namespace engine
 
 /// Provides access to registered in Core objects
 /// These objects will be used as dependencies

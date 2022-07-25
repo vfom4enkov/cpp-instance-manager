@@ -35,14 +35,26 @@ namespace engine {
 
 BOOST_AUTO_TEST_SUITE(TestPtrHolder)
 
-BOOST_FIXTURE_TEST_CASE(test_ptr_holder_delete_instance, Fixture) {
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_normal_case, Fixture) {
   // arrange
   {
-    PtrHolder<MockUnitLevel_3> uptr(new (std::nothrow) MockUnitLevel_3());
+    PtrHolder<MockUnitLevel_3> ptr(new (std::nothrow) MockUnitLevel_3());
     BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
     BOOST_CHECK_EQUAL(0, MockUnitLevel_3::getDestructorCounter());
     // act: delete object at end of the block
   }
+
+  // assert
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
+}
+
+BOOST_FIXTURE_TEST_CASE(test_ptr_holder_reset, Fixture) {
+  // arrange
+  PtrHolder<MockUnitLevel_3> ptr(new (std::nothrow) MockUnitLevel_3());
+
+  // act
+  ptr.Reset();
 
   // assert
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());

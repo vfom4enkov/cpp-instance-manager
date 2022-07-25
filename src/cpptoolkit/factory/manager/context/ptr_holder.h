@@ -68,6 +68,7 @@ class PtrHolder {
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N *, T *>::value>::type>
   PtrHolder<T> &operator=(PtrHolder<N> &&other) noexcept {
+    Reset();
     instance_ptr_ = other.Relese();
     return *this;
   };
@@ -82,7 +83,7 @@ class PtrHolder {
 
   /// @brief Get pointer to managed object
   /// @return Pointer to managed object
-  T *Get() noexcept;
+  T *Get() const noexcept;
 
   /// @brief Reset pointer to managed object without deleting
   /// @return Pointer to managed object
@@ -102,8 +103,7 @@ class PtrHolder {
 /// @return PtrHolder with instance
 template <typename T, typename... Args>
 inline PtrHolder<T> MakePtrHolder(Args &&...args) noexcept {
-  PtrHolder<T> uptr(new T(std::forward<Args>(args)...));
-  return std::move(uptr);
+  return PtrHolder<T>(new (std::nothrow) T(std::forward<Args>(args)...));
 }
 
 template <class T>
@@ -122,7 +122,7 @@ T *PtrHolder<T>::operator->() const noexcept {
 }
 
 template <class T>
-T *PtrHolder<T>::Get() noexcept {
+T *PtrHolder<T>::Get() const noexcept {
   return instance_ptr_;
 }
 
