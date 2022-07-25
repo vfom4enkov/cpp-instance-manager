@@ -62,12 +62,13 @@ class UPtr {
   UPtr(const UPtr<T>& other) = delete;
   UPtr<T>& operator=(const UPtr<T>& other) = delete;
 
-  /// @brief Assign on move operation
+  /// @brief Reset and assign on move operation
   /// @tparam N type of inherided object
   /// @param other another instance of UPtr
   template <class N, class = typename std::enable_if<
                          std::is_convertible<N*, T*>::value>::type>
   UPtr<T>& operator=(UPtr<N>&& other) noexcept {
+    Reset();
     instance_ = other.instance_;
     other.instance_ = nullptr;
     context_ = std::move(other.context_);
@@ -81,13 +82,16 @@ class UPtr {
   ///@return Pointer of managed object
   T* Get() const noexcept;
 
+  /// @brief Delete managed object
+  void Reset() noexcept;
+
   ///@brief Check if managed object was created properly
   ///@return Check result
   bool IsValid() noexcept;
 
   ///@brief Get description if object was created with error
   ///@return Error description
-  std::string Error() noexcept;
+  std::string Error() const noexcept;
 
  private:
   T* instance_;
@@ -101,6 +105,12 @@ T* UPtr<T>::Get() const noexcept {
   return instance_;
 }
 
+template<class T>
+void UPtr<T>::Reset() noexcept {
+  context_.Reset();
+  instance_ = nullptr;
+}
+
 template <class T>
 bool UPtr<T>::IsValid() noexcept {
   if (context_.Get() == nullptr) {
@@ -111,7 +121,7 @@ bool UPtr<T>::IsValid() noexcept {
 }
 
 template <class T>
-std::string UPtr<T>::Error() noexcept {
+std::string UPtr<T>::Error() const noexcept {
   if (context_.Get() == nullptr) {
     return "Instance is not initialized";
   }

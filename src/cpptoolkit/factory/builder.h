@@ -123,11 +123,11 @@ inline std::unique_ptr<Core> Builder::BuildUnique() noexcept {
   std::unique_ptr<engine::CoreExtension> uptr_core(new (std::nothrow)
                                                        engine::CoreExtension());
   if (Build(uptr_core.get())) {
-    return std::move(uptr_core);
+    return uptr_core;
   }
 
   std::unique_ptr<engine::CoreExtension> empty(nullptr);
-  return std::move(empty);
+  return empty;
 }
 
 inline std::shared_ptr<Core> Builder::BuildShared() noexcept {

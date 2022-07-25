@@ -57,6 +57,19 @@ BOOST_FIXTURE_TEST_CASE(test_u_ptr_normal_case, Fixture) {
   BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
 }
 
+BOOST_FIXTURE_TEST_CASE(test_u_ptr_reset, Fixture) {
+  // arrange
+  CREATE_PTR_HOLDER_MACRO;
+  UPtr<MockUnitLevel_3> uptr(std::move(ptrHolder));
+
+  // act
+  uptr.Reset();
+
+  // assert
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getConstructorCounter());
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
+}
+
 BOOST_FIXTURE_TEST_CASE(test_u_ptr_check_validation_after_move, Fixture) {
   // arrange
   CREATE_PTR_HOLDER_MACRO;
@@ -114,6 +127,22 @@ BOOST_FIXTURE_TEST_CASE(test_u_ptr_move_assign, Fixture) {
   BOOST_CHECK(uptr_src.context_.Get() == nullptr);
   BOOST_CHECK(uptr.Get() != nullptr);
   BOOST_CHECK(uptr.context_.Get() != nullptr);
+}
+
+BOOST_FIXTURE_TEST_CASE(test_u_ptr_reset_on_move_assign, Fixture) {
+  // arrange
+  CREATE_PTR_HOLDER_MACRO;
+  UPtr<MockUnitLevel_3> uptr_src(std::move(ptrHolder));
+  PtrHolder<BaseContext<MockUnitLevel_3>> ptr_h(new Context<MockUnitLevel_3>());
+  ptr_h->SetInstance(new (std::nothrow) MockUnitLevel_3());
+  UPtr<MockUnitLevel_3> uptr(std::move(ptr_h));
+
+  // act
+  uptr = std::move(uptr_src);
+
+  // assert
+  BOOST_CHECK_EQUAL(2, MockUnitLevel_3::getConstructorCounter());
+  BOOST_CHECK_EQUAL(1, MockUnitLevel_3::getDestructorCounter());
 }
 
 BOOST_FIXTURE_TEST_CASE(test_u_ptr_move_assign_for_inherited_object, Fixture) {
